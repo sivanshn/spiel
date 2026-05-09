@@ -141,6 +141,7 @@ button:hover {
 .hud-left {
     display: flex;
     justify-content: flex-start;
+    gap: 1rem;
 }
 
 .hud-center {
@@ -416,8 +417,29 @@ svg {
 }
 
 .thief-trace-edge {
-    stroke: #f43f5e;
-    stroke-width: 3;
+    stroke: var(--thief);
+    stroke-width: 5;
     stroke-linecap: round;
+    stroke-dasharray: 10 10;
+    animation: trace-flow 2s linear infinite;
+    filter: drop-shadow(0 0 8px var(--thief));
     pointer-events: none;
+}
+
+@keyframes trace-flow {
+    from { stroke-dashoffset: 20; }
+    to { stroke-dashoffset: 0; }
+}
+
+.diamond {
+    fill: #facc15;
+    stroke: white;
+    stroke-width: 1;
+    filter: drop-shadow(0 0 5px #facc15);
+    animation: diamond-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes diamond-pulse {
+    0%, 100% { transform: scale(1) rotate(45deg); }
+    50% { transform: scale(1.2) rotate(45deg); }
 }

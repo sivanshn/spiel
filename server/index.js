@@ -14,29 +14,28 @@ app.get('/', (req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "*", // Für Entwicklung offen, später auf Vercel-Domain einschränken
+        origin: "*", 
         methods: ["GET", "POST"]
     }
 });
 
 const PORT = process.env.PORT || 3001;
 
-// Die neue Map 1 Daten
 const mapData = {
     stations: {
         'nordtor': { id: 'nordtor', name: 'Nordtor', x: 500, y: 120, type: 'thief_start' },
         'universitaet': { id: 'universitaet', name: 'Universität', x: 250, y: 120 },
         'westviertel': { id: 'westviertel', name: 'Westviertel', x: 250, y: 300 },
         'altstadt': { id: 'altstadt', name: 'Altstadt', x: 650, y: 150 },
-        'museum': { id: 'museum', name: 'Museum', x: 820, y: 150, hasDiamond: true },
+        'museum': { id: 'museum', name: 'Museum', x: 820, y: 150 },
         'osthafen': { id: 'osthafen', name: 'Osthafen', x: 920, y: 300 },
         'rathaus': { id: 'rathaus', name: 'Rathaus', x: 550, y: 350 },
         'kunstviertel': { id: 'kunstviertel', name: 'Kunstviertel', x: 730, y: 430 },
         'zentralstation': { id: 'zentralstation', name: 'Zentralstation', x: 400, y: 480 },
         'docklands': { id: 'docklands', name: 'Docklands', x: 180, y: 550 },
         'polizei_a': { id: 'polizei_a', name: 'Polizei Start A', x: 60, y: 550, type: 'police_start' },
-        'hafen': { id: 'hafen', name: 'Hafen', x: 250, y: 650, hasDiamond: true },
-        'marktplatz': { id: 'marktplatz', name: 'Marktplatz', x: 500, y: 650, hasDiamond: true },
+        'hafen': { id: 'hafen', name: 'Hafen', x: 250, y: 650 },
+        'marktplatz': { id: 'marktplatz', name: 'Marktplatz', x: 500, y: 650 },
         'brueckenplatz': { id: 'brueckenplatz', name: 'Brückenplatz', x: 600, y: 500 },
         'suedviertel': { id: 'suedviertel', name: 'Südviertel', x: 730, y: 650 },
         'suedbahnhof': { id: 'suedbahnhof', name: 'Südbahnhof', x: 450, y: 820 },
@@ -72,15 +71,18 @@ let gameState = {
     round: 1,
     map: mapData,
     isLocked: false,
-    thiefTraces: [] // { stationId, round }
+    thiefTraces: [], 
+    diamonds: [], 
+    collectedCount: 0,
+    requiredDiamonds: 2
 };
 
 let turnTimer = null;
-const TURN_TIME_LIMIT = 60; // 1 Minute
+const TURN_TIME_LIMIT = 60; 
 
 function assignRoles() {
     const ids = Object.keys(gameState.players);
-    if (ids.length < 1) return; // Mindestens ein Spieler muss da sein
+    if (ids.length < 1) return; 
 
     gameState.isLocked = true; 
 
@@ -90,7 +92,6 @@ function assignRoles() {
     gameState.players[shuffled[0]].ap_move = 2; 
     gameState.players[shuffled[0]].ap_investigate = 0; 
     
-    // Erste Spur am Startpunkt
     gameState.thiefTraces.push({ 
         stationId: 'nordtor', 
         round: gameState.round 
@@ -104,8 +105,27 @@ function assignRoles() {
         gameState.players[shuffled[i]].ap_investigate = 2;
     }
     
-    io.emit('state_update', gameState); // Temporär für Initialisierung
+    io.emit('state_update', gameState); 
+    initializeDiamonds();
     startTurn(shuffled[0], 'thief_turn');
+}
+
+function initializeDiamonds() {
+    const allConns = [...mapData.connections];
+    const shuffledConns = allConns.sort(() => 0.5 - Math.random());
+    
+    gameState.diamonds = [];
+    gameState.collectedCount = 0;
+    
+    for (let i = 0; i < 2; i++) {
+        const conn = shuffledConns[i];
+        gameState.diamonds.push({
+            stationA: conn[0],
+            stationB: conn[1],
+            isCollected: false
+        });
+        console.log(`Diamant platziert auf Verbindung: ${conn[0]} - ${conn[1]}`);
+    }
 }
 
 function startTurn(playerId, phase) {
@@ -152,13 +172,34 @@ function endTurn(playerId) {
             startTurn(policePlayers[currentIndex + 1].id, 'police_turn');
         } else {
             gameState.round++;
+            cleanupTraces();
             const thief = Object.values(gameState.players).find(p => p.role === 'thief');
             startTurn(thief.id, 'thief_turn');
         }
     }
 }
 
-// BFS zur Distanzberechnung auf dem Graph
+function cleanupTraces() {
+    const thief = Object.values(gameState.players).find(p => p.role === 'thief');
+    gameState.thiefTraces = gameState.thiefTraces.filter(t => t.round >= gameState.round - 1);
+    
+    if (thief && thief.position) {
+        gameState.thiefTraces = gameState.thiefTraces.filter(t => t.stationId !== thief.position);
+        gameState.thiefTraces.push({ 
+            stationId: thief.position, 
+            round: gameState.round 
+        });
+    }
+
+    const uniqueTraces = {};
+    gameState.thiefTraces.forEach(t => {
+        if (!uniqueTraces[t.stationId] || t.round > uniqueTraces[t.stationId].round) {
+            uniqueTraces[t.stationId] = t;
+        }
+    });
+    gameState.thiefTraces = Object.values(uniqueTraces);
+}
+
 function getDistance(startId, endId) {
     if (startId === endId) return 0;
     let queue = [[startId, 0]];
@@ -182,13 +223,11 @@ function getDistance(startId, endId) {
     return Infinity;
 }
 
-// Hilfsfunktion: State gefiltert an einen bestimmten Socket senden
 function emitState(socket) {
     try {
         const player = gameState.players[socket.id];
-        let filteredState = JSON.parse(JSON.stringify(gameState)); // Deep Copy
+        let filteredState = JSON.parse(JSON.stringify(gameState)); 
 
-        // Sensible Daten filtern
         if (!player || player.role !== 'thief') {
             delete filteredState.thiefTraces;
         }
@@ -199,7 +238,6 @@ function emitState(socket) {
     }
 }
 
-// Globales Update an alle (jeder bekommt seinen gefilterten State)
 function broadcastState() {
     const sockets = io.sockets.sockets;
     sockets.forEach(socket => {
@@ -232,6 +270,26 @@ io.on('connection', (socket) => {
         assignRoles();
     });
 
+    socket.on('reset_game', () => {
+        gameState.phase = 'waiting';
+        gameState.round = 1;
+        gameState.isLocked = false;
+        gameState.thiefTraces = [];
+        gameState.diamonds = [];
+        gameState.collectedCount = 0;
+        gameState.winner = null;
+        gameState.activePlayerId = null;
+        
+        Object.values(gameState.players).forEach(p => {
+            p.role = null;
+            p.position = null;
+            p.ap_move = 0;
+            p.ap_investigate = 0;
+        });
+
+        broadcastState();
+    });
+
     socket.on('move_to', (targetStationId) => {
         const player = gameState.players[socket.id];
         if (!player || gameState.activePlayerId !== socket.id) return;
@@ -241,26 +299,42 @@ io.on('connection', (socket) => {
             return;
         }
 
+        const previousPosition = player.position;
         const dist = getDistance(player.position, targetStationId);
         
         if (dist === 1) {
             player.position = targetStationId;
+            const fromStation = previousPosition;
             player.ap_move -= 1;
             player.turnStartPosition = player.position;
             
-            // Spur hinterlassen (nur für den Dieb)
             if (player.role === 'thief') {
+                const usedEdge = [fromStation, targetStationId].sort();
+                const diamond = gameState.diamonds.find(d => {
+                    const dEdge = [d.stationA, d.stationB].sort();
+                    return !d.isCollected && dEdge[0] === usedEdge[0] && dEdge[1] === usedEdge[1];
+                });
+
+                if (diamond) {
+                    diamond.isCollected = true;
+                    gameState.collectedCount++;
+                    console.log(`Dieb hat Diamant gesammelt! (${gameState.collectedCount}/${gameState.requiredDiamonds})`);
+                    
+                    if (gameState.collectedCount >= gameState.requiredDiamonds) {
+                        gameState.phase = 'end';
+                        gameState.winner = 'thief_team';
+                        gameState.activePlayerId = null;
+                    }
+                }
+
+                gameState.thiefTraces = gameState.thiefTraces.filter(t => t.stationId !== targetStationId);
                 gameState.thiefTraces.push({ 
                     stationId: targetStationId, 
                     round: gameState.round 
                 });
-                // Maximal 4 Spuren behalten (entspricht ca. 2 Runden)
-                if (gameState.thiefTraces.length > 4) {
-                    gameState.thiefTraces = gameState.thiefTraces.slice(-4);
-                }
+                cleanupTraces();
             }
 
-            // Auto-End Check
             if (player.ap_move === 0 && player.ap_investigate === 0) {
                 endTurn(socket.id);
             }
@@ -283,25 +357,62 @@ io.on('connection', (socket) => {
         player.ap_investigate -= 1;
         player.turnStartPosition = player.position;
         
-        // Auto-End Check
-        const shouldEnd = (player.ap_move === 0 && player.ap_investigate === 0);
-        
         const currentStation = player.position;
         const thief = Object.values(gameState.players).find(p => p.role === 'thief');
         
-        let result = "Keine Spur gefunden.";
-        const hasTrace = gameState.thiefTraces.some(t => t.stationId === currentStation);
-        if (thief.position === currentStation || hasTrace) {
-            result = "Spur vom Dieb gefunden!";
+        let result = "Keine Spur";
+        const foundTrace = gameState.thiefTraces.find(t => t.stationId === currentStation);
+        
+        if (foundTrace) {
+            if (foundTrace.round === gameState.round) {
+                result = "Frische Spur";
+            } else if (foundTrace.round === gameState.round - 1) {
+                result = "Alte Spur";
+            }
+        } else if (thief.position === currentStation) {
+            result = "Frische Spur";
         }
         
         socket.emit('investigation_result', { stationId: currentStation, result });
         
-        if (shouldEnd) {
+        if (player.ap_move === 0 && player.ap_investigate === 0) {
             endTurn(socket.id);
         }
 
         broadcastState();
+    });
+
+    socket.on('arrest', () => {
+        const player = gameState.players[socket.id];
+        if (!player || gameState.activePlayerId !== socket.id || player.role === 'thief') return;
+        
+        if (player.ap_investigate < 1) {
+            socket.emit('error_msg', 'Keine Aktionspunkte mehr für eine Festnahme!');
+            return;
+        }
+
+        player.ap_investigate -= 1;
+        player.turnStartPosition = player.position;
+        
+        const currentStation = player.position;
+        const thief = Object.values(gameState.players).find(p => p.role === 'thief');
+        
+        if (thief && thief.position === currentStation) {
+            gameState.phase = 'end';
+            gameState.winner = 'police';
+            gameState.activePlayerId = null;
+            broadcastState();
+        } else {
+            socket.emit('investigation_result', { 
+                stationId: currentStation, 
+                result: "Fehlgeschlagen! Der Dieb ist nicht hier." 
+            });
+            
+            if (player.ap_move === 0 && player.ap_investigate === 0) {
+                endTurn(socket.id);
+            }
+            broadcastState();
+        }
     });
 
     socket.on('end_turn', () => {

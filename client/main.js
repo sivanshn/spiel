@@ -8,7 +8,6 @@ const screens = {
     game: document.getElementById('screen-game'),
     result: document.getElementById('screen-result')
 };
-
 const usernameInput = document.getElementById('username');
 const joinBtn = document.getElementById('join-btn');
 const playerStatusBar = document.getElementById('player-status-bar');
@@ -20,6 +19,7 @@ const turnTimerTxt = document.getElementById('turn-timer');
 const btnEndTurn = document.getElementById('btn-end-turn');
 const btnMove = document.getElementById('btn-move');
 const btnInvestigate = document.getElementById('btn-investigate');
+const btnArrest = document.getElementById('btn-arrest');
 const btnDebugStart = document.getElementById('btn-debug-start');
 const actionBar = document.getElementById('action-bar');
 const notificationModal = document.getElementById('notification-modal');
@@ -74,6 +74,10 @@ btnInvestigate.addEventListener('click', () => {
     socket.emit('investigate');
 });
 
+btnArrest.addEventListener('click', () => {
+    socket.emit('arrest');
+});
+
 btnDebugStart.addEventListener('click', () => {
     socket.emit('start_game_debug');
 });
@@ -96,6 +100,29 @@ socket.on('error_msg', (msg) => {
 
 socket.on('state_update', (gameState) => {
     lastState = gameState;
+    if (gameState.phase === 'end') {
+        showScreen('result');
+        const title = document.getElementById('result-title');
+        const msg = document.getElementById('result-msg');
+        if (gameState.winner === 'police') {
+            title.textContent = "POLIZEI GEWINNT!";
+            title.style.color = "#3b82f6";
+            msg.textContent = "Der Dieb wurde erfolgreich festgenommen.";
+        } else if (gameState.winner === 'thief_team') {
+            title.textContent = "DIEB GEWINNT!";
+            title.style.color = "#f43f5e";
+            msg.textContent = "Der Dieb hat alle Diamanten gesammelt. Dieb und korrupter Polizist gewinnen!";
+        } else {
+            title.textContent = "DIEB GEWINNT!";
+            title.style.color = "#f43f5e";
+            msg.textContent = "Der Dieb ist allen entkommen.";
+        }
+    } else if (gameState.phase === 'waiting' || gameState.phase === 'thief_turn') {
+        // Falls wir gerade vom Result-Screen kommen
+        if (screens.result.classList.contains('active')) {
+            showScreen('game');
+        }
+    }
     updateUI(gameState);
 });
 
@@ -107,6 +134,9 @@ function updateUI(state) {
     if (myPlayer && myPlayer.role) {
         playerRoleTxt.textContent = translateRole(myPlayer.role).toUpperCase();
         playerRoleTxt.style.color = getRoleColor(myPlayer.role);
+    } else {
+        playerRoleTxt.textContent = "WARTEN...";
+        playerRoleTxt.style.color = "#94a3b8";
     }
 
     // Action Bar
@@ -124,13 +154,18 @@ function updateUI(state) {
         }
         btnMove.disabled = !isValidMove;
 
-        // UNTERSUCHEN Button
+        // UNTERSUCHEN & FESTNAHME Buttons
         if (myPlayer && myPlayer.role !== 'thief') {
             btnInvestigate.classList.remove('hidden');
             btnInvestigate.textContent = `UNTERSUCHEN (${myPlayer.ap_investigate} ÜBRIG)`;
             btnInvestigate.disabled = (myPlayer.ap_investigate < 1);
+
+            btnArrest.classList.remove('hidden');
+            btnArrest.textContent = `FESTNAHME (${myPlayer.ap_investigate} ÜBRIG)`;
+            btnArrest.disabled = (myPlayer.ap_investigate < 1);
         } else {
             btnInvestigate.classList.add('hidden');
+            btnArrest.classList.add('hidden');
         }
     } else {
         actionBar.classList.add('hidden');
@@ -185,6 +220,12 @@ function updateUI(state) {
         else turnTimerTxt.classList.remove('warning');
     } else {
         turnTimerTxt.classList.add('hidden');
+    }
+
+    // Diamanten Counter
+    const diamondCounter = document.getElementById('diamond-counter');
+    if (diamondCounter) {
+        diamondCounter.textContent = `${state.collectedCount} / ${state.requiredDiamonds}`;
     }
 
     // Karte zeichnen
@@ -248,6 +289,30 @@ function renderMap(state, me, isMyTurn) {
             gameMap.appendChild(line);
         }
     });
+
+    // Diamanten auf Verbindungen zeichnen
+    if (state.diamonds) {
+        state.diamonds.forEach(d => {
+            if (d.isCollected) return;
+            const s1 = map.stations[d.stationA];
+            const s2 = map.stations[d.stationB];
+            if (s1 && s2) {
+                const midX = (s1.x + s2.x) / 2;
+                const midY = (s1.y + s2.y) / 2;
+                
+                const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rect.setAttribute("x", midX - 6);
+                rect.setAttribute("y", midY - 6);
+                rect.setAttribute("width", 12);
+                rect.setAttribute("height", 12);
+                rect.setAttribute("class", "diamond");
+                // Rotation (45 Grad) wird über CSS-Animation gehandhabt
+                rect.style.transformOrigin = `${midX}px ${midY}px`;
+                
+                gameMap.appendChild(rect);
+            }
+        });
+    }
 
     // Stationen
     Object.values(map.stations).forEach(station => {
