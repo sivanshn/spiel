@@ -34,6 +34,9 @@ let lastState = null;
 function showScreen(screenId) {
     Object.values(screens).forEach(s => s.classList.remove('active'));
     screens[screenId].classList.add('active');
+    if (screenId === 'login') {
+        usernameInput.focus();
+    }
 }
 
 function showPopup(title, message) {
@@ -441,3 +444,6 @@ function renderMap(state, me, isMyTurn) {
         });
     });
 }
+
+// Initialer Fokus auf das Namensfeld
+usernameInput.focus();
