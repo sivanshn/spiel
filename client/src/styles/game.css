@@ -1,0 +1,211 @@
+/* ============================
+   GAME VIEW
+   ============================ */
+
+#screen-game {
+    background: #020617;
+    justify-content: flex-start;
+}
+
+.game-hud {
+    position: absolute;
+    top: 2rem; left: 2rem; right: 2rem;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: start;
+    z-index: 10;
+}
+
+.hud-left  { display: flex; justify-content: flex-start; gap: 1rem; }
+.hud-center { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+.hud-right { display: flex; justify-content: flex-end; gap: 1rem; }
+
+.hud-item {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+}
+
+.phase-highlight {
+    font-size: 1.4rem !important;
+    padding: 1rem 3rem !important;
+    background: linear-gradient(180deg, rgba(56,189,248,0.2) 0%, rgba(15,23,42,0.8) 100%) !important;
+    border-color: var(--primary) !important;
+    min-width: 300px;
+    text-align: center;
+}
+
+#player-role {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    text-shadow: 0 0 15px currentColor;
+}
+
+.timer {
+    color: var(--primary);
+    min-width: 60px;
+    text-align: center;
+    border-color: rgba(56, 189, 248, 0.4) !important;
+}
+
+.timer.warning {
+    color: var(--thief);
+    border-color: var(--thief) !important;
+    animation: blink 0.5s infinite;
+}
+
+@keyframes blink { 50% { opacity: 0.5; } }
+
+.debug-btn {
+    background: rgba(245, 158, 11, 0.2);
+    border: 1px solid #f59e0b;
+    color: #f59e0b;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.debug-btn:hover {
+    background: #f59e0b;
+    color: black;
+}
+
+/* Map Viewport */
+#map-viewport {
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5rem;
+}
+
+svg {
+    max-height: 90vh;
+    max-width: 95vw;
+}
+
+/* Map Elements */
+.connection {
+    stroke: rgba(255, 255, 255, 0.4);
+    stroke-width: 3;
+    filter: drop-shadow(0 0 2px rgba(255,255,255,0.2));
+}
+
+.station-circle {
+    fill: #0f172a;
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 3;
+    transition: all 0.3s;
+}
+
+.station:hover .station-circle {
+    stroke: var(--primary);
+    fill: #1e293b;
+}
+
+.station-text {
+    fill: #475569;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.player-marker { pointer-events: none; }
+
+.player-label {
+    fill: white;
+    font-size: 12px;
+    font-weight: 900;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
+.thief-trace {
+    fill: none;
+    stroke: #f43f5e;
+    stroke-width: 2;
+    pointer-events: none;
+}
+
+.thief-trace-edge {
+    stroke: var(--thief);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-dasharray: 10 10;
+    animation: trace-flow 2s linear infinite;
+    filter: drop-shadow(0 0 8px var(--thief));
+    pointer-events: none;
+}
+
+@keyframes trace-flow {
+    from { stroke-dashoffset: 20; }
+    to   { stroke-dashoffset: 0; }
+}
+
+.diamond {
+    fill: #facc15;
+    stroke: white;
+    stroke-width: 1;
+    filter: drop-shadow(0 0 5px #facc15);
+    animation: diamond-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes diamond-pulse {
+    0%, 100% { transform: scale(1) rotate(45deg); }
+    50%       { transform: scale(1.2) rotate(45deg); }
+}
+
+/* Game Footer */
+.game-footer {
+    position: absolute;
+    bottom: 1.5rem; left: 2rem; right: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    z-index: 10;
+    pointer-events: none;
+}
+
+#player-status-bar {
+    display: flex;
+    gap: 0.5rem;
+    pointer-events: auto;
+}
+
+#action-bar {
+    display: flex;
+    gap: 0.5rem;
+    pointer-events: auto;
+}
+
+.status-pill {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    border: 1px solid var(--glass-border);
+}
+
+.status-pill.active-player {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+    box-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+/* Result Screen */
+.result-card { text-align: center; }
+
+#result-title {
+    font-size: 5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+}
+
+.reload-btn {
+    margin-top: 2rem;
+    background: white;
+}

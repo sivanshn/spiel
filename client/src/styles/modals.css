@@ -1,0 +1,122 @@
+/* ============================
+   MODALS (Notification, Ranking, Settings)
+   ============================ */
+
+.modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(2, 6, 23, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 0.3s;
+}
+
+.modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.modal-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(to right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.modal-content p {
+    color: #94a3b8;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+/* Ranking Modal */
+.ranking-modal-panel {
+    max-width: 500px !important;
+    padding: 2.5rem !important;
+}
+
+.ranking-header {
+    display: grid;
+    grid-template-columns: 80px 1fr 100px;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+}
+
+.ranking-list {
+    max-height: 350px;
+    overflow-y: auto;
+    margin-bottom: 2rem;
+    padding-right: 5px;
+}
+
+.ranking-entry {
+    display: grid;
+    grid-template-columns: 80px 1fr 100px;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.rank-number { font-weight: 900; font-size: 1.1rem; color: var(--primary); }
+.rank-user   { display: flex; align-items: center; gap: 1rem; }
+.rank-avatar { width: 32px; height: 32px; border-radius: 6px; background: rgba(255,255,255,0.05); }
+.rank-kora   { font-weight: 800; color: white; }
+
+/* Settings Modal */
+.settings-modal-panel {
+    max-width: 400px !important;
+}
+
+.settings-group {
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.settings-group p {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+.language-options {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.lang-btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.lang-btn:hover  { background: rgba(255, 255, 255, 0.1); }
+.lang-btn.active { background: var(--primary); border-color: var(--primary); color: white; }

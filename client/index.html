@@ -13,12 +13,68 @@
     <div id="game-container">
         <!-- Screen 1: Login -->
         <section id="screen-login" class="screen active">
-            <div class="glass-card animate-in">
-                <div class="logo">POLIZEI <span>vs</span> DIEB</div>
-                <p class="subtitle">Ein rundenbasiertes Strategie-Abenteuer</p>
-                <div class="input-group">
-                    <input type="text" id="username" placeholder="NAME EINGEBEN..." maxlength="15" autocomplete="off">
-                    <button id="join-btn">EINTRETEN</button>
+            <div class="logo-container animate-in">
+                <h1 data-i18n="logo_title">POLIZEI vs DIEB</h1>
+                <p data-i18n="logo_subtitle">Ein rundenbasiertes Strategie-Abenteuer</p>
+            </div>
+            <div class="login-card glass-card animate-in">
+                <input type="text" id="username" data-i18n-placeholder="login_placeholder" placeholder="NAME EINGEBEN..." maxlength="15">
+                <button id="join-btn" class="action-btn" data-i18n="login_btn">EINTRETEN</button>
+            </div>
+        </section>
+
+        <!-- Screen 1.5: Main View / Lobby Overview -->
+        <section id="screen-main" class="screen">
+            <div class="main-header-actions">
+                <button id="ranking-btn" class="icon-btn">🏆</button>
+                <button id="settings-btn" class="icon-btn">⚙️</button>
+            </div>
+            <div class="user-profile">
+                <div class="user-info">
+                    <img id="my-avatar" src="" alt="Avatar">
+                    <div>
+                        <h2 id="my-name">Name</h2>
+                        <div class="kora-display" id="kora-main">
+                            <span class="kora-icon">💎</span>
+                            <span class="kora-label" data-i18n="main_kora">Kora:</span>
+                            <span class="kora-value" id="kora-value-main">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- PANEL 1: LOBBY LISTE -->
+            <div id="lobby-list-panel" class="lobby-panel glass-card animate-in">
+                <div class="panel-header">
+                    <h2 data-i18n="main_open_lobbies">OFFENE LOBBYS</h2>
+                </div>
+                <div class="panel-content">
+                    <div id="lobby-list" class="lobby-list">
+                        <!-- Lobbies appear here -->
+                        <p class="empty-msg" data-i18n="main_empty_lobbies">Keine aktiven Ermittlungen</p>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button id="create-lobby-btn" class="action-btn" data-i18n="main_create_lobby">LOBBY ERSTELLEN</button>
+                </div>
+            </div>
+
+            <!-- PANEL 2: LOBBY WARTERAUM (Integriert in Main View) -->
+            <div id="lobby-waiting-panel" class="lobby-panel glass-card animate-in hidden">
+                <div class="panel-header">
+                    <h2 id="lobby-view-title" data-i18n="lobby_title">LOBBY</h2>
+                </div>
+                <div class="panel-content">
+                    <div class="lobby-stats">
+                        <span data-i18n="lobby_stats_players">SPIELER:</span> <span id="lobby-player-count">1 / 4</span>
+                    </div>
+                    <div id="lobby-player-list" class="player-list">
+                        <!-- Players appear here -->
+                    </div>
+                </div>
+                <div class="panel-footer lobby-actions">
+                    <button id="leave-lobby-btn" class="action-btn secondary" data-i18n="lobby_btn_back">ZURÜCK</button>
+                    <button id="start-game-btn" class="action-btn hidden" data-i18n="lobby_btn_start">SPIEL STARTEN</button>
+                    <p id="wait-msg" class="wait-msg" data-i18n="lobby_wait_msg">Warte auf weitere Spieler...</p>
                 </div>
             </div>
         </section>
@@ -57,22 +113,54 @@
 
         <!-- Screen 3: Result -->
         <section id="screen-result" class="screen">
-            <div class="result-card">
-                <h1 id="result-title">SIEG</h1>
-                <p id="result-msg">Der Dieb ist entkommen!</p>
+            <div class="result-card glass-card">
+                <h1 id="result-title">GEWINNER</h1>
+                <p id="result-msg">Nachricht...</p>
+                <div id="result-reward" class="reward-badge hidden">+10 Kora erhalten</div>
             </div>
         </section>
+
+        <!-- Modal: Ranking -->
+        <div id="modal-ranking" class="modal hidden">
+            <div class="modal-content glass-card ranking-modal-panel">
+                <h2 data-i18n="ranking_title">RANGLISTE</h2>
+                <div class="ranking-header">
+                    <span data-i18n="ranking_rank">Platz</span>
+                    <span data-i18n="ranking_name">Spieler</span>
+                    <span data-i18n="ranking_kora">Kora</span>
+                </div>
+                <div id="ranking-list" class="ranking-list">
+                    <!-- Ranking entries here -->
+                </div>
+                <button id="ranking-close" class="action-btn" data-i18n="ranking_close">ZURÜCK</button>
+            </div>
+        </div>
+
+        <!-- Modal: Settings -->
+        <div id="modal-settings" class="modal hidden">
+            <div class="modal-content glass-card settings-modal-panel">
+                <h2 data-i18n="settings_title">EINSTELLUNGEN</h2>
+                <div class="settings-group">
+                    <p data-i18n="settings_language">Sprache wählen</p>
+                    <div class="language-options">
+                        <button class="lang-btn active" data-lang="de">DEUTSCH</button>
+                        <button class="lang-btn" data-lang="en">ENGLISH</button>
+                    </div>
+                </div>
+                <button id="settings-close" class="action-btn" data-i18n="settings_close">SCHLIESSEN</button>
+            </div>
+        </div>
 
         <!-- Custom Notification Modal -->
         <div id="notification-modal" class="modal hidden">
             <div class="glass-card modal-content animate-in">
                 <h2 id="modal-title">INFO</h2>
-                <p id="modal-msg"></p>
+                <p id="modal-msg">Nachricht hier...</p>
                 <button id="modal-close" class="action-btn">OK</button>
             </div>
         </div>
     </div>
-    <script type="module" src="./main.js"></script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>
