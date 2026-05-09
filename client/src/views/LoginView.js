@@ -8,6 +8,9 @@ export function initLoginView() {
 
     if (!usernameInput || !joinBtn) return;
 
+    // Sofort fokussieren – kein Klick nötig
+    usernameInput.focus();
+
     const avatars = ['goat', 'monkey', 'cat', 'dog', 'fox', 'panda'];
     function getRandomAvatar() {
         return avatars[Math.floor(Math.random() * avatars.length)];

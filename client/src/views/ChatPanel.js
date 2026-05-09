@@ -14,6 +14,7 @@ export function initChatPanel() {
     chatToggleBtn.id = 'chat-toggle-btn';
     chatToggleBtn.title = 'Chat öffnen';
     chatToggleBtn.innerHTML = `💬<span id="chat-unread-badge" class="hidden"></span>`;
+    chatToggleBtn.classList.add('hidden'); // Erst nach Login sichtbar
     document.body.appendChild(chatToggleBtn);
 
     unreadBadge = chatToggleBtn.querySelector('#chat-unread-badge');
@@ -75,8 +76,9 @@ export function initChatPanel() {
         }
     });
 
-    // Chathistorie laden sobald eingeloggt
+    // Chat erst nach Login anzeigen + History laden
     socket.on('registration_success', () => {
+        chatToggleBtn.classList.remove('hidden'); // Chat-Button einblenden
         socket.emit('get_chat_history');
     });
 
