@@ -87,20 +87,24 @@ function assignRoles() {
     gameState.isLocked = true; 
 
     const shuffled = ids.sort(() => 0.5 - Math.random());
+
+    const availableStations = Object.keys(gameState.map.stations).filter(id => gameState.map.stations[id].type !== 'escape');
+    const shuffledStations = availableStations.sort(() => 0.5 - Math.random());
+
     gameState.players[shuffled[0]].role = 'thief';
-    gameState.players[shuffled[0]].position = 'nordtor';
+    gameState.players[shuffled[0]].position = shuffledStations[0];
     gameState.players[shuffled[0]].ap_move = 2; 
     gameState.players[shuffled[0]].ap_investigate = 0; 
     
     gameState.thiefTraces.push({ 
-        stationId: 'nordtor', 
+        stationId: shuffledStations[0], 
         round: gameState.round 
     });
 
     for (let i = 1; i < shuffled.length; i++) {
         const role = (i === 1) ? 'corrupt_police' : 'police';
         gameState.players[shuffled[i]].role = role;
-        gameState.players[shuffled[i]].position = i % 2 === 0 ? 'polizei_a' : 'polizei_b';
+        gameState.players[shuffled[i]].position = shuffledStations[i]; // Jeder bekommt eine andere zufällige Station
         gameState.players[shuffled[i]].ap_move = 2;
         gameState.players[shuffled[i]].ap_investigate = 2;
     }
