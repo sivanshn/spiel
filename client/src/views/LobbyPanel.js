@@ -28,11 +28,14 @@ export function renderLobbyList(lobbies, container) {
         };
 
         card.innerHTML = `
-            <div class="lobby-info">
-                <span class="lobby-name">${t.lobby_title} VON ${lobby.hostName.toUpperCase()}</span>
-                <span class="lobby-details">ID: #${lobby.id.slice(0, 4)} — ${lobby.playerCount} / 4 SPIELER</span>
+            <div class="p-avatar" style="display:flex; align-items:center; justify-content:center; color:#3b82f6; font-size:1.5rem; background:rgba(59,130,246,0.1);">#</div>
+            <div class="lobby-info" style="flex:1;">
+                <span class="p-name">${t.lobby_title} VON ${lobby.hostName.toUpperCase()}</span>
+                <div style="font-size:0.8rem; color:#64748b; font-weight:800; margin-top:0.2rem; letter-spacing:1px;">
+                    ID: #${lobby.id.slice(0, 4)} — ${lobby.playerCount} / 4 SPIELER
+                </div>
             </div>
-            <div class="join-icon">❯</div>
+            <div class="join-icon" style="color:#3b82f6; font-weight:900;">❯</div>
         `;
         container.appendChild(card);
     });
