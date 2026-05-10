@@ -15,17 +15,17 @@
     align-items: center;
 }
 
-/* Left Header (Profile + Shop) */
 .left-header-container {
     position: absolute;
     top: 1.5rem;
     left: 1.5rem;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1.5rem;
+    align-items: stretch;   /* Shop = gleiche Breite wie Profil */
+    gap: 0.8rem;
     z-index: 100;
 }
+
 
 /* Profile Box */
 .user-profile {
