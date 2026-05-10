@@ -60,7 +60,23 @@ export const translations = {
         role_agent_name: "Special Agent",
         role_agent_short: "Kann die Identität eines Spielers überprüfen.",
         role_agent_goal: "Unterstützt die Polizei bei der Suche nach Verrätern.",
-        role_agent_abilities: "Alles was Polizei kann; Bis zu 3 Stationen Bewegung; Einmalige Identitätsprüfung (sieht echte Rolle)."
+        role_agent_abilities: "Alles was Polizei kann; Bis zu 3 Stationen Bewegung; Einmalige Identitätsprüfung (sieht echte Rolle).",
+        shop_buy: "Kaufen",
+        shop_bought: "Gekauft",
+        shop_not_enough_kora: "Nicht genug Kora",
+        ability_roadblock_name: "Straßensperre",
+        ability_roadblock_short: "Sperre eine Verbindung für den Dieb.",
+        ability_roadblock_desc: "Mit dieser Fähigkeit kann ein Polizist eine Verbindung zwischen zwei benachbarten Stationen sperren.",
+        ability_roadblock_goal: "Sperre Fluchtwege und lenke den Dieb.",
+        ability_roadblock_abilities: "Kostet 1 Aktionspunkt; Bleibt dauerhaft aktiv; Nur für Polizei/Agent; Dieb darf nicht passieren.",
+        game_btn_abilities: "Fähigkeiten",
+        game_no_abilities: "Keine Fähigkeiten verfügbar",
+        error_no_ap: "Du hast keine Aktionspunkte mehr.",
+        error_no_ability: "Du besitzt keine Straßensperre mehr.",
+        error_not_neighbor: "Du kannst nur eine benachbarte Verbindung sperren.",
+        error_thief_ability: "Der Dieb kann diese Fähigkeit nicht benutzen.",
+        msg_roadblock_placed: "Straßensperre wurde platziert!",
+        msg_connection_blocked: "Diese Verbindung ist gesperrt."
     },
     en: {
         logo_title: "POLICE vs THIEF",
@@ -123,6 +139,22 @@ export const translations = {
         role_agent_name: "Special Agent",
         role_agent_short: "Can check a player's identity.",
         role_agent_goal: "Supports police in finding traitors.",
-        role_agent_abilities: "Everything police can do; Up to 3 stations movement; One-time identity check (sees real role)."
+        role_agent_abilities: "Everything police can do; Up to 3 stations movement; One-time identity check (sees real role).",
+        shop_buy: "Buy",
+        shop_bought: "Bought",
+        shop_not_enough_kora: "Not enough Kora",
+        ability_roadblock_name: "Roadblock",
+        ability_roadblock_short: "Block a connection for the thief.",
+        ability_roadblock_desc: "With this ability, a police officer can block a connection between two adjacent stations.",
+        ability_roadblock_goal: "Block escape routes and divert the thief.",
+        ability_roadblock_abilities: "Costs 1 action point; Stays active permanently; Only for police/agent; Thief may not pass.",
+        game_btn_abilities: "Abilities",
+        game_no_abilities: "No abilities available",
+        error_no_ap: "You have no action points left.",
+        error_no_ability: "You do not own a roadblock.",
+        error_not_neighbor: "You can only block an adjacent connection.",
+        error_thief_ability: "The thief cannot use this ability.",
+        msg_roadblock_placed: "Roadblock placed!",
+        msg_connection_blocked: "This connection is blocked."
     }
 };

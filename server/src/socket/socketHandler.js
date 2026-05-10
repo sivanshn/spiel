@@ -2,7 +2,7 @@ const { connectedUsers } = require('../utils/store');
 const { broadcastLobbyList } = require('../socket/broadcast');
 const { broadcastRanking } = require('../ranking/rankingService');
 const { handleCreateLobby, handleJoinLobby, handleLeaveLobby, handleStartLobbyGame, handleDisconnect } = require('../lobby/lobbyManager');
-const { handleMoveAction, handleInvestigateAction, handleArrestAction, endTurn } = require('../game/gameManager');
+const { handleMoveAction, handleInvestigateAction, handleArrestAction, endTurn, handleUseAbility } = require('../game/gameManager');
 const { broadcastState } = require('../socket/broadcast');
 const { registerPlayer, removePlayer } = require('../player/playerManager');
 const { registerVoiceHandlers } = require('../voice/voiceSignaling');
@@ -22,6 +22,7 @@ function registerSocketHandlers(io, socket) {
     socket.on('move_to', (targetStationId) => handleMoveAction(io, socket, targetStationId));
     socket.on('investigate', () => handleInvestigateAction(io, socket));
     socket.on('arrest', () => handleArrestAction(io, socket));
+    socket.on('use_ability', (data) => handleUseAbility(io, socket, data));
 
     socket.on('end_turn', () => {
         const user = connectedUsers.get(socket.id);

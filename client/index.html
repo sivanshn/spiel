@@ -107,21 +107,16 @@
                         <!-- Player list will be injected here -->
                     </div>
                 </div>
-                <div class="main-top-right">
-                    <button id="main-ranking" class="hud-item hud-btn">
-                        <span>🏆</span> <span data-i18n="btn_ranking">Ranking</span>
-                    </button>
-                    <button id="main-roles" class="hud-item hud-btn">
-                        <span>📋</span> <span data-i18n="btn_roles">Rollen</span>
-                    </button>
-                    <button id="main-settings" class="hud-item hud-btn gear-only">
-                        <span>⚙️</span>
-                    </button>
-                </div>
                 <div class="hud-center">
                     <div id="game-phase" class="hud-item phase-highlight">Lobby</div>
                 </div>
                 <div class="hud-right">
+                    <div class="abilities-container">
+                        <button id="btn-abilities-toggle" class="hud-item hud-btn">
+                            <span data-i18n="game_btn_abilities">Fähigkeiten</span> <span class="arrow">▼</span>
+                        </button>
+                        <div id="abilities-dropdown" class="abilities-dropdown hidden"></div>
+                    </div>
                 </div>
             </div>
 

@@ -1,36 +1,63 @@
 /**
  * shopManager.js
  * Verwaltet Shop-Aktionen auf Serverseite.
- * Version 0.1 – Struktur vorbereitet.
+ * Implementiert Kauf von Fähigkeiten (z.B. Straßensperre).
  */
 
 const { connectedUsers } = require('../utils/store');
+
+const ABILITIES = {
+    roadblock: { priceKora: 5 }
+};
 
 /**
  * Registriert Socket-Handler für den Shop.
  */
 function registerShopHandlers(io, socket) {
     socket.on('shop_get_items', () => {
-        // Später: Sende Liste der verfügbaren Items vom Server
-        socket.emit('shop_items_list', []);
+        // Liste der verfügbaren Items vom Server
+        socket.emit('shop_items_list', [
+            { id: 'roadblock', priceKora: 5 }
+        ]);
     });
 
     socket.on('shop_buy', (data) => {
         const user = connectedUsers.get(socket.id);
         if (!user) return;
 
-        console.log(`[Shop] Kaufanfrage von ${user.name} für Item: ${data.abilityId}`);
+        const abilityId = data.abilityId;
+        const ability = ABILITIES[abilityId];
         
-        // TODO: 
-        // 1. Item-Existenz prüfen
-        // 2. Kora-Guthaben prüfen
-        // 3. Kora abziehen
-        // 4. Item dem User-Profil hinzufügen
-        // 5. Erfolg/Fehler zurücksenden
+        if (!ability) {
+            return socket.emit('shop_buy_result', { 
+                success: false, 
+                message: 'Item nicht gefunden.' 
+            });
+        }
+
+        if (user.koraBalance < ability.priceKora) {
+            return socket.emit('shop_buy_result', { 
+                success: false, 
+                message: 'Nicht genug Kora.' 
+            });
+        }
+
+        // Kora abziehen
+        user.koraBalance -= ability.priceKora;
         
+        // Inventar aktualisieren
+        if (!user.abilities) user.abilities = {};
+        user.abilities[abilityId] = (user.abilities[abilityId] || 0) + 1;
+
+        console.log(`[Shop] ${user.name} kaufte ${abilityId}. Kora-Rest: ${user.koraBalance}`);
+
+        // Update an Client
+        socket.emit('kora_update', { balance: user.koraBalance, earned: 0 });
         socket.emit('shop_buy_result', {
-            success: false,
-            message: 'Shop-Kauffunktion ist noch nicht implementiert.'
+            success: true,
+            abilityId: abilityId,
+            newCount: user.abilities[abilityId],
+            message: 'Kauf erfolgreich!'
         });
     });
 }

@@ -14,6 +14,7 @@ function createNewGameState() {
         map: mapData,
         isLocked: false,
         thiefTraces: [],
+        roadblocks: [],
         diamonds: [],
         collectedCount: 0,
         requiredDiamonds: 1
@@ -185,6 +186,15 @@ function handleMoveAction(io, socket, targetStationId) {
 
     const dist = getDistance(player.position, targetStationId);
     if (dist === 1) {
+        // Roadblock Check
+        if (player.role === 'thief') {
+            const isBlocked = gameState.roadblocks.some(rb => {
+                return (rb.stationAId === player.position && rb.stationBId === targetStationId) ||
+                       (rb.stationAId === targetStationId && rb.stationBId === player.position);
+            });
+            if (isBlocked) return socket.emit('error_msg', 'Diese Verbindung ist gesperrt.');
+        }
+
         const previousPosition = player.position;
         player.position = targetStationId;
         player.ap_move -= 1;
@@ -269,7 +279,43 @@ function handleArrestAction(io, socket) {
     }
 }
 
+function handleUseAbility(io, socket, data) {
+    const { connectedUsers } = require('../utils/store');
+    const user = connectedUsers.get(socket.id);
+    if (!user || !user.lobbyId) return;
+    const lobby = lobbies.get(user.lobbyId);
+    const gameState = lobby.gameState;
+    const player = gameState.players[socket.id];
+
+    if (!player || gameState.activePlayerId !== socket.id) return;
+
+    const { abilityId, targetId } = data;
+
+    if (abilityId === 'roadblock') {
+        if (player.role === 'thief') return socket.emit('error_msg', 'Der Dieb kann diese Fähigkeit nicht benutzen.');
+        if (!user.abilities || !user.abilities.roadblock || user.abilities.roadblock < 1) {
+            return socket.emit('error_msg', 'Du besitzt keine Straßensperre mehr.');
+        }
+        if (player.ap_investigate < 1) return socket.emit('error_msg', 'Du hast keine Aktionspunkte mehr.');
+
+        const dist = getDistance(player.position, targetId);
+        if (dist !== 1) return socket.emit('error_msg', 'Du kannst nur eine benachbarte Verbindung sperren.');
+
+        // Fähigkeit einsetzen
+        user.abilities.roadblock--;
+        player.ap_investigate -= 1;
+        gameState.roadblocks.push({ stationAId: player.position, stationBId: targetId });
+
+        console.log(`[Ability] ${user.name} platzierte Straßensperre zwischen ${player.position} und ${targetId}`);
+        
+        socket.emit('ability_success', { abilityId, message: 'Straßensperre wurde platziert!' });
+        if (player.ap_move === 0 && player.ap_investigate === 0) endTurn(io, user.lobbyId, socket.id);
+        broadcastState(io, user.lobbyId);
+    }
+}
+
 module.exports = {
     createNewGameState, assignRoles, startTurn, endTurn,
-    handleGameEnd, handleMoveAction, handleInvestigateAction, handleArrestAction
+    handleGameEnd, handleMoveAction, handleInvestigateAction, handleArrestAction,
+    handleUseAbility
 };

@@ -57,6 +57,7 @@ export function initMainView() {
     });
 
     socket.on('kora_update', (data) => {
+        if (state.myUserData) state.myUserData.koraBalance = data.balance;
         const kValue = getEl('kora-value-main');
         if (kValue) kValue.textContent = data.balance;
     });

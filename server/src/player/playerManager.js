@@ -26,7 +26,8 @@ function registerPlayer(io, socket, data) {
         avatar: data.avatar || 'fox',
         lobbyId: null,
         koraBalance: 0,
-        micEnabled: true
+        micEnabled: true,
+        abilities: {} // { roadblock: 0 }
     };
 
     connectedUsers.set(socket.id, user);

@@ -6,14 +6,18 @@ import { getRoleColor, getRoleIcon, translateRole, translatePhase, getDistance }
 import { toggleMute, getMuteState, isVoiceReady, initVoiceChat } from '../services/voiceService.js';
 import { translations } from '../i18n/translations.js';
 
+let targetingAbilityId = null;
+
 export function initGameView() {
     const btnEndTurn = getEl('btn-end-turn');
     const btnMove = getEl('btn-move');
     const btnInvestigate = getEl('btn-investigate');
     const btnArrest = getEl('btn-arrest');
+    const btnAbilities = getEl('btn-abilities-toggle');
 
     if (btnEndTurn) {
         btnEndTurn.addEventListener('click', () => {
+            cancelTargeting();
             socket.emit('end_turn');
         });
     }
@@ -39,11 +43,26 @@ export function initGameView() {
         });
     }
 
-    // Mic-Button im HUD entfernt (wird nun in der Liste angezeigt)
+    if (btnAbilities) {
+        btnAbilities.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const dropdown = getEl('abilities-dropdown');
+            if (dropdown) dropdown.classList.toggle('hidden');
+        });
+    }
 
+    document.addEventListener('click', () => {
+        const dropdown = getEl('abilities-dropdown');
+        if (dropdown) dropdown.classList.add('hidden');
+    });
 
     socket.on('investigation_result', (data) => {
         showPopup("HINWEIS", data.result);
+    });
+
+    socket.on('ability_success', (data) => {
+        showPopup("ERFOLG", data.message);
+        cancelTargeting();
     });
 
     socket.on('game_started', () => {
@@ -97,6 +116,12 @@ export function initGameView() {
     });
 }
 
+function cancelTargeting() {
+    targetingAbilityId = null;
+    const map = getEl('game-map');
+    if (map) map.classList.remove('targeting-mode');
+}
+
 function updateUI(gameState) {
     const screensGame = getEl('screen-game');
     if (!screensGame || (!screensGame.classList.contains('active') && gameState.phase !== 'end')) return;
@@ -111,13 +136,12 @@ function updateUI(gameState) {
     const btnMove = getEl('btn-move');
     const btnInvestigate = getEl('btn-investigate');
     const btnArrest = getEl('btn-arrest');
+    const abilitiesDropdown = getEl('abilities-dropdown');
 
-    // Diamanten-Zahl aktualisieren
     if (diamondCounter) {
         diamondCounter.textContent = `${gameState.collectedCount} / ${gameState.requiredDiamonds}`;
     }
 
-    // Spielerliste oben links rendern
     if (playerListPanel) {
         const lang = state.currentLanguage || 'de';
         const trans = (translations[lang] || translations['de']);
@@ -128,16 +152,11 @@ function updateUI(gameState) {
             const item = document.createElement('div');
             item.className = 'player-list-entry';
             const isMe = p.id === state.myId;
-            
             const roleName = translateRole(p.role, lang);
-            
-            // Mikrofon-Status
             const isMicOn = p.micEnabled !== false;
             const micIcon = isMicOn ? '🎤' : '🔇';
             const micClass = isMicOn ? 'mic-on' : 'mic-off';
-            const micTitle = isMicOn 
-                ? (lang === 'de' ? 'Mikrofon an' : 'Microphone on') 
-                : (lang === 'de' ? 'Mikrofon aus' : 'Microphone off');
+            const micTitle = isMicOn ? (lang === 'de' ? 'Mikrofon an' : 'Microphone on') : (lang === 'de' ? 'Mikrofon aus' : 'Microphone off');
 
             item.innerHTML = `
                 <span class="player-list-name">${p.name}${isMe ? youSuffix : ''}</span>
@@ -157,18 +176,50 @@ function updateUI(gameState) {
                     }
                 };
             }
-            
             playerListPanel.appendChild(item);
         });
     }
 
+    if (abilitiesDropdown) {
+        const lang = state.currentLanguage || 'de';
+        const t = translations[lang] || translations['de'];
+        const myUser = state.myUserData;
+        
+        abilitiesDropdown.innerHTML = '';
+        const abilities = (myUser && myUser.abilities) ? Object.entries(myUser.abilities).filter(([id, count]) => count > 0) : [];
+
+        if (abilities.length === 0) {
+            abilitiesDropdown.innerHTML = `<div class="ability-entry empty">${t.game_no_abilities}</div>`;
+        } else {
+            abilities.forEach(([id, count]) => {
+                const entry = document.createElement('div');
+                entry.className = `ability-entry ${targetingAbilityId === id ? 'active' : ''}`;
+                const name = t[`ability_${id}_name`] || id;
+                entry.innerHTML = `<span class="ability-icon">${id === 'roadblock' ? '🚧' : '✨'}</span> ${name} x${count}`;
+                
+                entry.onclick = (e) => {
+                    e.stopPropagation();
+                    if (!isMyTurn) return;
+                    if (id === 'roadblock') {
+                        targetingAbilityId = (targetingAbilityId === id) ? null : id;
+                        if (targetingAbilityId) {
+                            getEl('game-map').classList.add('targeting-mode');
+                        } else {
+                            getEl('game-map').classList.remove('targeting-mode');
+                        }
+                        updateUI(gameState);
+                    }
+                };
+                abilitiesDropdown.appendChild(entry);
+            });
+        }
+    }
+
     if (actionBar && isMyTurn && gameState.phase !== 'waiting' && gameState.phase !== 'end') {
         actionBar.classList.remove('hidden');
-
         if (btnMove) {
             btnMove.classList.remove('hidden');
             btnMove.textContent = `MOVE (${myPlayer.ap_move} ÜBRIG)`;
-
             let isValidMove = false;
             if (state.selectedStationId && myPlayer && myPlayer.ap_move > 0 && gameState.map) {
                 const dist = getDistance(gameState.map, myPlayer.position, state.selectedStationId);
@@ -196,22 +247,13 @@ function updateUI(gameState) {
         actionBar.classList.add('hidden');
     }
 
-
-
     if (gamePhaseTxt) {
         let phaseText = "";
-        if (isMyTurn) {
-            phaseText = "DEIN ZUG!";
-        } else {
+        if (isMyTurn) phaseText = "DEIN ZUG!";
+        else {
             const activePlayer = gameState.players[gameState.activePlayerId];
-            if (activePlayer) {
-                phaseText = `${activePlayer.name.toUpperCase()} IST DRAN`;
-            } else {
-                phaseText = translatePhase(gameState.phase).toUpperCase();
-            }
+            phaseText = activePlayer ? `${activePlayer.name.toUpperCase()} IST DRAN` : translatePhase(gameState.phase).toUpperCase();
         }
-        
-        // Timer hinzufügen
         if (gameState.timeLeft !== undefined && gameState.phase !== 'waiting' && gameState.phase !== 'end') {
             gamePhaseTxt.textContent = `${phaseText} — ${gameState.timeLeft}s`;
             if (gameState.timeLeft <= 5) gamePhaseTxt.classList.add('warning');
@@ -227,22 +269,29 @@ function updateUI(gameState) {
 
 function renderMap(gameState, me, isMyTurn) {
     const gameMap = getEl('game-map');
-    const { map, players } = gameState;
+    const { map, players, roadblocks } = gameState;
     if (!map || !gameMap) return;
     gameMap.innerHTML = '';
 
+    // Connections
     map.connections.forEach(conn => {
         const s1 = map.stations[conn[0]];
         const s2 = map.stations[conn[1]];
         if (s1 && s2) {
+            const isBlocked = roadblocks && roadblocks.some(rb => 
+                (rb.stationAId === conn[0] && rb.stationBId === conn[1]) ||
+                (rb.stationAId === conn[1] && rb.stationBId === conn[0])
+            );
+            
             const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
             line.setAttribute("x1", s1.x); line.setAttribute("y1", s1.y);
             line.setAttribute("x2", s2.x); line.setAttribute("y2", s2.y);
-            line.setAttribute("class", "connection");
+            line.setAttribute("class", isBlocked ? "connection blocked" : "connection");
             gameMap.appendChild(line);
         }
     });
 
+    // Diamonds
     if (gameState.diamonds) {
         gameState.diamonds.forEach(d => {
             if (d.isCollected) return;
@@ -261,20 +310,24 @@ function renderMap(gameState, me, isMyTurn) {
         });
     }
 
+    // Stations
     Object.values(map.stations).forEach(station => {
         const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
         g.setAttribute("class", "station");
 
         if (isMyTurn) {
             g.onclick = () => {
-                state.selectedStationId = station.id;
-                renderMap(gameState, me, isMyTurn);
-                updateUI(gameState);
+                if (targetingAbilityId === 'roadblock') {
+                    socket.emit('use_ability', { abilityId: 'roadblock', targetId: station.id });
+                } else {
+                    state.selectedStationId = station.id;
+                    renderMap(gameState, me, isMyTurn);
+                    updateUI(gameState);
+                }
             };
             g.style.cursor = 'pointer';
         }
 
-        // Hit-Area für bessere Klickbarkeit
         const hitArea = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         hitArea.setAttribute("cx", station.x); hitArea.setAttribute("cy", station.y); hitArea.setAttribute("r", 25);
         hitArea.setAttribute("fill", "transparent");
@@ -302,6 +355,7 @@ function renderMap(gameState, me, isMyTurn) {
         gameMap.appendChild(g);
     });
 
+    // Traces
     if (me && me.role === 'thief' && gameState.thiefTraces) {
         for (let i = 0; i < gameState.thiefTraces.length - 1; i++) {
             const s1 = map.stations[gameState.thiefTraces[i].stationId];
@@ -325,13 +379,10 @@ function renderMap(gameState, me, isMyTurn) {
         });
     }
 
+    // Players
     const visiblePlayersByStation = {};
     Object.values(players).forEach(p => {
-        let isVisible = false;
-        if (me && (me.role === 'thief' || me.role === 'corrupt_police')) isVisible = true;
-        if (p.role === 'police' || p.role === 'corrupt_police') isVisible = true;
-        if (p.id === state.myId) isVisible = true;
-
+        let isVisible = (me && (me.role === 'thief' || me.role === 'corrupt_police')) || (p.role === 'police' || p.role === 'corrupt_police') || (p.id === state.myId);
         if (isVisible) {
             if (!visiblePlayersByStation[p.position]) visiblePlayersByStation[p.position] = [];
             visiblePlayersByStation[p.position].push(p);
@@ -354,7 +405,6 @@ function renderMap(gameState, me, isMyTurn) {
 
             const pGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
             pGroup.setAttribute("class", "player-marker");
-
             let displayIcon = getRoleIcon(p.role);
             if (p.role === 'corrupt_police' && me && me.role === 'police') displayIcon = getRoleIcon('police');
 
@@ -362,24 +412,19 @@ function renderMap(gameState, me, isMyTurn) {
             const pIcon = document.createElementNS("http://www.w3.org/2000/svg", "image");
             pIcon.setAttribute("x", station.x + offsetX - pIconSize / 2);
             pIcon.setAttribute("y", station.y + offsetY - pIconSize / 2);
-            pIcon.setAttribute("width", pIconSize);
-            pIcon.setAttribute("height", pIconSize);
+            pIcon.setAttribute("width", pIconSize); pIcon.setAttribute("height", pIconSize);
             pIcon.setAttribute("href", displayIcon);
 
             if (isMe) {
                 const pHighlight = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                pHighlight.setAttribute("cx", station.x + offsetX);
-                pHighlight.setAttribute("cy", station.y + offsetY);
-                pHighlight.setAttribute("r", pIconSize / 2 + 4);
-                pHighlight.setAttribute("fill", "none");
-                pHighlight.setAttribute("stroke", "#facc15");
-                pHighlight.setAttribute("stroke-width", "3");
+                pHighlight.setAttribute("cx", station.x + offsetX); pHighlight.setAttribute("cy", station.y + offsetY);
+                pHighlight.setAttribute("r", pIconSize / 2 + 4); pHighlight.setAttribute("fill", "none");
+                pHighlight.setAttribute("stroke", "#facc15"); pHighlight.setAttribute("stroke-width", "3");
                 pGroup.appendChild(pHighlight);
             }
             pGroup.appendChild(pIcon);
             const pName = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            pName.setAttribute("x", station.x + offsetX);
-            pName.setAttribute("y", station.y + offsetY - 18);
+            pName.setAttribute("x", station.x + offsetX); pName.setAttribute("y", station.y + offsetY - 18);
             pName.setAttribute("class", "player-label");
             pName.textContent = p.name.toUpperCase() + (isMe ? " (ICH)" : "");
             pGroup.appendChild(pName);
