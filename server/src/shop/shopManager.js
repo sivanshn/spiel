@@ -12,6 +12,11 @@ const FRAMES = {
     'toxic_vibe': { id: 'toxic_vibe', priceKora: 100, type: 'frame', cssClass: 'frame-toxic-vibe' }
 };
 
+const AVATARS = {
+    'default_avatar': { id: 'default_avatar', priceKora: 0, type: 'avatar' },
+    'trader_cat': { id: 'trader_cat', priceKora: 50, type: 'avatar' }
+};
+
 /**
  * Registriert Socket-Handler für den Shop.
  */
@@ -19,7 +24,8 @@ function registerShopHandlers(io, socket) {
     socket.on('shop_get_data', () => {
         socket.emit('shop_data', {
             abilities: Object.values(ABILITIES).map(a => ({ ...a, nameKey: `shop_item_${a.id}_name` })),
-            frames: Object.values(FRAMES).map(f => ({ ...f, nameKey: `shop_item_${f.id}_name` }))
+            frames: Object.values(FRAMES).map(f => ({ ...f, nameKey: `shop_item_${f.id}_name` })),
+            avatars: Object.values(AVATARS).map(v => ({ ...v, nameKey: `shop_item_${v.id}_name` }))
         });
     });
 
@@ -28,14 +34,22 @@ function registerShopHandlers(io, socket) {
         if (!user) return;
 
         const { itemId, category } = data;
-        const catalog = category === 'frames' ? FRAMES : ABILITIES;
+        let catalog;
+        if (category === 'frames') catalog = FRAMES;
+        else if (category === 'avatars') catalog = AVATARS;
+        else catalog = ABILITIES;
+        
         const item = catalog[itemId];
         
         if (!item) {
             return socket.emit('shop_error', 'Item nicht gefunden.');
         }
 
-        if (category === 'frames' && user.ownedFrames.includes(itemId)) {
+        if (category === 'frames' && user.ownedFrames && user.ownedFrames.includes(itemId)) {
+            return socket.emit('shop_error', 'Bereits im Besitz.');
+        }
+
+        if (category === 'avatars' && user.ownedAvatars && user.ownedAvatars.includes(itemId)) {
             return socket.emit('shop_error', 'Bereits im Besitz.');
         }
 
@@ -48,6 +62,9 @@ function registerShopHandlers(io, socket) {
         if (category === 'frames') {
             if (!user.ownedFrames) user.ownedFrames = ['none'];
             user.ownedFrames.push(itemId);
+        } else if (category === 'avatars') {
+            if (!user.ownedAvatars) user.ownedAvatars = ['default_avatar'];
+            user.ownedAvatars.push(itemId);
         } else {
             if (!user.abilities) user.abilities = {};
             user.abilities[itemId] = (user.abilities[itemId] || 0) + 1;
@@ -73,6 +90,20 @@ function registerShopHandlers(io, socket) {
             socket.emit('profile_updated', user);
             socket.emit('player_data_updated', user);
             console.log(`[Profile] ${user.name} ausgerüsteter Rahmen: ${frameId}`);
+        }
+    });
+
+    socket.on('profile_set_avatar', (data) => {
+        const user = connectedUsers.get(socket.id);
+        if (!user) return;
+
+        const avatarId = typeof data === 'string' ? data : data.avatarId;
+
+        if (user.ownedAvatars && user.ownedAvatars.includes(avatarId)) {
+            user.avatar = avatarId;
+            socket.emit('profile_updated', user);
+            socket.emit('player_data_updated', user);
+            console.log(`[Profile] ${user.name} gewechseltes Icon: ${avatarId}`);
         }
     });
 }

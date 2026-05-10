@@ -12,6 +12,7 @@ export class ProfileModal {
         this.previewContainer = document.querySelector('.profile-preview-large .avatar-container');
         this.displayName = document.getElementById('profile-display-name');
         this.displayAvatar = document.getElementById('profile-display-avatar');
+        this.avatarsGrid = document.getElementById('owned-avatars-grid');
         
         this.init();
     }
@@ -61,6 +62,39 @@ export class ProfileModal {
             tile.appendChild(framePreview);
             this.ownedGrid.appendChild(tile);
         });
+
+        // Render owned avatars
+        if (this.avatarsGrid) {
+            this.avatarsGrid.innerHTML = '';
+            const ownedAvatars = player.ownedAvatars || ['default_avatar'];
+            
+            ownedAvatars.forEach(avatarId => {
+                const tile = document.createElement('div');
+                tile.className = `owned-item-tile ${avatarId === player.avatar ? 'active' : ''}`;
+                tile.style.overflow = 'hidden';
+                
+                const img = document.createElement('img');
+                img.src = getAvatarUrl(avatarId);
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                
+                tile.onclick = () => this.setAvatar(avatarId);
+                
+                tile.appendChild(img);
+                this.avatarsGrid.appendChild(tile);
+            });
+        }
+    }
+
+    setAvatar(avatarId) {
+        this.socket.emit('profile_set_avatar', { avatarId });
+        const player = this.playerManager.getSelf() || state.myUserData;
+        if (player) {
+            player.avatar = avatarId;
+            this.render();
+            window.dispatchEvent(new CustomEvent('player_data_updated'));
+        }
     }
 
     setFrame(frameId) {

@@ -1,5 +1,6 @@
 import { getTranslation } from '../i18n/translations.js';
 import { closeAllModals } from '../utils/ui.js';
+import { getAvatarUrl } from '../utils/gameUtils.js';
 
 export class ShopModal {
     constructor(socket) {
@@ -67,6 +68,8 @@ export class ShopModal {
             
             if (this.currentTab === 'frames') {
                 preview.innerHTML = `<div class="frame-preview ${item.id}"></div>`;
+            } else if (this.currentTab === 'avatars') {
+                preview.innerHTML = `<img src="${getAvatarUrl(item.id)}" style="width:100%; height:100%; border-radius:10px;">`;
             } else {
                 preview.textContent = item.icon || '✨';
             }

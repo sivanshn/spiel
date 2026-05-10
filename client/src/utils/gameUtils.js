@@ -21,7 +21,16 @@ export function translateRole(role, lang = 'de') {
 }
 
 export function getAvatarUrl(avatarId) {
-    const oldDefaults = ['goat', 'monkey', 'cat', 'dog', 'fox', 'panda', 'default_avatar'];
+    const AVATAR_MAP = {
+        'default_avatar': '/default_avatar.png',
+        'trader_cat': '/trader_cat.png'
+    };
+
+    if (avatarId && AVATAR_MAP[avatarId]) {
+        return AVATAR_MAP[avatarId];
+    }
+
+    const oldDefaults = ['goat', 'monkey', 'cat', 'dog', 'fox', 'panda'];
     if (!avatarId || oldDefaults.includes(avatarId)) {
         return '/default_avatar.png';
     }

@@ -34,7 +34,8 @@ function registerPlayer(io, socket, data) {
             incomingRequests: [],   // Liste von Namen
             outgoingRequests: [],   // Liste von Namen
             ownedFrames: ['none'],  // Gekaufte Rahmen
-            currentFrame: 'none'    // Aktuell ausgerüsteter Rahmen
+            currentFrame: 'none',   // Aktuell ausgerüsteter Rahmen
+            ownedAvatars: ['default_avatar'] // Gekaufte Icons
         };
         allPlayers.set(name.toLowerCase(), user);
     }
