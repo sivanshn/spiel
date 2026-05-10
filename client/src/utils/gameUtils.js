@@ -12,9 +12,12 @@ export function getRoleIcon(role) {
     return '';
 }
 
-export function translateRole(role) {
-    const roles = { 'thief': 'Dieb', 'police': 'Polizei', 'corrupt_police': 'Korrupt' };
-    return roles[role] || 'Warten...';
+export function translateRole(role, lang = 'de') {
+    const roles = {
+        de: { 'thief': 'Dieb', 'police': 'Polizei', 'corrupt_police': 'Korrupter Polizist', 'unknown': 'Unbekannt' },
+        en: { 'thief': 'Thief', 'police': 'Police', 'corrupt_police': 'Corrupt Police', 'unknown': 'Unknown' }
+    };
+    return (roles[lang] && roles[lang][role]) || role;
 }
 
 export function translatePhase(phase) {

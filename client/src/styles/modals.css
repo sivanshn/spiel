@@ -120,3 +120,158 @@
 
 .lang-btn:hover  { background: rgba(255, 255, 255, 0.1); }
 .lang-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+/* ============================
+   SHOP MODAL
+   ============================ */
+
+.shop-modal-panel {
+    max-width: 560px !important;
+    width: 94% !important;
+    padding: 2rem !important;
+    text-align: left !important;
+}
+
+/* Shop Header: Titel + Kora-Badge */
+.shop-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.shop-header h2 {
+    margin-bottom: 0 !important;
+    font-size: 1.8rem !important;
+}
+
+.shop-kora-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+}
+
+.shop-kora-label {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.shop-kora-value {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--primary);
+}
+
+/* Shop Body */
+.shop-body {
+    min-height: 200px;
+    margin-bottom: 1.5rem;
+}
+
+/* Items Grid (für spätere Fähigkeiten) */
+.shop-items-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+}
+
+.shop-item-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    padding: 1rem 1.2rem;
+    transition: background 0.2s;
+}
+
+.shop-item-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.shop-item-icon {
+    font-size: 2rem;
+    min-width: 2.5rem;
+    text-align: center;
+}
+
+.shop-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.shop-item-name {
+    font-weight: 800;
+    font-size: 1rem;
+    color: white;
+}
+
+.shop-item-desc {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    line-height: 1.4;
+}
+
+.shop-item-price {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--primary);
+    min-width: 60px;
+    justify-content: center;
+}
+
+.shop-buy-btn {
+    min-width: 90px;
+    padding: 0.5rem 1rem !important;
+    font-size: 0.8rem !important;
+}
+
+.shop-buy-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Empty State */
+.shop-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 3rem 1rem;
+    text-align: center;
+}
+
+.shop-empty-icon {
+    font-size: 3.5rem;
+    opacity: 0.4;
+    margin-bottom: 0.5rem;
+}
+
+.shop-empty-title {
+    font-size: 1.2rem !important;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6) !important;
+    margin-bottom: 0 !important;
+}
+
+.shop-empty-sub {
+    font-size: 0.9rem !important;
+    color: #64748b !important;
+    margin-bottom: 0 !important;
+}
+

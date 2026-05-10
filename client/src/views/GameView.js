@@ -4,6 +4,7 @@ import { state } from '../app/state.js';
 import { renderLobbyPlayers } from './LobbyWaitingPanel.js';
 import { getRoleColor, getRoleIcon, translateRole, translatePhase, getDistance } from '../utils/gameUtils.js';
 import { toggleMute, getMuteState, isVoiceReady, initVoiceChat } from '../services/voiceService.js';
+import { translations } from '../i18n/translations.js';
 
 export function initGameView() {
     const btnEndTurn = getEl('btn-end-turn');
@@ -38,24 +39,8 @@ export function initGameView() {
         });
     }
 
-    // Mic-Button im HUD (oben rechts)
-    const hudRight = document.querySelector('.hud-right');
-    if (hudRight && !getEl('game-mic-btn')) {
-        const gameMicBtn = document.createElement('button');
-        gameMicBtn.id = 'game-mic-btn';
-        gameMicBtn.className = 'hud-mic-btn hud-item';
-        gameMicBtn.title = 'Mikrofon (klicken zum Aktivieren)';
-        gameMicBtn.textContent = '🎤';
-        hudRight.prepend(gameMicBtn);
+    // Mic-Button im HUD entfernt (wird nun in der Liste angezeigt)
 
-        gameMicBtn.addEventListener('click', async () => {
-            if (!isVoiceReady()) await initVoiceChat();
-            const muted = toggleMute();
-            gameMicBtn.textContent = muted ? '🔇' : '🎤';
-            gameMicBtn.classList.toggle('muted', muted);
-            gameMicBtn.title = muted ? 'Stummgeschaltet' : 'Mikrofon aktiv';
-        });
-    }
 
     socket.on('investigation_result', (data) => {
         showPopup("HINWEIS", data.result);
@@ -119,23 +104,62 @@ function updateUI(gameState) {
     const myPlayer = gameState.players[state.myId];
     const isMyTurn = gameState.activePlayerId === state.myId;
 
-    const playerRoleTxt = getEl('player-role');
+    const diamondCounter = getEl('diamond-counter');
+    const playerListPanel = getEl('game-player-list');
+    const gamePhaseTxt = getEl('game-phase');
     const actionBar = getEl('action-bar');
     const btnMove = getEl('btn-move');
     const btnInvestigate = getEl('btn-investigate');
     const btnArrest = getEl('btn-arrest');
-    const playerStatusBar = getEl('player-status-bar');
-    const gamePhaseTxt = getEl('game-phase');
-    const roundCounter = getEl('round-counter');
-    const turnTimerTxt = getEl('turn-timer');
-    const diamondCounter = getEl('diamond-counter');
 
-    if (myPlayer && myPlayer.role && playerRoleTxt) {
-        playerRoleTxt.textContent = translateRole(myPlayer.role).toUpperCase();
-        playerRoleTxt.style.color = getRoleColor(myPlayer.role);
-    } else if (playerRoleTxt) {
-        playerRoleTxt.textContent = "WARTEN...";
-        playerRoleTxt.style.color = "#94a3b8";
+    // Diamanten-Zahl aktualisieren
+    if (diamondCounter) {
+        diamondCounter.textContent = `${gameState.collectedCount} / ${gameState.requiredDiamonds}`;
+    }
+
+    // Spielerliste oben links rendern
+    if (playerListPanel) {
+        const lang = state.currentLanguage || 'de';
+        const trans = (translations[lang] || translations['de']);
+        playerListPanel.innerHTML = `<div class="player-list-header">${trans.game_player_list_title}</div>`;
+        const youSuffix = lang === 'de' ? ' (Du)' : ' (You)';
+
+        Object.values(gameState.players).forEach(p => {
+            const item = document.createElement('div');
+            item.className = 'player-list-entry';
+            const isMe = p.id === state.myId;
+            
+            const roleName = translateRole(p.role, lang);
+            
+            // Mikrofon-Status
+            const isMicOn = p.micEnabled !== false;
+            const micIcon = isMicOn ? '🎤' : '🔇';
+            const micClass = isMicOn ? 'mic-on' : 'mic-off';
+            const micTitle = isMicOn 
+                ? (lang === 'de' ? 'Mikrofon an' : 'Microphone on') 
+                : (lang === 'de' ? 'Mikrofon aus' : 'Microphone off');
+
+            item.innerHTML = `
+                <span class="player-list-name">${p.name}${isMe ? youSuffix : ''}</span>
+                <span class="player-list-separator"> — </span>
+                <span class="player-list-role" style="color: ${getRoleColor(p.role)}">${roleName}</span>
+                <span class="mic-status ${micClass} ${isMe ? 'clickable' : ''}" title="${micTitle}">${micIcon}</span>
+            `;
+
+            if (isMe) {
+                const micEl = item.querySelector('.mic-status');
+                micEl.onclick = async () => {
+                    if (!isVoiceReady()) await initVoiceChat();
+                    const currentlyMuted = toggleMute();
+                    const lobbyId = state.currentLobby ? state.currentLobby.id : null;
+                    if (lobbyId) {
+                        socket.emit('voice_mute_toggle', { lobbyId, isMuted: currentlyMuted });
+                    }
+                };
+            }
+            
+            playerListPanel.appendChild(item);
+        });
     }
 
     if (actionBar && isMyTurn && gameState.phase !== 'waiting' && gameState.phase !== 'end') {
@@ -172,53 +196,30 @@ function updateUI(gameState) {
         actionBar.classList.add('hidden');
     }
 
-    if (playerStatusBar) {
-        playerStatusBar.innerHTML = '';
-        if (myPlayer) {
-            const pill = document.createElement('div');
-            pill.className = 'status-pill';
-            if (gameState.activePlayerId === state.myId) pill.classList.add('active-player');
 
-            let apText = "";
-            if (myPlayer.role === 'thief') {
-                apText = `${myPlayer.ap_move} BEWEGUNG`;
+
+    if (gamePhaseTxt) {
+        let phaseText = "";
+        if (isMyTurn) {
+            phaseText = "DEIN ZUG!";
+        } else {
+            const activePlayer = gameState.players[gameState.activePlayerId];
+            if (activePlayer) {
+                phaseText = `${activePlayer.name.toUpperCase()} IST DRAN`;
             } else {
-                apText = `${myPlayer.ap_move} BEW. | ${myPlayer.ap_investigate} UNT.`;
+                phaseText = translatePhase(gameState.phase).toUpperCase();
             }
-
-            pill.textContent = `${myPlayer.name} (DU) [${apText}]`;
-            if (myPlayer.role) pill.style.borderColor = getRoleColor(myPlayer.role);
-            playerStatusBar.appendChild(pill);
         }
-    }
-
-    let phaseText = "";
-    if (isMyTurn) {
-        phaseText = "DEIN ZUG!";
-    } else {
-        const activePlayer = gameState.players[gameState.activePlayerId];
-        if (activePlayer) {
-            phaseText = `${activePlayer.name.toUpperCase()} IST DRAN`;
+        
+        // Timer hinzufügen
+        if (gameState.timeLeft !== undefined && gameState.phase !== 'waiting' && gameState.phase !== 'end') {
+            gamePhaseTxt.textContent = `${phaseText} — ${gameState.timeLeft}s`;
+            if (gameState.timeLeft <= 5) gamePhaseTxt.classList.add('warning');
+            else gamePhaseTxt.classList.remove('warning');
         } else {
-            phaseText = translatePhase(gameState.phase).toUpperCase();
+            gamePhaseTxt.textContent = phaseText;
+            gamePhaseTxt.classList.remove('warning');
         }
-    }
-    if (gamePhaseTxt) gamePhaseTxt.textContent = phaseText;
-    if (roundCounter) roundCounter.textContent = `RUNDE ${gameState.round}`;
-
-    if (turnTimerTxt) {
-        if (gameState.phase !== 'waiting' && gameState.phase !== 'end') {
-            turnTimerTxt.classList.remove('hidden');
-            turnTimerTxt.textContent = `${gameState.timeLeft}s`;
-            if (gameState.timeLeft <= 5) turnTimerTxt.classList.add('warning');
-            else turnTimerTxt.classList.remove('warning');
-        } else {
-            turnTimerTxt.classList.add('hidden');
-        }
-    }
-
-    if (diamondCounter) {
-        diamondCounter.textContent = `${gameState.collectedCount} / ${gameState.requiredDiamonds}`;
     }
 
     renderMap(gameState, myPlayer, isMyTurn);
@@ -270,7 +271,14 @@ function renderMap(gameState, me, isMyTurn) {
                 renderMap(gameState, me, isMyTurn);
                 updateUI(gameState);
             };
+            g.style.cursor = 'pointer';
         }
+
+        // Hit-Area für bessere Klickbarkeit
+        const hitArea = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        hitArea.setAttribute("cx", station.x); hitArea.setAttribute("cy", station.y); hitArea.setAttribute("r", 25);
+        hitArea.setAttribute("fill", "transparent");
+        g.appendChild(hitArea);
 
         const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         circle.setAttribute("cx", station.x); circle.setAttribute("cy", station.y); circle.setAttribute("r", 10);

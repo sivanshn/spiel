@@ -10,17 +10,25 @@ function broadcastState(io, lobbyId) {
         if (!socket) return;
 
         const myPlayer = gameState.players[p.socketId];
-        const isThief = myPlayer && myPlayer.role === 'thief';
-        const isCorruptPolice = myPlayer && myPlayer.role === 'corrupt_police';
+        if (!myPlayer) return;
+        const isThief = myPlayer.role === 'thief';
+        const isCorruptPolice = myPlayer.role === 'corrupt_police';
 
         const filteredPlayers = {};
         Object.values(gameState.players).forEach(player => {
-            const isVisible =
-                player.role === 'police' ||
-                player.role === 'corrupt_police' ||
-                player.id === p.socketId ||
-                isThief || isCorruptPolice;
-            if (isVisible) filteredPlayers[player.id] = player;
+            const pData = { ...player };
+            
+            // Sichtbarkeits-Regel:
+            // 1. Dieb ist für alle sichtbar.
+            // 2. Korrupter Polizist ist für Dieb und sich selbst sichtbar.
+            // 3. Für normale Polizisten wird der korrupte Kollege als 'police' maskiert.
+            if (!isThief && !isCorruptPolice) {
+                if (pData.role === 'corrupt_police') {
+                    pData.role = 'police';
+                }
+            }
+            
+            filteredPlayers[player.id] = pData;
         });
 
         const filteredState = {

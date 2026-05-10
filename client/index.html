@@ -26,22 +26,37 @@
         <!-- Screen 1.5: Main View / Lobby Overview -->
         <section id="screen-main" class="screen">
             <div class="main-header-actions">
-                <button id="ranking-btn" class="icon-btn">🏆</button>
-                <button id="settings-btn" class="icon-btn">⚙️</button>
+                <button id="ranking-btn" class="nav-btn" title="Rangliste">
+                    <span class="btn-icon">🏆</span>
+                    <span data-i18n="btn_ranking">Ranking</span>
+                </button>
+                <button id="roles-btn" class="nav-btn" title="Rollen">
+                    <span class="btn-icon">📋</span>
+                    <span data-i18n="btn_roles">Rollen</span>
+                </button>
+                <button id="settings-btn" class="icon-btn" title="Einstellungen">⚙️</button>
             </div>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img id="my-avatar" src="" alt="Avatar">
-                    <div>
-                        <h2 id="my-name">Name</h2>
-                        <div class="kora-display" id="kora-main">
-                            <span class="kora-icon">💎</span>
-                            <span class="kora-label" data-i18n="main_kora">Kora:</span>
-                            <span class="kora-value" id="kora-value-main">0</span>
+            
+            <div class="left-header-container">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <img id="my-avatar" src="" alt="Avatar">
+                        <div>
+                            <h2 id="my-name">Name</h2>
+                            <div class="kora-display" id="kora-main">
+                                <span class="kora-icon">💎</span>
+                                <span class="kora-label" data-i18n="main_kora">Kora:</span>
+                                <span class="kora-value" id="kora-value-main">0</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <button id="shop-btn" class="nav-btn shop-profile-btn">
+                    <span class="btn-icon">🛍️</span>
+                    <span data-i18n="btn_shop">Shop</span>
+                </button>
             </div>
+
             <!-- PANEL 1: LOBBY LISTE -->
             <div id="lobby-list-panel" class="lobby-panel glass-card animate-in">
                 <div class="panel-header">
@@ -82,17 +97,31 @@
         <!-- Screen 2: Game View -->
         <section id="screen-game" class="screen">
             <div class="game-hud">
-                <div class="hud-left">
-                    <div class="hud-item"><span id="player-role">Warten...</span></div>
-                    <div class="hud-item">DIAMANTEN: <span id="diamond-counter">0 / 2</span></div>
+                <div class="hud-left-v">
+                    <div class="hud-item diamond-panel">
+                        <span class="hud-icon">💎</span>
+                        <span data-i18n="game_diamonds">DIAMANTEN: </span>
+                        <span id="diamond-counter">0 / 2</span>
+                    </div>
+                    <div id="game-player-list" class="hud-item player-list-panel">
+                        <!-- Player list will be injected here -->
+                    </div>
+                </div>
+                <div class="main-top-right">
+                    <button id="main-ranking" class="hud-item hud-btn">
+                        <span>🏆</span> <span data-i18n="btn_ranking">Ranking</span>
+                    </button>
+                    <button id="main-roles" class="hud-item hud-btn">
+                        <span>📋</span> <span data-i18n="btn_roles">Rollen</span>
+                    </button>
+                    <button id="main-settings" class="hud-item hud-btn gear-only">
+                        <span>⚙️</span>
+                    </button>
                 </div>
                 <div class="hud-center">
                     <div id="game-phase" class="hud-item phase-highlight">Lobby</div>
                 </div>
                 <div class="hud-right">
-                    <div id="turn-timer" class="hud-item timer">60s</div>
-                    <div id="round-counter" class="hud-item">RUNDE 1</div>
-                    <button id="btn-debug-start" class="debug-btn">DEBUG: START</button>
                 </div>
             </div>
 
@@ -101,7 +130,6 @@
             </div>
 
             <div class="game-footer">
-                <div id="player-status-bar"></div>
                 <div id="action-bar" class="hidden">
                     <button id="btn-move" class="action-btn hidden">MOVE (2 ÜBRIG)</button>
                     <button id="btn-investigate" class="action-btn secondary hidden">UNTERSUCHEN (2 ÜBRIG)</button>
@@ -120,6 +148,31 @@
             </div>
         </section>
 
+        <!-- Modal: Shop -->
+        <div id="modal-shop" class="modal hidden">
+            <div class="modal-content glass-card shop-modal-panel">
+                <div class="shop-header">
+                    <h2 data-i18n="shop_title">SHOP</h2>
+                    <div class="shop-kora-badge">
+                        <span class="kora-icon">💎</span>
+                        <span class="shop-kora-label" data-i18n="shop_kora_label">Deine Kora:</span>
+                        <span class="shop-kora-value" id="shop-kora-display">0</span>
+                    </div>
+                </div>
+                <div class="shop-body">
+                    <div id="shop-items-grid" class="shop-items-grid">
+                        <!-- Abilities will be rendered here -->
+                    </div>
+                    <div class="shop-empty-state" id="shop-empty-state">
+                        <div class="shop-empty-icon">🛒</div>
+                        <p class="shop-empty-title" data-i18n="shop_coming_soon">Shop kommt bald.</p>
+                        <p class="shop-empty-sub" data-i18n="shop_empty">Noch keine Fähigkeiten verfügbar.</p>
+                    </div>
+                </div>
+                <button id="shop-close" class="action-btn" data-i18n="shop_close">SCHLIESSEN</button>
+            </div>
+        </div>
+
         <!-- Modal: Ranking -->
         <div id="modal-ranking" class="modal hidden">
             <div class="modal-content glass-card ranking-modal-panel">
@@ -133,6 +186,17 @@
                     <!-- Ranking entries here -->
                 </div>
                 <button id="ranking-close" class="action-btn" data-i18n="ranking_close">ZURÜCK</button>
+            </div>
+        </div>
+
+        <!-- Modal: Roles -->
+        <div id="modal-roles" class="modal hidden">
+            <div class="modal-content glass-card roles-modal-panel">
+                <h2 data-i18n="roles_title">SPIELROLLEN</h2>
+                <div id="roles-list" class="roles-grid">
+                    <!-- Roles cards appear here -->
+                </div>
+                <button id="roles-close" class="action-btn" data-i18n="roles_close">SCHLIESSEN</button>
             </div>
         </div>
 

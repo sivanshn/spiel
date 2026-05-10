@@ -91,7 +91,8 @@ function handleStartLobbyGame(io, socket) {
             role: null,
             position: null,
             ap_move: 0,
-            ap_investigate: 0
+            ap_investigate: 0,
+            micEnabled: p.micEnabled !== false
         };
     });
 

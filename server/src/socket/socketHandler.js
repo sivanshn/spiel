@@ -7,6 +7,7 @@ const { broadcastState } = require('../socket/broadcast');
 const { registerPlayer, removePlayer } = require('../player/playerManager');
 const { registerVoiceHandlers } = require('../voice/voiceSignaling');
 const { registerChatHandlers } = require('../chat/chatService');
+const { registerShopHandlers } = require('../shop/shopManager');
 
 function registerSocketHandlers(io, socket) {
     socket.on('register_user', (data) => registerPlayer(io, socket, data));
@@ -36,6 +37,9 @@ function registerSocketHandlers(io, socket) {
 
     // Globaler Chat
     registerChatHandlers(io, socket);
+
+    // Shop
+    registerShopHandlers(io, socket);
 }
 
 module.exports = { registerSocketHandlers };

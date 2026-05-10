@@ -3,7 +3,7 @@
    ============================ */
 
 #screen-main {
-    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('/main_bg.png');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('/main_bg.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -15,11 +15,20 @@
     align-items: center;
 }
 
-/* Profile Box */
-.user-profile {
+/* Left Header (Profile + Shop) */
+.left-header-container {
     position: absolute;
     top: 1.5rem;
     left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    z-index: 100;
+}
+
+/* Profile Box */
+.user-profile {
     display: flex;
     align-items: center;
     gap: 1.2rem;
@@ -60,9 +69,20 @@
     margin-top: 0.1rem;
 }
 
-.kora-icon { font-size: 0.9rem; }
-.kora-label { font-size: 0.8rem; color: #94a3b8; }
-.kora-value { font-size: 0.9rem; font-weight: 800; color: var(--primary); }
+.kora-icon {
+    font-size: 0.9rem;
+}
+
+.kora-label {
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+
+.kora-value {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--primary);
+}
 
 /* Header Buttons (Ranking, Settings) */
 .main-header-actions {
@@ -70,7 +90,8 @@
     top: 1.5rem;
     right: 1.5rem;
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.8rem;
     z-index: 110;
 }
 
@@ -90,7 +111,6 @@
 
 .icon-btn:hover {
     background: rgba(255, 255, 255, 0.1);
-    transform: rotate(30deg);
 }
 
 .main-header-actions .icon-btn {
@@ -102,4 +122,235 @@
     width: 44px;
     height: 44px;
     border-radius: 12px;
+}
+
+/* New Navigation Buttons (Ranking, Shop) */
+.nav-btn {
+    background: rgba(10, 15, 25, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-icon {
+    font-size: 1.1rem;
+}
+
+.shop-profile-btn {
+    width: fit-content;
+    min-width: 140px;
+}
+
+/* Responsive adjustment for Left Header */
+@media (max-width: 900px) {
+    .left-header-container {
+        position: relative;
+        left: 0;
+        top: 0;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Roles Modal */
+.roles-modal-panel {
+    max-width: 900px;
+    width: 95%;
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+    width: 100%;
+}
+
+.role-tile {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0.8rem;
+    height: 100px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.4rem;
+}
+
+.role-tile:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.role-tile-icon {
+    font-size: 1.8rem;
+    filter: drop-shadow(0 0 10px currentColor);
+    margin: 0;
+}
+
+.role-tile-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: white;
+    line-height: 1.2;
+    display: block;
+}
+
+/* Detail View */
+.role-detail-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0 1rem;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.detail-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 0;
+    margin-bottom: 1rem;
+    /* Custom Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+}
+
+.detail-scroll-area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.detail-scroll-area::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 10px;
+}
+
+.back-btn-footer {
+    margin: 1.5rem auto;
+    align-self: center;
+    width: 200px !important;
+}
+
+.detail-title-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.detail-main-icon {
+    font-size: 3.5rem;
+    filter: drop-shadow(0 0 15px currentColor);
+}
+
+.role-detail-view h2 {
+    font-size: 2rem;
+    margin: 0;
+    color: white;
+}
+
+.detail-short {
+    font-size: 1.1rem;
+    color: var(--primary);
+    font-style: italic;
+    margin-bottom: 2rem;
+}
+
+.detail-section {
+    margin-bottom: 1.5rem;
+}
+
+.detail-section h3 {
+    font-size: 0.9rem;
+    color: #64748b;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+}
+
+.detail-section p {
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.detail-abilities {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.detail-abilities li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #cbd5e1;
+}
+
+.detail-abilities li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+/* Colors */
+[data-role="thief"] .role-tile-icon,
+.role-detail-view:has([data-role="thief"]) .detail-main-icon,
+.role-detail-view[data-role="thief"] .detail-main-icon {
+    color: var(--thief);
+}
+
+.role-tile[data-role="thief"] .role-tile-icon {
+    color: var(--thief);
+}
+
+.role-tile[data-role="police"] .role-tile-icon {
+    color: var(--police);
+}
+
+.role-tile[data-role="corrupt_police"] .role-tile-icon {
+    color: #a855f7;
+}
+
+.role-tile[data-role="special_agent"] .role-tile-icon {
+    color: #64748b;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

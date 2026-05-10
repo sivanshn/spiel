@@ -4,6 +4,8 @@ import { state } from '../app/state.js';
 import { setLanguage } from '../i18n/languageService.js';
 import { renderLobbyList } from './LobbyPanel.js';
 import { renderLobbyPlayers } from './LobbyWaitingPanel.js';
+import { initShopModal } from './ShopModal.js';
+import { initRolesModal } from './RolesModal.js';
 
 export function initMainView() {
     const createLobbyBtn = getEl('create-lobby-btn');
@@ -17,6 +19,10 @@ export function initMainView() {
     const lobbyListContainer = getEl('lobby-list');
     const lobbyListPanel = getEl('lobby-list-panel');
     const lobbyWaitingPanel = getEl('lobby-waiting-panel');
+
+    // Shop & Rollen initialisieren
+    initShopModal();
+    initRolesModal();
 
     if (createLobbyBtn) {
         createLobbyBtn.addEventListener('click', () => {
