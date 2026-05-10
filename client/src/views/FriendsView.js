@@ -121,7 +121,9 @@ function renderFriends() {
             const item = document.createElement('div');
             item.className = 'request-item';
             item.innerHTML = `
-                <div class="friend-avatar"></div>
+                <div class="friend-avatar">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${req.avatar}" alt="Avatar">
+                </div>
                 <div class="request-info">
                     <span class="request-name">${req.name}</span>
                 </div>
@@ -145,7 +147,9 @@ function createFriendItem(friend, isOnline, t) {
 
     return `
         <div class="friend-item">
-            <div class="friend-avatar"></div>
+            <div class="friend-avatar">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${friend.avatar}" alt="Avatar">
+            </div>
             <div class="friend-info">
                 <span class="friend-name">${friend.name}</span>
                 <div class="friend-status">
@@ -166,7 +170,9 @@ function renderSearchResult(player) {
     container.innerHTML = `
         <div class="search-preview-card">
             <div class="preview-header">
-                <div class="friend-avatar"></div>
+                <div class="friend-avatar">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${player.avatar}" alt="Avatar">
+                </div>
                 <span class="preview-name">${player.name}</span>
             </div>
             <button id="send-request-after-search" class="primary-btn hidden" style="margin-top: 1rem; width: 100%;">
