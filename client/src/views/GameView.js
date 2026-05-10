@@ -205,8 +205,12 @@ function updateUI(gameState) {
         }
     }
 
+    const abilitiesContainer = document.querySelector('.abilities-container');
+
     if (actionBar && isMyTurn && gameState.phase !== 'waiting' && gameState.phase !== 'end') {
         actionBar.classList.remove('hidden');
+        if (abilitiesContainer) abilitiesContainer.classList.remove('hidden');
+
         if (btnMove) {
             btnMove.classList.remove('hidden');
             btnMove.textContent = `MOVE (${myPlayer.ap_move} ÜBRIG)`;
@@ -235,6 +239,7 @@ function updateUI(gameState) {
         }
     } else if (actionBar) {
         actionBar.classList.add('hidden');
+        if (abilitiesContainer) abilitiesContainer.classList.add('hidden');
     }
 
     if (gamePhaseTxt) {
