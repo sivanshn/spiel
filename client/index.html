@@ -58,35 +58,43 @@
                 </button>
             </div>
 
-            <div class="central-panel">
-                <!-- Lobby List Panel -->
-                <div id="lobby-list-panel" class="lobby-panel animate-in">
+            <!-- PANEL 1: LOBBY LISTE -->
+            <div id="lobby-list-panel" class="lobby-panel glass-card animate-in">
+                <div class="panel-header">
                     <h2 data-i18n="main_open_lobbies">OFFENE LOBBYS</h2>
+                </div>
+                <div class="panel-content">
                     <div id="lobby-list" class="lobby-list">
+                        <!-- Lobbies appear here -->
                         <p class="empty-msg" data-i18n="main_empty_lobbies">Keine aktiven Ermittlungen</p>
                     </div>
-                    <button id="create-lobby-btn" class="action-btn" data-i18n="main_create_lobby">LOBBY ERSTELLEN</button>
                 </div>
-
-                <!-- Lobby Waiting Panel (Hidden by default) -->
-                <div id="lobby-waiting-panel" class="lobby-panel animate-in hidden">
-                    <h2 id="lobby-view-title" data-i18n="lobby_title">LOBBY</h2>
-                    <div class="lobby-stats">
-                        <span data-i18n="lobby_stats_players">SPIELER:</span>
-                        <span id="lobby-player-count">1 / 4</span>
-                    </div>
-                    <div id="lobby-player-list" class="player-list">
-                        <!-- Players will be injected here -->
-                    </div>
-                    <div class="panel-footer">
-                        <button id="leave-lobby-btn" class="secondary-btn" data-i18n="lobby_btn_back">ZURÜCK</button>
-                        <button id="start-game-btn" class="action-btn hidden" data-i18n="lobby_btn_start">SPIEL STARTEN</button>
-                    </div>
-                    <p id="wait-msg" class="wait-msg hidden" data-i18n="lobby_wait_msg">Warte auf weitere Spieler...</p>
+                <div class="panel-footer">
+                    <button id="create-lobby-btn" class="action-btn" data-i18n="main_create_lobby">LOBBY
+                        ERSTELLEN</button>
                 </div>
             </div>
 
-            <button id="chat-toggle-btn" class="chat-toggle">💬</button>
+            <!-- PANEL 2: LOBBY WARTERAUM (Integriert in Main View) -->
+            <div id="lobby-waiting-panel" class="lobby-panel glass-card animate-in hidden">
+                <div class="panel-header">
+                    <h2 id="lobby-view-title" data-i18n="lobby_title">LOBBY</h2>
+                </div>
+                <div class="panel-content">
+                    <div class="lobby-stats">
+                        <span data-i18n="lobby_stats_players">SPIELER:</span> <span id="lobby-player-count">1 / 4</span>
+                    </div>
+                    <div id="lobby-player-list" class="player-list">
+                        <!-- Players appear here -->
+                    </div>
+                </div>
+                <div class="panel-footer lobby-actions">
+                    <button id="leave-lobby-btn" class="action-btn secondary" data-i18n="lobby_btn_back">ZURÜCK</button>
+                    <button id="start-game-btn" class="action-btn hidden" data-i18n="lobby_btn_start">SPIEL
+                        STARTEN</button>
+                    <p id="wait-msg" class="wait-msg" data-i18n="lobby_wait_msg">Warte auf weitere Spieler...</p>
+                </div>
+            </div>
         </section>
 
         <!-- Screen 2: Game View -->
