@@ -307,6 +307,22 @@ function handleUseAbility(io, socket, data) {
         gameState.roadblocks.push({ stationAId: player.position, stationBId: targetId });
 
         console.log(`[Ability] ${user.name} platzierte Straßensperre zwischen ${player.position} und ${targetId}`);
+
+        // NEU: Wenn ein Diamant auf dieser Verbindung liegt, gewinnt die Polizei sofort
+        const usedEdge = [player.position, targetId].sort();
+        const diamondOnConnection = gameState.diamonds.find(d => {
+            const dEdge = [d.stationA, d.stationB].sort();
+            return !d.isCollected && dEdge[0] === usedEdge[0] && dEdge[1] === usedEdge[1];
+        });
+
+        if (diamondOnConnection) {
+            gameState.phase = 'end';
+            gameState.winner = 'police';
+            gameState.activePlayerId = null;
+            handleGameEnd(io, user.lobbyId, 'police', 'Die Polizei hat eine Verbindung mit einem Diamanten gesperrt!');
+            broadcastState(io, user.lobbyId);
+            return;
+        }
         
         socket.emit('ability_success', { abilityId, message: 'Straßensperre wurde platziert!' });
         if (player.ap_move === 0 && player.ap_investigate === 0) endTurn(io, user.lobbyId, socket.id);
