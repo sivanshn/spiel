@@ -7,7 +7,7 @@
 const { connectedUsers } = require('../utils/store');
 
 const ABILITIES = {
-    roadblock: { priceKora: 5 }
+    roadblock: { priceKora: 10 }
 };
 
 /**
@@ -17,7 +17,7 @@ function registerShopHandlers(io, socket) {
     socket.on('shop_get_items', () => {
         // Liste der verfügbaren Items vom Server
         socket.emit('shop_items_list', [
-            { id: 'roadblock', priceKora: 5 }
+            { id: 'roadblock', priceKora: 10 }
         ]);
     });
 
