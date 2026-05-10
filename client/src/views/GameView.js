@@ -307,7 +307,11 @@ function renderMap(gameState, me, isMyTurn) {
 
         if (isMyTurn) {
             g.onclick = () => {
-                state.selectedStationId = station.id;
+                if (state.selectedStationId === station.id) {
+                    state.selectedStationId = null;
+                } else {
+                    state.selectedStationId = station.id;
+                }
                 renderMap(gameState, me, isMyTurn);
                 updateUI(gameState);
             };
