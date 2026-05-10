@@ -209,8 +209,21 @@
 
 /* Shop Body */
 .shop-body {
-    min-height: 350px;
-    margin-bottom: 1.5rem;
+    height: 500px;
+    overflow-y: auto;
+    margin-bottom: 2rem;
+    padding-right: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+}
+
+.shop-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.shop-body::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 10px;
 }
 
 /* Items Grid */
