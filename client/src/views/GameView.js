@@ -323,15 +323,24 @@ function renderMap(gameState, me, isMyTurn) {
         hitArea.setAttribute("fill", "transparent");
         g.appendChild(hitArea);
 
+        // Selection Ring (New Style)
+        if (state.selectedStationId === station.id) {
+            const selectionRing = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            selectionRing.setAttribute("cx", station.x);
+            selectionRing.setAttribute("cy", station.y);
+            selectionRing.setAttribute("r", 17);
+            selectionRing.setAttribute("fill", "none");
+            selectionRing.setAttribute("stroke", "#3b82f6"); // Blue
+            selectionRing.setAttribute("stroke-width", "4");
+            selectionRing.setAttribute("class", "selection-ring");
+            g.appendChild(selectionRing);
+        }
+
         const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         circle.setAttribute("cx", station.x); circle.setAttribute("cy", station.y); circle.setAttribute("r", 10);
         circle.setAttribute("class", "station-circle");
 
-        if (state.selectedStationId === station.id) {
-            circle.setAttribute("stroke", "#facc15");
-            circle.setAttribute("stroke-width", "4");
-            circle.setAttribute("r", "14");
-        } else if (station.type === 'thief_start') circle.setAttribute("stroke", "#f43f5e");
+        if (station.type === 'thief_start') circle.setAttribute("stroke", "#f43f5e");
         else if (station.type === 'police_start') circle.setAttribute("stroke", "#3b82f6");
         else if (station.type === 'escape') circle.setAttribute("stroke", "#22c55e");
 

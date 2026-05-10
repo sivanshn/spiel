@@ -371,3 +371,14 @@ svg {
     stroke-opacity: 0.8;
 }
 
+.selection-ring {
+    animation: selection-pulse 2s infinite;
+}
+
+@keyframes selection-pulse {
+    0% { stroke-opacity: 0.4; stroke-width: 3; }
+    50% { stroke-opacity: 1; stroke-width: 5; }
+    100% { stroke-opacity: 0.4; stroke-width: 3; }
+}
+
+
