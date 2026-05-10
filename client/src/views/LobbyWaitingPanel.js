@@ -2,6 +2,7 @@ import { socket } from '../services/socket.js';
 import { getEl } from '../utils/ui.js';
 import { state } from '../app/state.js';
 import { initVoiceChat, toggleMute, getMuteState, disconnectAll, isVoiceReady } from '../services/voiceService.js';
+import { getAvatarUrl } from '../utils/gameUtils.js';
 
 let micBtn = null;
 
@@ -83,7 +84,7 @@ export function renderLobbyPlayers(lobby) {
         if (p.isHost) item.classList.add('is-host');
 
         item.innerHTML = `
-            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${p.avatar}" class="player-avatar">
+            <img src="${getAvatarUrl(p.avatar)}" class="player-avatar">
             <span class="player-name">${p.name}</span>
             ${p.isHost ? '<span class="host-badge">HOST</span>' : ''}
             ${!isMe ? '<span class="voice-indicator">🎤</span>' : ''}

@@ -1,6 +1,7 @@
 import { socket } from '../services/socket.js';
 import { showScreen, showPopup, getEl } from '../utils/ui.js';
 import { state } from '../app/state.js';
+import { getAvatarUrl } from '../utils/gameUtils.js';
 
 export function initLoginView() {
     const usernameInput = getEl('username');
@@ -11,9 +12,9 @@ export function initLoginView() {
     // Sofort fokussieren – kein Klick nötig
     usernameInput.focus();
 
-    const avatars = ['goat', 'monkey', 'cat', 'dog', 'fox', 'panda'];
+    const avatars = ['default_avatar'];
     function getRandomAvatar() {
-        return avatars[Math.floor(Math.random() * avatars.length)];
+        return 'default_avatar';
     }
 
     joinBtn.addEventListener('click', () => {
@@ -36,7 +37,7 @@ export function initLoginView() {
         const myAvatarImg = getEl('my-avatar');
         
         if (myNameTxt) myNameTxt.textContent = userData.name;
-        if (myAvatarImg) myAvatarImg.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${userData.avatar}`;
+        if (myAvatarImg) myAvatarImg.src = getAvatarUrl(userData.avatar);
         
         showScreen('main');
     });

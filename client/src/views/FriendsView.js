@@ -1,195 +1,187 @@
 import { socket } from '../services/socket.js';
-import { getEl, showPopup } from '../utils/ui.js';
+import { getTranslation } from '../i18n/translations.js';
 import { state } from '../app/state.js';
-import { translations } from '../i18n/translations.js';
+import { getEl, showPopup, closeAllModals } from '../utils/ui.js';
+import { getAvatarUrl } from '../utils/gameUtils.js';
 
-let friendsList = [];
-let friendRequests = [];
+export class FriendsView {
+    constructor() {
+        this.panel = getEl('friends-panel');
+        this.friendsListEl = getEl('friends-list-container');
+        this.requestsListEl = getEl('friends-requests-container');
+        this.searchResultsEl = getEl('friends-search-results');
+        this.searchInput = getEl('friends-search-input');
+        this.searchBtn = getEl('friends-search-btn');
+        this.tabs = document.querySelectorAll('.friends-tab');
+        this.closeBtn = getEl('friends-close-btn');
+        
+        this.init();
+    }
 
-export function initFriendsView() {
-    const friendsBtn = getEl('friends-btn');
-    const closeBtn = getEl('close-friends-btn');
-    const panel = getEl('friends-panel');
-    const tabBtns = document.querySelectorAll('.friends-tabs .tab-btn');
-    const sendRequestBtn = getEl('send-friend-request-btn');
-    const findInput = getEl('find-friend-input');
+    init() {
+        if (this.searchBtn) {
+            this.searchBtn.onclick = () => this.search();
+        }
 
-    if (friendsBtn) {
-        friendsBtn.addEventListener('click', () => {
-            panel.classList.remove('hidden');
-            socket.emit('friends:getList');
+        if (this.searchInput) {
+            this.searchInput.onkeypress = (e) => {
+                if (e.key === 'Enter') this.search();
+            };
+        }
+
+        if (this.closeBtn) {
+            this.closeBtn.onclick = () => this.hide();
+        }
+
+        if (this.tabs) {
+            this.tabs.forEach(tab => {
+                tab.onclick = () => {
+                    this.tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    const view = tab.getAttribute('data-view');
+                    this.showView(view);
+                };
+            });
+        }
+
+        socket.on('friends:list', (list) => {
+            this.renderFriends(list);
+        });
+
+        socket.on('friends:requests', (requests) => {
+            this.renderRequests(requests);
+        });
+
+        socket.on('friends:searchResults', (player) => {
+            this.renderSearchResult(player);
+        });
+
+        socket.on('friends:requestSent', () => {
+            showPopup("ERFOLG", "Anfrage gesendet.");
+            if (this.searchResultsEl) this.searchResultsEl.innerHTML = '';
+        });
+
+        socket.on('friends:update', () => {
+            socket.emit('friends:getFriends');
+            socket.emit('friends:getRequests');
+        });
+
+        socket.on('friends:error', (msg) => {
+            showPopup("FEHLER", msg);
         });
     }
 
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            panel.classList.add('hidden');
-        });
+    show() {
+        closeAllModals();
+        if (this.panel) this.panel.classList.remove('hidden');
+        socket.emit('friends:getFriends');
+        socket.emit('friends:getRequests');
     }
 
-    // Tab Switching
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const tabId = btn.getAttribute('data-tab');
+    hide() {
+        if (this.panel) this.panel.classList.add('hidden');
+    }
+
+    showView(view) {
+        document.querySelectorAll('.friends-content-view').forEach(v => v.classList.add('hidden'));
+        const target = getEl(`friends-view-${view}`);
+        if (target) target.classList.remove('hidden');
+    }
+
+    renderFriends(friends) {
+        if (!this.friendsListEl) return;
+        this.friendsListEl.innerHTML = '';
+        if (!friends || friends.length === 0) {
+            this.friendsListEl.innerHTML = `<div class="empty-msg">${getTranslation('friends_empty_list', state.currentLanguage)}</div>`;
+            return;
+        }
+
+        friends.forEach(f => {
+            const item = document.createElement('div');
+            item.className = 'friend-item';
+            const avatarUrl = getAvatarUrl(f.avatar);
+            const statusText = f.online ? 'Online' : 'Offline';
+            const statusClass = f.online ? 'online' : 'offline';
             
-            // UI Update
-            tabBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-            getEl(`tab-${tabId}`).classList.add('active');
-
-            // Reset Search Result when switching tabs
-            if (getEl('search-result-container')) getEl('search-result-container').innerHTML = '';
+            item.innerHTML = `
+                <div class="avatar-container small ${f.currentFrame || 'default'}">
+                    <img src="${avatarUrl}" alt="Avatar">
+                </div>
+                <div class="friend-info">
+                    <span class="friend-name">${f.name}</span>
+                    <span class="friend-status ${statusClass}">${statusText}</span>
+                </div>
+            `;
+            this.friendsListEl.appendChild(item);
         });
-    });
+    }
 
-    // Search Player
-    if (sendRequestBtn) {
-        sendRequestBtn.addEventListener('click', () => {
-            const name = findInput.value.trim();
+    search() {
+        if (this.searchInput) {
+            const name = this.searchInput.value.trim();
             if (name) {
                 socket.emit('friends:search', name);
-                findInput.value = '';
             }
-        });
+        }
     }
 
-    // Socket Events
-    socket.on('friends:listUpdate', (data) => {
-        friendsList = data.friends;
-        friendRequests = data.requests;
-        renderFriends();
-    });
+    renderRequests(requests) {
+        if (!this.requestsListEl) return;
+        this.requestsListEl.innerHTML = '';
+        if (!requests || requests.length === 0) {
+            this.requestsListEl.innerHTML = `<div class="empty-msg">${getTranslation('friends_no_requests', state.currentLanguage)}</div>`;
+            return;
+        }
 
-    socket.on('friends:searchResult', (data) => {
-        renderSearchResult(data);
-    });
-
-    socket.on('friends:requestReceived', (fromName) => {
-        const lang = state.currentLanguage || 'de';
-        const msg = lang === 'de' ? `Neue Freundschaftsanfrage von ${fromName}!` : `New friend request from ${fromName}!`;
-        showPopup(lang === 'de' ? "FREUNDE" : "FRIENDS", msg);
-    });
-
-    socket.on('friends:requestSent', (targetName) => {
-        const lang = state.currentLanguage || 'de';
-        const t = translations[lang] || translations['de'];
-        showPopup(lang === 'de' ? "FREUNDE" : "FRIENDS", t.friends_request_sent);
-    });
-
-    socket.on('friends:error', (errorMsg) => {
-        const lang = state.currentLanguage || 'de';
-        showPopup(lang === 'de' ? "FEHLER" : "ERROR", errorMsg);
-    });
-}
-
-function renderFriends() {
-    const lang = state.currentLanguage || 'de';
-    const t = translations[lang] || translations['de'];
-
-    const onlineListEl = getEl('friends-list-online');
-    const offlineListEl = getEl('friends-list-offline');
-    const requestsListEl = getEl('friend-requests-list');
-
-    if (!onlineListEl || !offlineListEl || !requestsListEl) return;
-
-    // Filter Online/Offline
-    const online = friendsList.filter(f => f.online);
-    const offline = friendsList.filter(f => !f.online);
-
-    // Render Online
-    if (online.length === 0) {
-        onlineListEl.innerHTML = `<div class="empty-msg">${t.friends_no_online}</div>`;
-    } else {
-        onlineListEl.innerHTML = online.map(f => createFriendItem(f, true, t)).join('');
-    }
-
-    // Render Offline
-    if (offline.length === 0) {
-        offlineListEl.innerHTML = `<div class="empty-msg">${t.friends_no_offline}</div>`;
-    } else {
-        offlineListEl.innerHTML = offline.map(f => createFriendItem(f, false, t)).join('');
-    }
-
-    // Render Requests
-    if (friendRequests.length === 0) {
-        requestsListEl.innerHTML = `<div class="empty-msg">Keine Anfragen</div>`;
-    } else {
-        requestsListEl.innerHTML = '';
-        friendRequests.forEach(req => {
+        requests.forEach(req => {
             const item = document.createElement('div');
             item.className = 'request-item';
             item.innerHTML = `
-                <div class="friend-avatar">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${req.avatar}" alt="Avatar">
-                </div>
-                <div class="request-info">
-                    <span class="request-name">${req.name}</span>
-                </div>
-                <div class="request-actions">
-                    <button class="friend-action-btn accept-btn" title="${t.friends_status_online}">✔</button>
-                    <button class="friend-action-btn decline-btn" title="${t.friends_status_offline}">&times;</button>
+                <span class="friend-name">${req.name}</span>
+                <div class="request-btns">
+                    <button class="action-btn small accept-btn">✓</button>
+                    <button class="action-btn small secondary reject-btn">✗</button>
                 </div>
             `;
-            
             item.querySelector('.accept-btn').onclick = () => socket.emit('friends:acceptRequest', req.name);
-            item.querySelector('.decline-btn').onclick = () => socket.emit('friends:declineRequest', req.name);
-            
-            requestsListEl.appendChild(item);
+            item.querySelector('.reject-btn').onclick = () => socket.emit('friends:rejectRequest', req.name);
+            this.requestsListEl.appendChild(item);
         });
+    }
+
+    renderSearchResult(player) {
+        if (!this.searchResultsEl) return;
+        this.searchResultsEl.innerHTML = '';
+        if (!player) {
+            this.searchResultsEl.innerHTML = `<div class="empty-msg">${getTranslation('friends_search_no_results', state.currentLanguage)}</div>`;
+            return;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'search-result-card animate-in';
+        const avatarUrl = getAvatarUrl(player.avatar);
+        card.innerHTML = `
+            <div class="player-info-row">
+                <div class="avatar-container small ${player.currentFrame || 'default'}">
+                    <img src="${avatarUrl}" alt="Avatar">
+                </div>
+                <span class="player-name">${player.name}</span>
+            </div>
+            <div class="request-actions">
+                 <button class="action-btn small send-req-btn">${getTranslation('friends_btn_send', state.currentLanguage)}</button>
+            </div>
+        `;
+
+        const sendReq = () => {
+            socket.emit('friends:sendRequest', player.name);
+        };
+
+        card.querySelector('.send-req-btn').onclick = sendReq;
+
+        this.searchResultsEl.appendChild(card);
     }
 }
 
-function createFriendItem(friend, isOnline, t) {
-    const statusText = isOnline ? t.friends_status_online : t.friends_status_offline;
-    const statusClass = isOnline ? 'online' : 'offline';
-
-    return `
-        <div class="friend-item">
-            <div class="friend-avatar">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${friend.avatar}" alt="Avatar">
-            </div>
-            <div class="friend-info">
-                <span class="friend-name">${friend.name}</span>
-                <div class="friend-status">
-                    <span class="status-dot ${statusClass}"></span>
-                    <span class="status-text ${statusClass}">${statusText}</span>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-function renderSearchResult(player) {
-    const lang = state.currentLanguage || 'de';
-    const t = translations[lang] || translations['de'];
-    const container = getEl('search-result-container');
-    if (!container) return;
-
-    container.innerHTML = `
-        <div class="search-preview-card">
-            <div class="preview-header">
-                <div class="friend-avatar">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${player.avatar}" alt="Avatar">
-                </div>
-                <span class="preview-name">${player.name}</span>
-            </div>
-            <button id="send-request-after-search" class="primary-btn hidden" style="margin-top: 1rem; width: 100%;">
-                ${t.friends_btn_send}
-            </button>
-        </div>
-    `;
-
-    const card = container.querySelector('.preview-header');
-    const sendBtn = getEl('send-request-after-search');
-
-    card.addEventListener('click', () => {
-        sendBtn.classList.remove('hidden');
-    });
-
-    sendBtn.addEventListener('click', () => {
-        socket.emit('friends:sendRequest', player.name);
-        container.innerHTML = '';
-    });
+export function initFriendsView() {
+    state.friendsView = new FriendsView();
 }

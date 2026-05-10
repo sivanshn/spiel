@@ -1,3 +1,5 @@
+import { state } from '../app/state.js';
+
 export const translations = {
     de: {
         logo_title: "POLIZEI vs DIEB",
@@ -64,6 +66,12 @@ export const translations = {
         shop_buy: "Kaufen",
         shop_bought: "Gekauft",
         shop_not_enough_kora: "Nicht genug Kora",
+        shop_item_roadblock_name: "Straßensperre",
+        shop_item_none_name: "Standard",
+        shop_item_neon_blue_name: "Neon Blau",
+        shop_item_red_pulse_name: "Roter Puls",
+        shop_item_gold_glaze_name: "Goldener Glanz",
+        shop_item_toxic_vibe_name: "Giftige Aura",
         ability_roadblock_name: "Straßensperre",
         ability_roadblock_short: "Sperre eine Verbindung für den Dieb.",
         ability_roadblock_desc: "Mit dieser Fähigkeit kann ein Polizist eine Verbindung zwischen zwei benachbarten Stationen sperren.",
@@ -79,20 +87,34 @@ export const translations = {
         msg_connection_blocked: "Diese Verbindung ist gesperrt.",
         btn_friends: "Freunde",
         friends_title: "FREUNDE",
-        friends_tab_online: "Online",
-        friends_tab_offline: "Offline",
-        friends_tab_find: "Freunde finden",
-        friends_find_placeholder: "Spielername eingeben...",
+        friends_tab_list: "Liste",
+        friends_tab_requests: "Anfragen",
+        friends_tab_search: "Suche",
+        friends_search_placeholder: "Spieler suchen...",
+        friends_search_no_results: "Keine Spieler gefunden.",
         friends_btn_search: "Suchen",
         friends_btn_send: "Anfrage senden",
         friends_requests_title: "ANFRAGEN",
+        friends_no_requests: "Keine Anfragen.",
+        friends_empty_list: "Du hast noch keine Freunde.",
         friends_no_online: "Keine Freunde online.",
         friends_no_offline: "Keine Freunde offline.",
         friends_request_sent: "Freundschaftsanfrage gesendet.",
         friends_error_not_found: "Spieler nicht gefunden.",
         friends_error_already: "Ihr seid bereits Freunde.",
         friends_status_online: "Online",
-        friends_status_offline: "Offline"
+        friends_status_offline: "Offline",
+        shop_tab_abilities: "Fähigkeiten",
+        shop_tab_frames: "Rahmen",
+        profile_title: "MEIN PROFIL",
+        profile_owned_frames: "Deine Rahmen",
+        profile_btn_equip: "Ausrüsten",
+        profile_btn_equipped: "Ausgerüstet",
+        frame_neon_blue: "Neon Blau",
+        frame_red_pulse: "Roter Puls",
+        frame_gold_glaze: "Goldglanz",
+        frame_toxic_vibe: "Toxic Vibe",
+        frame_none: "Standard"
     },
     en: {
         logo_title: "POLICE vs THIEF",
@@ -158,19 +180,54 @@ export const translations = {
         role_agent_abilities: "Everything police can do; Up to 3 stations movement; One-time identity check (sees real role).",
         btn_friends: "Friends",
         friends_title: "FRIENDS",
-        friends_tab_online: "Online",
-        friends_tab_offline: "Offline",
-        friends_tab_find: "Find Friends",
-        friends_find_placeholder: "Enter player name...",
+        friends_tab_list: "List",
+        friends_tab_requests: "Requests",
+        friends_tab_search: "Search",
+        friends_search_placeholder: "Search players...",
+        friends_search_no_results: "No players found.",
         friends_btn_search: "Search",
         friends_btn_send: "Send Request",
         friends_requests_title: "REQUESTS",
+        friends_no_requests: "No requests.",
+        friends_empty_list: "You have no friends yet.",
         friends_no_online: "No friends online.",
         friends_no_offline: "No friends offline.",
         friends_request_sent: "Friend request sent.",
         friends_error_not_found: "Player not found.",
         friends_error_already: "You are already friends.",
         friends_status_online: "Online",
-        friends_status_offline: "Offline"
+        friends_status_offline: "Offline",
+        shop_tab_abilities: "Abilities",
+        shop_tab_frames: "Frames",
+        profile_title: "MY PROFILE",
+        profile_owned_frames: "Your Frames",
+        profile_btn_equip: "Equip",
+        profile_btn_equipped: "Equipped",
+        frame_neon_blue: "Neon Blue",
+        frame_red_pulse: "Red Pulse",
+        frame_gold_glaze: "Gold Glaze",
+        frame_toxic_vibe: "Toxic Vibe",
+        frame_none: "Standard",
+        shop_buy: "Buy",
+        shop_bought: "Bought",
+        shop_not_enough_kora: "Not enough Kora",
+        shop_item_roadblock_name: "Roadblock",
+        shop_item_none_name: "Default",
+        shop_item_neon_blue_name: "Neon Blue",
+        shop_item_red_pulse_name: "Red Pulse",
+        shop_item_gold_glaze_name: "Gold Glaze",
+        shop_item_toxic_vibe_name: "Toxic Vibe"
     }
 };
+
+export function getTranslation(key) {
+    const lang = state.currentLanguage || 'de';
+    if (translations[lang] && translations[lang][key]) {
+        return translations[lang][key];
+    }
+    // Fallback to German if key not found in current language
+    if (translations['de'] && translations['de'][key]) {
+        return translations['de'][key];
+    }
+    return key;
+}

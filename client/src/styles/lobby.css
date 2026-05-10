@@ -3,10 +3,10 @@
    ============================ */
 
 .lobby-panel {
-    background: rgba(10, 15, 25, 0.75) !important;
-    backdrop-filter: blur(40px) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 50px 100px -20px rgba(0,0,0,0.8), 0 0 20px rgba(56, 189, 248, 0.1);
+    background: var(--panel-bg) !important;
+    backdrop-filter: blur(40px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-premium);
     width: 550px !important;
     max-width: 95%;
     border-radius: 24px;
@@ -97,7 +97,7 @@
 
 .join-btn-small {
     background: var(--primary);
-    color: white;
+    color: #060B14;
     border: none;
     padding: 0.4rem 1rem;
     border-radius: 8px;
@@ -109,8 +109,8 @@
 }
 
 .join-btn-small:hover {
-    filter: brightness(1.2);
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    background: var(--primary-bright);
+    box-shadow: 0 0 15px rgba(216, 163, 58, 0.4);
 }
 
 .player-count {
@@ -147,8 +147,8 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
     padding: 0.8rem 1.2rem;
     border-radius: 12px;
     transition: all 0.3s;
@@ -156,7 +156,7 @@
 
 .player-item.is-host {
     border-color: var(--primary);
-    background: rgba(56, 189, 248, 0.1);
+    background: rgba(216, 163, 58, 0.05);
 }
 
 .player-avatar {
@@ -174,7 +174,7 @@
 
 .host-badge {
     background: var(--primary);
-    color: #020617;
+    color: #060B14;
     font-size: 0.7rem;
     font-weight: 800;
     padding: 0.2rem 0.5rem;

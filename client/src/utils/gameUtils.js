@@ -20,6 +20,14 @@ export function translateRole(role, lang = 'de') {
     return (roles[lang] && roles[lang][role]) || role;
 }
 
+export function getAvatarUrl(avatarId) {
+    const oldDefaults = ['goat', 'monkey', 'cat', 'dog', 'fox', 'panda', 'default_avatar'];
+    if (!avatarId || oldDefaults.includes(avatarId)) {
+        return '/default_avatar.png';
+    }
+    return `https://api.dicebear.com/7.x/bottts/svg?seed=${avatarId}`;
+}
+
 export function translatePhase(phase) {
     const phases = { 'waiting': 'Lobby', 'thief_turn': 'Dieb am Zug', 'police_turn': 'Polizei am Zug', 'end': 'Spiel Ende' };
     return phases[phase] || phase;

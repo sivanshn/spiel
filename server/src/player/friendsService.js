@@ -4,7 +4,11 @@ const { connectedUsers, allPlayers } = require('../utils/store');
  * Registriert Socket-Handler für das Freunde-System.
  */
 function registerFriendsHandlers(io, socket) {
-    socket.on('friends:getList', () => {
+    socket.on('friends:getFriends', () => {
+        sendFriendsUpdate(socket);
+    });
+
+    socket.on('friends:getRequests', () => {
         sendFriendsUpdate(socket);
     });
 
@@ -13,12 +17,13 @@ function registerFriendsHandlers(io, socket) {
         const targetPlayer = allPlayers.get(targetNameLower);
         
         if (!targetPlayer) {
-            return socket.emit('friends:error', 'Spieler nicht gefunden.');
+            return socket.emit('friends:searchResults', null);
         }
 
-        socket.emit('friends:searchResult', {
+        socket.emit('friends:searchResults', {
             name: targetPlayer.name,
-            avatar: targetPlayer.avatar
+            avatar: targetPlayer.avatar,
+            currentFrame: targetPlayer.currentFrame || null
         });
     });
 
@@ -47,8 +52,12 @@ function registerFriendsHandlers(io, socket) {
         }
 
         // Anfrage speichern
-        user.outgoingRequests.push(targetNameLower);
-        targetPlayer.incomingRequests.push(userNameLower);
+        if (!user.outgoingRequests.includes(targetNameLower)) {
+            user.outgoingRequests.push(targetNameLower);
+        }
+        if (!targetPlayer.incomingRequests.includes(userNameLower)) {
+            targetPlayer.incomingRequests.push(userNameLower);
+        }
 
         socket.emit('friends:requestSent', targetName);
         sendFriendsUpdate(socket);
@@ -56,7 +65,7 @@ function registerFriendsHandlers(io, socket) {
         // Falls Target online ist, auch dort updaten
         const targetSocketId = targetPlayer.socketId;
         if (targetSocketId && connectedUsers.has(targetSocketId)) {
-            io.to(targetSocketId).emit('friends:requestReceived', user.name);
+            io.to(targetSocketId).emit('friends:update');
             sendFriendsUpdate(io.sockets.sockets.get(targetSocketId));
         }
     });
@@ -87,7 +96,7 @@ function registerFriendsHandlers(io, socket) {
         }
     });
 
-    socket.on('friends:declineRequest', (fromName) => {
+    socket.on('friends:rejectRequest', (fromName) => {
         const user = connectedUsers.get(socket.id);
         if (!user) return;
 
@@ -119,23 +128,28 @@ function sendFriendsUpdate(socket) {
 
     const friendsList = user.friends.map(friendName => {
         const p = allPlayers.get(friendName);
+        if (!p) return null;
         const isOnline = Array.from(connectedUsers.values()).some(u => u.name.toLowerCase() === friendName);
         return {
             name: p.name,
             avatar: p.avatar,
-            online: isOnline
+            online: isOnline,
+            currentFrame: p.currentFrame || 'default'
         };
-    });
+    }).filter(f => f !== null);
 
     const incoming = user.incomingRequests.map(name => {
         const p = allPlayers.get(name);
-        return { name: p.name, avatar: p.avatar };
-    });
+        if (!p) return null;
+        return { 
+            name: p.name, 
+            avatar: p.avatar,
+            currentFrame: p.currentFrame || 'default'
+        };
+    }).filter(f => f !== null);
 
-    socket.emit('friends:listUpdate', {
-        friends: friendsList,
-        requests: incoming
-    });
+    socket.emit('friends:list', friendsList);
+    socket.emit('friends:requests', incoming);
 }
 
 module.exports = { registerFriendsHandlers };

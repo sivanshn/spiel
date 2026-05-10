@@ -1,13 +1,15 @@
 import { socket } from '../services/socket.js';
-import { getEl } from '../utils/ui.js';
+import { getEl, closeAllModals } from '../utils/ui.js';
 import { state } from '../app/state.js';
 import { setLanguage } from '../i18n/languageService.js';
 import { renderLobbyList } from './LobbyPanel.js';
 import { renderLobbyPlayers } from './LobbyWaitingPanel.js';
-import { initShopModal } from './ShopModal.js';
+import { ShopModal } from '../components/ShopModal.js';
+import { ProfileModal } from '../components/ProfileModal.js';
 import { initRolesModal } from './RolesModal.js';
+import { getAvatarUrl } from '../utils/gameUtils.js';
 
-export function initMainView() {
+export function initMainView(playerManager) {
     const createLobbyBtn = getEl('create-lobby-btn');
     const settingsBtn = getEl('settings-btn');
     const modalSettings = getEl('modal-settings');
@@ -19,9 +21,14 @@ export function initMainView() {
     const lobbyListContainer = getEl('lobby-list');
     const lobbyListPanel = getEl('lobby-list-panel');
     const lobbyWaitingPanel = getEl('lobby-waiting-panel');
+    const profileBox = document.querySelector('.user-profile');
+    const shopBtn = getEl('shop-btn');
+    const friendsBtn = getEl('friends-btn');
+    const rolesBtn = getEl('roles-btn');
 
-    // Shop & Rollen initialisieren
-    initShopModal();
+    // Modals
+    const shopModal = new ShopModal(socket);
+    const profileModal = new ProfileModal(socket, playerManager);
     initRolesModal();
 
     if (createLobbyBtn) {
@@ -30,8 +37,48 @@ export function initMainView() {
         });
     }
 
+    if (shopBtn) {
+        shopBtn.addEventListener('click', () => shopModal.open());
+    }
+
+    if (friendsBtn) {
+        friendsBtn.addEventListener('click', () => {
+            if (state.friendsView) {
+                closeAllModals();
+                state.friendsView.show();
+            }
+        });
+    }
+
+    const shopClose = getEl('shop-close');
+    if (shopClose) {
+        shopClose.addEventListener('click', () => shopModal.close());
+    }
+
+    if (profileBox) {
+        profileBox.addEventListener('click', () => profileModal.open());
+    }
+
+    if (rolesBtn) {
+        rolesBtn.addEventListener('click', () => {
+            const modal = getEl('modal-roles');
+            if (modal) {
+                closeAllModals();
+                modal.classList.remove('hidden');
+            }
+        });
+    }
+
+    const profileClose = getEl('profile-close');
+    if (profileClose) {
+        profileClose.addEventListener('click', () => profileModal.close());
+    }
+
     if (settingsBtn) {
-        settingsBtn.addEventListener('click', () => modalSettings.classList.remove('hidden'));
+        settingsBtn.addEventListener('click', () => {
+            closeAllModals();
+            modalSettings.classList.remove('hidden');
+        });
     }
 
     if (settingsClose) {
@@ -40,6 +87,7 @@ export function initMainView() {
 
     if (rankingBtn) {
         rankingBtn.addEventListener('click', () => {
+            closeAllModals();
             socket.emit('get_ranking');
             modalRanking.classList.remove('hidden');
         });
@@ -54,6 +102,25 @@ export function initMainView() {
             const lang = btn.getAttribute('data-lang');
             setLanguage(lang, lobbyListContainer);
         });
+    });
+
+    window.addEventListener('player_data_updated', () => {
+        const player = playerManager.getSelf() || state.myUserData;
+        if (!player) return;
+
+        const nameEl = getEl('my-name');
+        const koraEl = getEl('kora-value-main');
+        const avatarContainer = getEl('my-avatar-container');
+        const avatarImg = getEl('my-avatar');
+
+        if (nameEl) nameEl.textContent = player.name;
+        if (koraEl) koraEl.textContent = player.koraBalance;
+        if (avatarImg && player.avatar) avatarImg.src = getAvatarUrl(player.avatar);
+        
+        if (avatarContainer) {
+            // Apply frame class directly
+            avatarContainer.className = `avatar-container ${player.currentFrame || 'default'}`;
+        }
     });
 
     socket.on('kora_update', (data) => {
@@ -72,7 +139,7 @@ export function initMainView() {
             div.innerHTML = `
                 <span class="rank-number">${entry.rank}.</span>
                 <div class="rank-user">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${entry.avatar}" class="rank-avatar">
+                    <img src="${getAvatarUrl(entry.avatar)}" class="rank-avatar">
                     <span>${entry.name}</span>
                 </div>
                 <span class="rank-kora">${entry.kora}</span>

@@ -88,6 +88,9 @@ function handleStartLobbyGame(io, socket) {
         lobby.gameState.players[p.socketId] = {
             id: p.socketId,
             name: p.name,
+            avatar: p.avatar,
+            currentFrame: p.currentFrame,
+            koraBalance: p.koraBalance,
             role: null,
             position: null,
             ap_move: 0,

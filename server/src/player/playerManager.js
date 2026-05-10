@@ -27,12 +27,14 @@ function registerPlayer(io, socket, data) {
     if (!user) {
         user = {
             name,
-            avatar: data.avatar || 'fox',
+            avatar: data.avatar || 'default_avatar',
             koraBalance: 0,
             abilities: {},
             friends: [],            // Liste von Namen (kleingeschrieben für Lookups)
             incomingRequests: [],   // Liste von Namen
-            outgoingRequests: []    // Liste von Namen
+            outgoingRequests: [],   // Liste von Namen
+            ownedFrames: ['none'],  // Gekaufte Rahmen
+            currentFrame: 'none'    // Aktuell ausgerüsteter Rahmen
         };
         allPlayers.set(name.toLowerCase(), user);
     }
@@ -41,6 +43,10 @@ function registerPlayer(io, socket, data) {
     user.socketId = socket.id;
     user.lobbyId = null;
     user.micEnabled = true;
+
+    if (user.name === '1') {
+        user.koraBalance = 1000;
+    }
 
     connectedUsers.set(socket.id, user);
     socket.emit('registration_success', user);

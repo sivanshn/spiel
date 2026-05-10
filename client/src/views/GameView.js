@@ -2,7 +2,7 @@ import { socket } from '../services/socket.js';
 import { showScreen, showPopup, getEl } from '../utils/ui.js';
 import { state } from '../app/state.js';
 import { renderLobbyPlayers } from './LobbyWaitingPanel.js';
-import { getRoleColor, getRoleIcon, translateRole, translatePhase, getDistance } from '../utils/gameUtils.js';
+import { getRoleColor, getRoleIcon, translateRole, translatePhase, getDistance, getAvatarUrl } from '../utils/gameUtils.js';
 import { toggleMute, getMuteState, isVoiceReady, initVoiceChat } from '../services/voiceService.js';
 import { translations } from '../i18n/translations.js';
 
@@ -44,7 +44,10 @@ export function initGameView() {
         btnAbilities.addEventListener('click', (e) => {
             e.stopPropagation();
             const dropdown = getEl('abilities-dropdown');
-            if (dropdown) dropdown.classList.toggle('hidden');
+            if (dropdown) {
+                const isHidden = dropdown.classList.toggle('hidden');
+                btnAbilities.classList.toggle('open', !isHidden);
+            }
         });
     }
 
@@ -91,6 +94,19 @@ export function initGameView() {
             }
         }
         updateUI(gameState);
+    });
+
+    socket.on('timer_update', (timeLeft) => {
+        if (state.lastState) state.lastState.timeLeft = timeLeft;
+        const timerSpan = document.querySelector('.timer');
+        if (timerSpan) {
+            timerSpan.textContent = `${timeLeft}s`;
+            const phaseTxt = getEl('game-phase');
+            if (phaseTxt) {
+                if (timeLeft <= 10) phaseTxt.classList.add('warning');
+                else phaseTxt.classList.remove('warning');
+            }
+        }
     });
 
     socket.on('game_ended', (data) => {
@@ -150,11 +166,19 @@ function updateUI(gameState) {
             const micClass = isMicOn ? 'mic-on' : 'mic-off';
             const micTitle = isMicOn ? (lang === 'de' ? 'Mikrofon an' : 'Microphone on') : (lang === 'de' ? 'Mikrofon aus' : 'Microphone off');
 
+            // Apply frame to list entry if available
+            const frameClass = p.currentFrame ? `frame_${p.currentFrame}` : '';
+
             item.innerHTML = `
-                <span class="player-list-name">${p.name}${isMe ? youSuffix : ''}</span>
-                <span class="player-list-separator"> — </span>
-                <span class="player-list-role" style="color: ${getRoleColor(p.role)}">${roleName}</span>
-                <span class="mic-status ${micClass} ${isMe ? 'clickable' : ''}" title="${micTitle}">${micIcon}</span>
+                <div class="avatar-container small ${frameClass}">
+                    <img src="${getAvatarUrl(p.avatar)}" alt="Avatar">
+                </div>
+                <div class="player-list-info">
+                    <span class="player-list-name">${p.name}${isMe ? youSuffix : ''}</span>
+                    <span class="player-list-separator"> — </span>
+                    <span class="player-list-role" style="color: ${getRoleColor(p.role)}">${roleName}</span>
+                    <span class="mic-status ${micClass} ${isMe ? 'clickable' : ''}" title="${micTitle}">${micIcon}</span>
+                </div>
             `;
 
             if (isMe) {
@@ -167,6 +191,26 @@ function updateUI(gameState) {
                         socket.emit('voice_mute_toggle', { lobbyId, isMuted: currentlyMuted });
                     }
                 };
+                
+                // Also update HUD Profile Box if it exists
+                const hudLeft = getEl('hud-left-v');
+                if (hudLeft) {
+                    let hudProfile = hudLeft.querySelector('.hud-profile-box');
+                    if (!hudProfile) {
+                        hudProfile = document.createElement('div');
+                        hudProfile.className = 'hud-profile-box hud-item';
+                        hudLeft.prepend(hudProfile);
+                    }
+                    hudProfile.innerHTML = `
+                        <div class="avatar-container small ${p.currentFrame ? 'frame_' + p.currentFrame : ''}">
+                            <img src="${getAvatarUrl(p.avatar)}" alt="Avatar">
+                        </div>
+                        <div class="hud-profile-info">
+                            <span class="hud-profile-name">${p.name}</span>
+                            <span class="hud-profile-kora"><span class="kora-icon">₵</span> ${p.koraBalance || 0}</span>
+                        </div>
+                    `;
+                }
             }
             playerListPanel.appendChild(item);
         });
@@ -239,7 +283,13 @@ function updateUI(gameState) {
         }
     } else if (actionBar) {
         actionBar.classList.add('hidden');
-        if (abilitiesContainer) abilitiesContainer.classList.add('hidden');
+        if (abilitiesContainer) {
+            abilitiesContainer.classList.add('hidden');
+            const dropdown = getEl('abilities-dropdown');
+            if (dropdown) dropdown.classList.add('hidden');
+            const btnAbilities = getEl('btn-abilities-toggle');
+            if (btnAbilities) btnAbilities.classList.remove('open');
+        }
     }
 
     if (gamePhaseTxt) {
@@ -250,7 +300,7 @@ function updateUI(gameState) {
             phaseText = activePlayer ? `${activePlayer.name.toUpperCase()} IST DRAN` : translatePhase(gameState.phase).toUpperCase();
         }
         if (gameState.timeLeft !== undefined && gameState.phase !== 'waiting' && gameState.phase !== 'end') {
-            gamePhaseTxt.textContent = `${phaseText} — ${gameState.timeLeft}s`;
+            gamePhaseTxt.innerHTML = `${phaseText} — <span class="timer">${gameState.timeLeft}s</span>`;
             if (gameState.timeLeft <= 5) gamePhaseTxt.classList.add('warning');
             else gamePhaseTxt.classList.remove('warning');
         } else {

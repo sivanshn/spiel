@@ -8,11 +8,15 @@ import { setLanguage } from './i18n/languageService.js';
 import { showPopup } from './utils/ui.js';
 import { initChatPanel } from './views/ChatPanel.js';
 import { initFriendsView } from './views/FriendsView.js';
+import { PlayerManager } from './services/PlayerManager.js';
 import './styles/friends.css';
+
+// Initialize Services
+const playerManager = new PlayerManager(socket);
 
 // Init views
 initLoginView();
-initMainView();
+initMainView(playerManager);
 initLobbyWaitingPanel();
 initGameView();
 initChatPanel();

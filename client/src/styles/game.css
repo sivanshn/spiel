@@ -3,7 +3,7 @@
    ============================ */
 
 #screen-game {
-    background: #020617;
+    background: var(--bg-dark);
     justify-content: flex-start;
 }
 
@@ -28,22 +28,24 @@
 .hud-right { display: flex; justify-content: flex-end; gap: 1rem; }
 
 .hud-item {
-    background: var(--glass);
+    background: var(--panel-bg);
     border: 1px solid var(--glass-border);
     padding: 0.8rem 1.5rem;
     border-radius: 12px;
     font-weight: 700;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
     pointer-events: auto;
+    color: var(--text-main);
 }
 
 .phase-highlight {
     font-size: 1.4rem !important;
     padding: 1rem 3rem !important;
-    background: linear-gradient(180deg, rgba(56,189,248,0.2) 0%, rgba(15,23,42,0.8) 100%) !important;
+    background: linear-gradient(180deg, rgba(216, 163, 58, 0.08) 0%, var(--panel-bg) 100%) !important;
     border-color: var(--primary) !important;
     min-width: 300px;
     text-align: center;
+    color: var(--primary);
 }
 
 #player-role {
@@ -56,7 +58,7 @@
     color: var(--primary);
     min-width: 60px;
     text-align: center;
-    border-color: rgba(56, 189, 248, 0.4) !important;
+    border-color: var(--primary) !important;
 }
 
 .warning {
@@ -94,9 +96,17 @@
 
 .player-list-entry {
     font-size: 0.95rem;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.8rem;
     font-weight: 600;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.player-list-info {
+    display: flex;
+    align-items: center;
 }
 
 .player-list-role {
@@ -249,13 +259,29 @@ svg {
 }
 
 #btn-end-turn {
-    background: #38bdf8;
-    color: #020617;
+    background: linear-gradient(180deg, var(--primary) 0%, #78581d 100%);
+    color: #060B14;
+    border: none;
+    box-shadow: 0 0 20px rgba(216, 163, 58, 0.3);
 }
 
 #btn-end-turn:hover:not(:disabled) {
-    background: #7dd3fc;
-    transform: scale(1.02);
+    background: linear-gradient(180deg, var(--primary-bright) 0%, #78581d 100%);
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 30px rgba(216, 163, 58, 0.5);
+}
+
+#action-bar .action-btn.secondary {
+    background: rgba(15, 23, 42, 0.7) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+#action-bar .action-btn.secondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: var(--primary) !important;
+    transform: translateX(-10px) !important;
+    color: var(--primary) !important;
 }
 
 .status-pill {
@@ -293,20 +319,45 @@ svg {
 }
 
 /* Der Button selbst nutzt nun die .action-btn .secondary Klassen aus dem index.html */
+#btn-abilities-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    min-width: 180px;
+}
+
+#btn-abilities-toggle .btn-arrow {
+    font-size: 0.7rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.6;
+}
+
+#btn-abilities-toggle.open .btn-arrow {
+    transform: rotate(180deg);
+    opacity: 1;
+}
 
 .abilities-dropdown {
     position: absolute;
-    top: calc(100% + 10px); /* Öffnet wieder nach UNTEN */
-    right: 0;
-    width: 300px; /* Gleiche Breite wie Button */
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 0.6rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    bottom: 0;
+    right: calc(100% + 20px); /* Opens to the LEFT of the button */
+    width: 320px;
+    background: rgba(10, 15, 25, 0.9);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 0.8rem;
+    box-shadow: -10px 10px 50px rgba(0, 0, 0, 0.8);
     z-index: 100;
-    animation: slideInDown 0.2s ease-out;
+    animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes slideInDown {
@@ -315,36 +366,43 @@ svg {
 }
 
 .ability-entry {
-    padding: 0.8rem 1rem;
-    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
     cursor: pointer;
-    font-size: 0.9rem;
-    color: #94a3b8;
+    font-size: 1rem;
+    color: #cbd5e1;
     transition: all 0.2s;
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    font-weight: 600;
+    gap: 1rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid transparent;
 }
 
 .ability-entry:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: white;
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--primary);
+    border-color: rgba(56, 189, 248, 0.3);
+    transform: scale(1.02);
 }
 
 .ability-entry.active {
     background: var(--primary);
-    color: white;
+    color: #020617;
 }
 
 .ability-entry.empty {
     cursor: default;
     opacity: 0.5;
     font-style: italic;
+    background: none;
+    border: none;
 }
 
 .ability-icon {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
 }
 
 /* Targeting Mode */

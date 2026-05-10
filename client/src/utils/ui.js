@@ -33,3 +33,15 @@ export function showPopup(title, message) {
 export function getEl(id) {
     return document.getElementById(id);
 }
+
+export function closeAllModals() {
+    const modals = document.querySelectorAll('.modal, .panel, .friends-panel');
+    modals.forEach(m => m.classList.add('hidden'));
+    
+    // Specifically handle some special IDs if they don't have the class
+    const panels = ['modal-settings', 'modal-ranking', 'friends-panel', 'modal-roles'];
+    panels.forEach(id => {
+        const el = getEl(id);
+        if (el) el.classList.add('hidden');
+    });
+}

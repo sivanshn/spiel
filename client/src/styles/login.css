@@ -16,7 +16,7 @@
 }
 
 .subtitle {
-    color: #64748b;
+    color: var(--text-dim);
     margin-bottom: 2.5rem;
     font-weight: 300;
 }
@@ -32,7 +32,7 @@ input {
     border: 1px solid var(--glass-border);
     padding: 1.2rem;
     border-radius: 16px;
-    color: white;
+    color: var(--text-main);
     font-size: 1.1rem;
     text-align: center;
     outline: none;
@@ -41,5 +41,6 @@ input {
 
 input:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 20px rgba(216, 163, 58, 0.2);
 }

@@ -5,14 +5,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap');
 
 :root {
-    --bg-dark: #020617;
-    --primary: #38bdf8;
-    --thief: #f43f5e;
-    --police: #3b82f6;
-    --corrupt: #a855f7;
-    --glass: rgba(15, 23, 42, 0.8);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --text: #f8fafc;
+    /* Main Palette from Cat Icon */
+    --bg-dark: #060B14;
+    --panel-bg: #11192A;
+    --primary: #D8A33A; /* Gold */
+    --primary-bright: #F2C96B; /* Helles Gold */
+    --accent-green: #5FAF6D; /* Augen-Grün */
+    --accent-green-dark: #334B3D; /* Halsband-Grün */
+    --text-main: #E6D7C5; /* Off-white / Schnauze */
+    --text-dim: #8A7668; /* Gedeumptes Beige/Braun */
+    --accent-pink: #C98678; /* Nase */
+    
+    /* Game Role Colors - Integrated into Palette */
+    --thief: #C98678; 
+    --police: #5FAF6D; 
+    --corrupt: #D8A33A; 
+
+    --glass: rgba(17, 25, 42, 0.85);
+    --glass-border: rgba(216, 163, 58, 0.25); /* Golden tint */
+    --text: var(--text-main);
+    
+    --shadow-premium: 0 20px 50px rgba(0, 0, 0, 0.6);
 }
 
 * {
@@ -45,7 +58,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+    background: radial-gradient(circle at center, #11192A 0%, #060B14 100%);
     transition: opacity 0.5s ease;
 }
 
@@ -75,19 +88,20 @@ body {
 /* Buttons */
 button {
     background: var(--primary);
-    color: #020617;
+    color: #060B14;
     border: none;
     padding: 1.2rem;
     border-radius: 16px;
     font-weight: 700;
     font-size: 1.1rem;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 button:hover {
-    filter: brightness(1.1);
+    background: var(--primary-bright);
     transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(216, 163, 58, 0.3);
 }
 
 /* Action Button Base Style - Used globally in Modals, Lobby, and Game HUD */
@@ -102,6 +116,8 @@ button:hover {
     text-transform: uppercase;
     letter-spacing: 1px;
     border-radius: 12px;
+    background: var(--primary);
+    color: #060B14;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     cursor: pointer;
@@ -109,15 +125,15 @@ button:hover {
 }
 
 .action-btn.secondary {
-    background: rgba(15, 23, 42, 0.8) !important;
+    background: var(--panel-bg) !important;
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: white !important;
+    border: 1px solid var(--primary) !important;
+    color: var(--primary) !important;
 }
 
 .action-btn.secondary:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(255, 255, 255, 0.2) !important;
+    background: rgba(216, 163, 58, 0.1) !important;
+    border-color: var(--primary-bright) !important;
     transform: scale(1.02) !important;
 }
 
@@ -128,19 +144,20 @@ button:hover {
 }
 
 .action-btn:hover:not(:disabled) {
-    filter: brightness(1.1);
+    background: var(--primary-bright);
     transform: scale(1.02);
 }
 
 /* Glass Card (shared) */
 .glass-card {
     background: var(--glass);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(40px);
     border: 1px solid var(--glass-border);
     padding: 3rem;
     border-radius: 32px;
-    box-shadow: 0 0 80px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 80px rgba(0, 0, 0, 0.7);
     text-align: center;
     max-width: 500px;
     width: 90%;
+    color: var(--text-main);
 }

@@ -27,21 +27,14 @@
         <!-- Screen 1.5: Main View / Lobby Overview -->
         <section id="screen-main" class="screen">
             <div class="main-header-actions">
-                <button id="ranking-btn" class="nav-btn" title="Rangliste">
-                    <span class="btn-icon">🏆</span>
-                    <span data-i18n="btn_ranking">Ranking</span>
-                </button>
-                <button id="roles-btn" class="nav-btn" title="Rollen">
-                    <span class="btn-icon">📋</span>
-                    <span data-i18n="btn_roles">Rollen</span>
-                </button>
-                <button id="settings-btn" class="icon-btn" title="Einstellungen">⚙️</button>
             </div>
 
             <div class="left-header-container">
-                <div class="user-profile">
+                <div class="user-profile" id="user-profile-box">
                     <div class="user-info">
-                        <img id="my-avatar" src="" alt="Avatar">
+                        <div id="my-avatar-container" class="avatar-container">
+                            <img id="my-avatar" src="" alt="Avatar">
+                        </div>
                         <div>
                             <h2 id="my-name">Name</h2>
                             <div class="kora-display" id="kora-main">
@@ -59,6 +52,18 @@
                 <button id="friends-btn" class="nav-btn shop-profile-btn">
                     <span class="btn-icon">👥</span>
                     <span data-i18n="btn_friends">Freunde</span>
+                </button>
+                <button id="ranking-btn" class="nav-btn shop-profile-btn">
+                    <span class="btn-icon">🏆</span>
+                    <span data-i18n="btn_ranking">Ranking</span>
+                </button>
+                <button id="roles-btn" class="nav-btn shop-profile-btn">
+                    <span class="btn-icon">📋</span>
+                    <span data-i18n="btn_roles">Rollen</span>
+                </button>
+                <button id="settings-btn" class="nav-btn shop-profile-btn">
+                    <span class="btn-icon">⚙️</span>
+                    <span data-i18n="btn_settings">Settings</span>
                 </button>
             </div>
 
@@ -117,14 +122,6 @@
                 <div class="hud-center">
                     <div id="game-phase" class="hud-item phase-highlight">Lobby</div>
                 </div>
-                <div class="hud-right">
-                    <div class="abilities-container hidden">
-                        <button id="btn-abilities-toggle" class="action-btn secondary">
-                            <span data-i18n="game_btn_abilities">Fähigkeiten</span> <span class="arrow">▼</span>
-                        </button>
-                        <div id="abilities-dropdown" class="abilities-dropdown hidden"></div>
-                    </div>
-                </div>
             </div>
 
             <div id="map-viewport">
@@ -133,6 +130,12 @@
 
             <div class="game-footer">
                 <div id="action-bar" class="hidden">
+                    <div class="abilities-container">
+                        <button id="btn-abilities-toggle" class="action-btn secondary">
+                            <span data-i18n="game_btn_abilities">Fähigkeiten</span> <span class="arrow">▼</span>
+                        </button>
+                        <div id="abilities-dropdown" class="abilities-dropdown hidden"></div>
+                    </div>
                     <button id="btn-move" class="action-btn secondary hidden">MOVE (2 ÜBRIG)</button>
                     <button id="btn-investigate" class="action-btn secondary hidden">UNTERSUCHEN (2 ÜBRIG)</button>
                     <button id="btn-arrest" class="action-btn secondary hidden">FESTNAHME</button>
@@ -161,17 +164,41 @@
                         <span class="shop-kora-value" id="shop-kora-display">0</span>
                     </div>
                 </div>
+                
+                <div class="shop-tabs">
+                    <button class="shop-tab-btn active" data-tab="abilities" data-i18n="shop_tab_abilities">Fähigkeiten</button>
+                    <button class="shop-tab-btn" data-tab="frames" data-i18n="shop_tab_frames">Rahmen</button>
+                </div>
+
                 <div class="shop-body">
                     <div id="shop-items-grid" class="shop-items-grid">
-                        <!-- Abilities will be rendered here -->
-                    </div>
-                    <div class="shop-empty-state" id="shop-empty-state">
-                        <div class="shop-empty-icon">🛒</div>
-                        <p class="shop-empty-title" data-i18n="shop_coming_soon">Shop kommt bald.</p>
-                        <p class="shop-empty-sub" data-i18n="shop_empty">Noch keine Fähigkeiten verfügbar.</p>
+                        <!-- Items rendered here -->
                     </div>
                 </div>
                 <button id="shop-close" class="action-btn" data-i18n="shop_close">SCHLIESSEN</button>
+            </div>
+        </div>
+
+        <!-- Modal: Profile / Inventory -->
+        <div id="modal-profile" class="modal hidden">
+            <div class="modal-content glass-card profile-modal-panel">
+                <h2 data-i18n="profile_title">PROFIL</h2>
+                
+                <div class="profile-preview-large">
+                    <div id="profile-avatar-container" class="avatar-container large">
+                        <img id="profile-display-avatar" src="" alt="Avatar">
+                    </div>
+                    <h3 id="profile-display-name">Spielername</h3>
+                </div>
+
+                <div class="inventory-section">
+                    <h4 data-i18n="profile_owned_frames">Deine Rahmen</h4>
+                    <div id="owned-frames-grid" class="owned-items-grid">
+                        <!-- Owned frames rendered here -->
+                    </div>
+                </div>
+
+                <button id="profile-close" class="action-btn" data-i18n="shop_close">SCHLIESSEN</button>
             </div>
         </div>
 
@@ -225,37 +252,36 @@
                 <button id="modal-close" class="action-btn">OK</button>
             </div>
         </div>
-    </div>
-        <!-- Friends Side Panel -->
-        <aside id="friends-panel" class="friends-panel hidden">
+            <aside id="friends-panel" class="friends-panel glass-card hidden">
             <div class="friends-header">
                 <h2 data-i18n="friends_title">FREUNDE</h2>
-                <button id="close-friends-btn" class="close-btn">&times;</button>
+                <button id="friends-close-btn" class="close-btn">&times;</button>
             </div>
             
             <div class="friends-tabs">
-                <button class="tab-btn active" data-tab="online" data-i18n="friends_tab_online">Online</button>
-                <button class="tab-btn" data-tab="offline" data-i18n="friends_tab_offline">Offline</button>
-                <button class="tab-btn" data-tab="find" data-i18n="friends_tab_find">Finden</button>
+                <button class="friends-tab active" data-view="list" data-i18n="friends_tab_list">Liste</button>
+                <button class="friends-tab" data-view="requests" data-i18n="friends_tab_requests">Anfragen</button>
+                <button class="friends-tab" data-view="search" data-i18n="friends_tab_search">Suche</button>
             </div>
 
             <div class="friends-content">
-                <div id="tab-online" class="tab-pane active">
-                    <div id="friends-list-online" class="friend-list"></div>
+                <!-- Tab: Friends List -->
+                <div id="friends-view-list" class="friends-content-view">
+                    <div id="friends-list-container" class="friends-list"></div>
                 </div>
-                <div id="tab-offline" class="tab-pane">
-                    <div id="friends-list-offline" class="friend-list"></div>
+
+                <!-- Tab: Requests -->
+                <div id="friends-view-requests" class="friends-content-view hidden">
+                    <div id="friends-requests-container" class="requests-list"></div>
                 </div>
-                <div id="tab-find" class="tab-pane">
-                    <div class="find-friend-form">
-                        <input type="text" id="find-friend-input" placeholder="Spielername..." data-i18n-placeholder="friends_find_placeholder">
-                        <button id="send-friend-request-btn" class="primary-btn" data-i18n="friends_btn_search">Suchen</button>
+
+                <!-- Tab: Search -->
+                <div id="friends-view-search" class="friends-content-view hidden">
+                    <div class="friends-search-box">
+                        <input type="text" id="friends-search-input" placeholder="Spieler suchen..." data-i18n-placeholder="friends_search_placeholder">
+                        <button id="friends-search-btn" class="action-btn small">Suchen</button>
                     </div>
-                    <div id="search-result-container" class="search-result-container"></div>
-                    <div class="requests-section">
-                        <h3 data-i18n="friends_requests_title">ANFRAGEN</h3>
-                        <div id="friend-requests-list" class="request-list"></div>
-                    </div>
+                    <div id="friends-search-results" class="search-results"></div>
                 </div>
             </div>
         </aside>

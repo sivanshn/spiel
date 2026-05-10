@@ -95,7 +95,7 @@ function startTurn(io, lobbyId, playerId, phase) {
             clearInterval(lobby.turnTimer);
             endTurn(io, lobbyId, playerId);
         } else {
-            broadcastState(io, lobbyId);
+            io.to(lobbyId).emit('timer_update', gameState.timeLeft);
         }
     }, 1000);
 

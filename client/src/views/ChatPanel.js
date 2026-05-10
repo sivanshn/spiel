@@ -1,5 +1,6 @@
 import { socket } from '../services/socket.js';
 import { state } from '../app/state.js';
+import { getAvatarUrl } from '../utils/gameUtils.js';
 
 let unreadCount = 0;
 let isOpen = false;
@@ -110,7 +111,7 @@ function appendMessage(msg, countUnread = true) {
     const div = document.createElement('div');
     div.className = `chat-msg ${isMe ? 'is-me' : ''}`;
     div.innerHTML = `
-        <img class="chat-msg-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=${msg.avatar}" alt="${msg.name}">
+        <img class="chat-msg-avatar" src="${getAvatarUrl(msg.avatar)}" alt="${msg.name}">
         <div class="chat-msg-body">
             <div class="chat-msg-meta">
                 <span class="chat-msg-name">${isMe ? 'Du' : msg.name}</span>
