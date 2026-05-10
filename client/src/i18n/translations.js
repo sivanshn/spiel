@@ -76,7 +76,12 @@ export const translations = {
         error_not_neighbor: "Du kannst nur eine benachbarte Verbindung sperren.",
         error_thief_ability: "Der Dieb kann diese Fähigkeit nicht benutzen.",
         msg_roadblock_placed: "Straßensperre wurde platziert!",
-        msg_connection_blocked: "Diese Verbindung ist gesperrt."
+        msg_connection_blocked: "Diese Verbindung ist gesperrt.",
+        lobby_host_badge: "HOST",
+        lobby_free_slot: "Freier Platz",
+        lobby_waiting: "Warten auf Spieler ...",
+        lobby_start_hint: "Nur der Host kann das Spiel starten",
+        lobby_version: "v1.2.0 Cyber Noir"
     },
     en: {
         logo_title: "POLICE vs THIEF",
@@ -155,6 +160,11 @@ export const translations = {
         error_not_neighbor: "You can only block an adjacent connection.",
         error_thief_ability: "The thief cannot use this ability.",
         msg_roadblock_placed: "Roadblock placed!",
-        msg_connection_blocked: "This connection is blocked."
+        msg_connection_blocked: "This connection is blocked.",
+        lobby_host_badge: "HOST",
+        lobby_free_slot: "Free Slot",
+        lobby_waiting: "Waiting for players ...",
+        lobby_start_hint: "Only the host can start the game",
+        lobby_version: "v1.2.0 Cyber Noir"
     }
 };

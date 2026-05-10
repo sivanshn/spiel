@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polizei gegen Dieb | Online</title>
+    <title>Polizei gegen Dieb | Cyber Noir</title>
     <link rel="stylesheet" href="./style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
@@ -18,86 +18,96 @@
                 <p data-i18n="logo_subtitle">Ein rundenbasiertes Strategie-Abenteuer</p>
             </div>
             <div class="login-card glass-card animate-in">
-                <input type="text" id="username" data-i18n-placeholder="login_placeholder" placeholder="NAME EINGEBEN..." maxlength="15">
+                <input type="text" id="username" data-i18n-placeholder="login_placeholder"
+                    placeholder="NAME EINGEBEN..." maxlength="15">
                 <button id="join-btn" class="action-btn" data-i18n="login_btn">EINTRETEN</button>
             </div>
         </section>
 
         <!-- Screen 1.5: Main View / Lobby Overview -->
         <section id="screen-main" class="screen">
+            <div class="main-bg-overlay"></div>
+
             <!-- Sidebar (Left) -->
-            <div class="left-sidebar">
-                <div class="profile-card">
-                    <img id="my-avatar" class="profile-avatar" src="" alt="Avatar">
-                    <div class="profile-info">
+            <div class="sidebar-left">
+                <div class="card profile-card">
+                    <img id="my-avatar" class="avatar-lg" src="" alt="Avatar">
+                    <div class="card-info">
                         <h2 id="my-name">Name</h2>
-                        <div class="profile-stats">
-                            <span data-i18n="main_kora">Kora</span>
-                            <span class="kora-val" id="kora-value-main">0</span>
+                        <div class="kora-badge">
+                            <span class="icon">💎</span>
+                            <span id="kora-value-main">0</span>
                         </div>
                     </div>
                 </div>
 
-                <div id="shop-btn" class="shop-sidebar-btn">
-                    <div class="shop-icon-box">🛒</div>
-                    <div class="shop-text-box">
+                <div id="shop-btn" class="card shop-card clickable">
+                    <div class="card-icon">🛒</div>
+                    <div class="card-text">
                         <span class="title" data-i18n="btn_shop">Shop</span>
-                        <span class="subtitle">Ausrüstung & Skins</span>
                     </div>
-                    <div class="shop-arrow">❯</div>
+                    <div class="card-arrow">❯</div>
+                </div>
+
+                <div class="sidebar-bottom">
+                    <div class="version-tag" data-i18n="lobby_version">v1.2.0 Cyber Noir</div>
                 </div>
             </div>
 
-            <!-- Top Header Actions (Right) -->
-            <div class="top-header-actions">
-                <button id="ranking-btn" class="action-btn-pill">
-                    <span class="icon">🏆</span>
-                    <span data-i18n="btn_ranking">Ranking</span>
+            <!-- Header Actions (Top Right) -->
+            <div class="header-right">
+                <button id="ranking-btn" class="pill-btn">
+                    <span class="icon">🏆</span> <span data-i18n="btn_ranking">Ranking</span>
                 </button>
-                <button id="roles-btn" class="action-btn-pill">
-                    <span class="icon">📋</span>
-                    <span data-i18n="btn_roles">Rollen</span>
+                <button id="roles-btn" class="pill-btn">
+                    <span class="icon">📋</span> <span data-i18n="btn_roles">Rollen</span>
                 </button>
-                <button id="settings-btn" class="action-btn-pill">
-                    <span class="icon">⚙️</span>
-                    <span data-i18n="settings_title">Einstellungen</span>
+                <button id="settings-btn" class="pill-btn">
+                    <span class="icon">⚙️</span> <span data-i18n="settings_title">Einstellungen</span>
                 </button>
             </div>
 
-            <!-- Central Lobby Panel -->
-            <div class="central-panel">
-                <div id="lobby-list-panel" class="lobby-panel-content animate-in">
-                    <div class="lobby-header">
-                        <h1 class="lobby-header-title">OFFENE <span class="blue">LOBBYS</span></h1>
+            <!-- Central Content -->
+            <div class="central-container">
+                <div id="lobby-panel" class="main-panel animate-in">
+                    <!-- Lobby List Section -->
+                    <div id="lobby-list-panel" class="panel-section">
+                        <div class="panel-header">
+                            <h1 data-i18n="main_open_lobbies">OFFENE LOBBYS</h1>
+                        </div>
+                        <div id="lobby-list" class="item-list scrollable">
+                            <p class="empty-msg" data-i18n="main_empty_lobbies">Keine aktiven Ermittlungen</p>
+                        </div>
+                        <div class="panel-footer">
+                            <button id="create-lobby-btn" class="footer-btn primary" data-i18n="main_create_lobby">LOBBY ERSTELLEN</button>
+                        </div>
                     </div>
-                    <div id="lobby-list" class="player-cards-container">
-                        <!-- Lobbies appear here as cards -->
-                        <p class="empty-msg" data-i18n="main_empty_lobbies">Keine aktiven Ermittlungen</p>
-                    </div>
-                    <div class="lobby-footer">
-                        <button id="create-lobby-btn" class="footer-btn primary" data-i18n="main_create_lobby">LOBBY ERSTELLEN</button>
-                    </div>
-                </div>
 
-                <div id="lobby-waiting-panel" class="lobby-panel-content animate-in hidden">
-                    <div class="lobby-header">
-                        <h1 class="lobby-header-title">LOBBY <span class="blue" id="lobby-host-name-title">VON HOST</span></h1>
-                        <span class="lobby-subtitle" id="lobby-player-count-label">SPIELER: 1 / 4</span>
-                    </div>
-                    <div id="lobby-player-list" class="player-cards-container">
-                        <!-- Players appear here as cards -->
-                    </div>
-                    <div class="lobby-footer">
-                        <button id="leave-lobby-btn" class="footer-btn secondary">
-                            <span>❮</span> <span data-i18n="lobby_btn_back">ZURÜCK</span>
-                        </button>
-                        <button id="start-game-btn" class="footer-btn primary hidden" data-i18n="lobby_btn_start">SPIEL STARTEN</button>
+                    <!-- Lobby Waiting Section -->
+                    <div id="lobby-waiting-panel" class="panel-section hidden">
+                        <div class="panel-header">
+                            <h1 id="lobby-view-title" class="title-xl">LOBBY</h1>
+                            <div class="lobby-meta">
+                                <span class="label" data-i18n="lobby_stats_players">SPIELER:</span>
+                                <span id="lobby-player-count" class="value">1 / 4</span>
+                            </div>
+                        </div>
+                        <div id="lobby-player-list" class="item-list">
+                            <!-- Player cards here -->
+                        </div>
+                        <div class="panel-footer dual">
+                            <button id="leave-lobby-btn" class="footer-btn secondary" data-i18n="lobby_btn_back">ZURÜCK</button>
+                            <div class="start-group">
+                                <button id="start-game-btn" class="footer-btn primary hidden" data-i18n="lobby_btn_start">SPIEL STARTEN</button>
+                                <p id="wait-msg" class="hint-text hidden" data-i18n="lobby_start_hint">Nur der Host kann das Spiel starten</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Floating Chat Icon -->
-            <div class="floating-chat-btn">💬</div>
+            <!-- Chat Button -->
+            <button id="chat-toggle-btn" class="floating-btn">💬</button>
         </section>
 
         <!-- Screen 2: Game View -->
