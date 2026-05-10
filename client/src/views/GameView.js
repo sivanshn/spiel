@@ -281,8 +281,9 @@ function renderMap(gameState, me, isMyTurn) {
         }
     });
 
-    // Diamonds
-    if (gameState.diamonds) {
+    // Diamonds (Only visible to Thief team)
+    const isThiefTeam = me && (me.role === 'thief' || me.role === 'corrupt_police');
+    if (gameState.diamonds && isThiefTeam) {
         gameState.diamonds.forEach(d => {
             if (d.isCollected) return;
             const s1 = map.stations[d.stationA];
