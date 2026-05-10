@@ -2,14 +2,26 @@
    GAME VIEW
    ============================ */
 
+/* Design Tokens (lokal für Game View) */
 #screen-game {
+    --hud-bg: rgba(10, 15, 25, 0.75);
+    --hud-blur: blur(20px);
+    --hud-border: 1px solid rgba(255, 255, 255, 0.07);
+    --hud-radius: 14px;
+    --hud-gap: 0.8rem;
     background: #020617;
     justify-content: flex-start;
 }
 
+/* ============================================================
+   HUD TOP BAR – eine zusammenhängende Leiste, nicht Einzelboxen
+   ============================================================ */
+
 .game-hud {
     position: absolute;
-    top: 2rem; left: 2rem; right: 2rem;
+    top: 1.5rem;
+    left: 1.5rem;
+    right: 1.5rem;
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: start;
@@ -21,35 +33,75 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.75rem;
-}
-
-.hud-center { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
-.hud-right { display: flex; justify-content: flex-end; gap: 1rem; }
-
-.hud-item {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    padding: 0.8rem 1.5rem;
-    border-radius: 12px;
-    font-weight: 700;
-    backdrop-filter: blur(10px);
+    gap: var(--hud-gap);
     pointer-events: auto;
 }
 
+/* Linke Info-Gruppe: Diamanten + Spielerliste teilen sich ein Panel */
+.hud-info-group {
+    background: var(--hud-bg);
+    backdrop-filter: var(--hud-blur);
+    border: var(--hud-border);
+    border-radius: var(--hud-radius);
+    overflow: hidden;
+    min-width: 240px;
+}
+
+.hud-info-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1.2rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.hud-info-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.06);
+    margin: 0;
+}
+
+.hud-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    pointer-events: none;
+}
+
+.hud-right {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    pointer-events: auto;
+}
+
+/* Legacy hud-item (wird noch für phase-highlight und abilities genutzt) */
+.hud-item {
+    background: var(--hud-bg);
+    border: var(--hud-border);
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--hud-radius);
+    font-weight: 700;
+    backdrop-filter: var(--hud-blur);
+    pointer-events: auto;
+}
+
+/* Phase-Anzeige (Mitte) */
 .phase-highlight {
-    font-size: 1.4rem !important;
-    padding: 1rem 3rem !important;
-    background: linear-gradient(180deg, rgba(56,189,248,0.2) 0%, rgba(15,23,42,0.8) 100%) !important;
-    border-color: var(--primary) !important;
-    min-width: 300px;
+    font-size: 1.2rem !important;
+    padding: 0.85rem 2.5rem !important;
+    background: rgba(56, 189, 248, 0.1) !important;
+    border-color: rgba(56, 189, 248, 0.3) !important;
+    min-width: 280px;
     text-align: center;
+    letter-spacing: 1px;
 }
 
 #player-role {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     letter-spacing: 2px;
-    text-shadow: 0 0 15px currentColor;
 }
 
 .timer {
@@ -67,24 +119,31 @@
 
 @keyframes blink { 50% { opacity: 0.5; } }
 
-/* Player List & Diamond Panel (Top Left) */
+/* ============================================================
+   DIAMANTEN + SPIELERLISTE → eine verbundene Box
+   ============================================================ */
+
 .diamond-panel {
     display: flex;
     align-items: center;
     gap: 0.6rem;
     color: white;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
+    font-size: 1rem;
 }
+
+.hud-icon { font-size: 1.1rem; }
 
 .player-list-panel {
     text-align: left !important;
-    padding: 1rem 1.5rem !important;
-    min-width: 220px;
+    padding: 0.75rem 1.2rem !important;
+    min-width: 240px;
+    background: transparent !important;
+    border: none !important;
+    backdrop-filter: none !important;
 }
 
 .player-list-header {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
     color: #64748b;
     margin-bottom: 0.5rem;
@@ -93,44 +152,30 @@
 }
 
 .player-list-entry {
-    font-size: 0.95rem;
-    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.35rem;
     font-weight: 600;
     white-space: nowrap;
 }
 
-.player-list-role {
-    font-weight: 800;
-}
+.player-list-role { font-weight: 800; }
 
 .mic-status {
-    margin-left: 0.8rem;
-    font-size: 0.9rem;
+    margin-left: 0.6rem;
+    font-size: 0.85rem;
     cursor: default;
     transition: all 0.2s;
-    opacity: 0.8;
+    opacity: 0.7;
 }
 
-.mic-status.clickable {
-    cursor: pointer;
-    opacity: 1;
-}
+.mic-status.clickable { cursor: pointer; opacity: 1; }
+.mic-status.clickable:hover { transform: scale(1.2); }
+.mic-status.mic-off { filter: grayscale(1) opacity(0.4); }
 
-.mic-status.clickable:hover {
-    transform: scale(1.2);
-    filter: brightness(1.2);
-}
+/* ============================================================
+   MAP
+   ============================================================ */
 
-.mic-status.mic-off {
-    filter: grayscale(1) opacity(0.5);
-}
-
-.hud-icon {
-    font-size: 1.2rem;
-}
-
-
-/* Map Viewport */
 #map-viewport {
     flex-grow: 1;
     width: 100%;
@@ -216,10 +261,15 @@ svg {
     50%       { transform: scale(1.2) rotate(45deg); }
 }
 
-/* Game Footer */
+/* ============================================================
+   ACTION BAR FOOTER – eine horizontale Button-Leiste
+   ============================================================ */
+
 .game-footer {
     position: absolute;
-    bottom: 1.5rem; left: 2rem; right: 2rem;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    right: 1.5rem;
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
@@ -227,60 +277,70 @@ svg {
     pointer-events: none;
 }
 
-#player-status-bar {
-    display: flex;
-    gap: 0.5rem;
-    pointer-events: auto;
-}
-
 #action-bar {
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    flex-direction: row;          /* Horizontal statt vertikal */
+    gap: 0;                        /* Kein Gap – verbunden */
     pointer-events: auto;
-    align-items: flex-end;
-    margin-right: 6rem; /* Sicherer Abstand zum Chat-Button unten rechts */
-    margin-bottom: 0.5rem;
+    align-items: stretch;
+    background: var(--hud-bg);
+    backdrop-filter: var(--hud-blur);
+    border: var(--hud-border);
+    border-radius: var(--hud-radius);
+    overflow: hidden;              /* Damit innere Buttons bündig sind */
+    margin-right: 5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Trennlinie zwischen Buttons */
+#action-bar .action-btn + .action-btn {
+    border-left: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 #action-bar .action-btn {
-    width: 260px; /* Einheitliche Breite für alle Buttons */
-    text-align: center;
-    justify-content: center;
-    padding: 0.9rem 1.5rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* Reset globale Styles */
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    width: auto;
+    padding: 1rem 1.6rem;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #e2e8f0;
+    transition: background 0.2s;
+    text-transform: uppercase;
+    box-shadow: none;
+    white-space: nowrap;
 }
 
-.status-pill {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    border: 1px solid var(--glass-border);
+#action-bar .action-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.07);
+    transform: none;             /* Kein Transform – würde Layout brechen */
+    filter: none;
 }
 
-.status-pill.active-player {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: white;
-    box-shadow: 0 0 10px rgba(255,255,255,0.3);
+/* Primärer Button (Zug beenden) – farblich hervorgehoben */
+#btn-end-turn {
+    background: rgba(56, 189, 248, 0.15) !important;
+    color: var(--primary) !important;
+    border-left: 1px solid rgba(56, 189, 248, 0.2) !important;
 }
 
-/* Result Screen */
-.result-card { text-align: center; }
-
-#result-title {
-    font-size: 5rem;
-    font-weight: 900;
-    margin-bottom: 1rem;
+#btn-end-turn:hover:not(:disabled) {
+    background: rgba(56, 189, 248, 0.25) !important;
 }
 
-.reload-btn {
-    margin-top: 2rem;
-    background: white;
+/* Disabled Zustand */
+#action-bar .action-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }
 
-/* Abilities UI */
+/* ============================================================
+   ABILITIES DROPDOWN
+   ============================================================ */
+
 .abilities-container {
     position: relative;
     pointer-events: auto;
@@ -297,8 +357,8 @@ svg {
 }
 
 .hud-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: white;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .abilities-dropdown {
@@ -306,10 +366,10 @@ svg {
     top: calc(100% + 10px);
     right: 0;
     width: 250px;
-    background: rgba(15, 23, 42, 0.95);
+    background: rgba(15, 23, 42, 0.97);
     backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
+    border: var(--hud-border);
+    border-radius: var(--hud-radius);
     padding: 0.5rem;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
     z-index: 100;
@@ -317,13 +377,13 @@ svg {
 }
 
 @keyframes slideInDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .ability-entry {
     padding: 0.8rem 1rem;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 0.9rem;
     color: #94a3b8;
@@ -340,35 +400,53 @@ svg {
 }
 
 .ability-entry.active {
-    background: var(--primary);
-    color: white;
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--primary);
 }
 
 .ability-entry.empty {
     cursor: default;
-    opacity: 0.5;
+    opacity: 0.4;
     font-style: italic;
 }
 
-.ability-icon {
-    font-size: 1.2rem;
+.ability-icon { font-size: 1.2rem; }
+
+/* ============================================================
+   RESULT SCREEN
+   ============================================================ */
+
+.result-card { text-align: center; }
+
+#result-title {
+    font-size: 4.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
 }
 
-/* Targeting Mode */
-.targeting-mode {
-    cursor: crosshair !important;
+.reward-badge {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1.5rem;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 12px;
+    font-weight: 700;
+    color: var(--primary);
 }
 
-.targeting-mode .station-circle {
-    cursor: crosshair !important;
-}
+/* ============================================================
+   MAP STATES
+   ============================================================ */
 
-/* Map Highlight: Blocked Connections */
+.targeting-mode { cursor: crosshair !important; }
+.targeting-mode .station-circle { cursor: crosshair !important; }
+
 .connection.blocked {
-    stroke: #22c55e !important; /* Green roadblock */
+    stroke: #22c55e !important;
     stroke-width: 8 !important;
-    filter: drop-shadow(0 0 10px #22c55e);
-    stroke-opacity: 0.8;
+    filter: drop-shadow(0 0 8px #22c55e);
+    stroke-opacity: 0.85;
 }
 
 .selection-ring {
@@ -376,9 +454,27 @@ svg {
 }
 
 @keyframes selection-pulse {
-    0% { stroke-opacity: 0.4; stroke-width: 3; }
-    50% { stroke-opacity: 1; stroke-width: 5; }
+    0%   { stroke-opacity: 0.4; stroke-width: 3; }
+    50%  { stroke-opacity: 1;   stroke-width: 5; }
     100% { stroke-opacity: 0.4; stroke-width: 3; }
 }
 
+/* Status Pills */
+#player-status-bar {
+    display: flex;
+    gap: 0.5rem;
+    pointer-events: auto;
+}
 
+.status-pill {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    border: 1px solid var(--glass-border);
+}
+
+.status-pill.active-player {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
