@@ -280,6 +280,39 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Search Results */
+.search-result-container {
+    margin-top: 1.5rem;
+}
+
+.search-preview-card {
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.preview-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.preview-name {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: white;
+}
+
 @media (max-width: 480px) {
     .friends-panel {
         width: 100vw;

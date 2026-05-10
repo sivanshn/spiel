@@ -8,6 +8,20 @@ function registerFriendsHandlers(io, socket) {
         sendFriendsUpdate(socket);
     });
 
+    socket.on('friends:search', (name) => {
+        const targetNameLower = name.trim().toLowerCase();
+        const targetPlayer = allPlayers.get(targetNameLower);
+        
+        if (!targetPlayer) {
+            return socket.emit('friends:error', 'Spieler nicht gefunden.');
+        }
+
+        socket.emit('friends:searchResult', {
+            name: targetPlayer.name,
+            avatar: targetPlayer.avatar
+        });
+    });
+
     socket.on('friends:sendRequest', (targetName) => {
         const user = connectedUsers.get(socket.id);
         if (!user) return;

@@ -38,15 +38,18 @@ export function initFriendsView() {
 
             document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
             getEl(`tab-${tabId}`).classList.add('active');
+
+            // Reset Search Result when switching tabs
+            if (getEl('search-result-container')) getEl('search-result-container').innerHTML = '';
         });
     });
 
-    // Send Request
+    // Search Player
     if (sendRequestBtn) {
         sendRequestBtn.addEventListener('click', () => {
             const name = findInput.value.trim();
             if (name) {
-                socket.emit('friends:sendRequest', name);
+                socket.emit('friends:search', name);
                 findInput.value = '';
             }
         });
@@ -57,6 +60,10 @@ export function initFriendsView() {
         friendsList = data.friends;
         friendRequests = data.requests;
         renderFriends();
+    });
+
+    socket.on('friends:searchResult', (data) => {
+        renderSearchResult(data);
     });
 
     socket.on('friends:requestReceived', (fromName) => {
@@ -148,4 +155,35 @@ function createFriendItem(friend, isOnline, t) {
             </div>
         </div>
     `;
+}
+
+function renderSearchResult(player) {
+    const lang = state.currentLanguage || 'de';
+    const t = translations[lang] || translations['de'];
+    const container = getEl('search-result-container');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="search-preview-card">
+            <div class="preview-header">
+                <div class="friend-avatar"></div>
+                <span class="preview-name">${player.name}</span>
+            </div>
+            <button id="send-request-after-search" class="primary-btn hidden" style="margin-top: 1rem; width: 100%;">
+                ${t.friends_btn_send}
+            </button>
+        </div>
+    `;
+
+    const card = container.querySelector('.preview-header');
+    const sendBtn = getEl('send-request-after-search');
+
+    card.addEventListener('click', () => {
+        sendBtn.classList.remove('hidden');
+    });
+
+    sendBtn.addEventListener('click', () => {
+        socket.emit('friends:sendRequest', player.name);
+        container.innerHTML = '';
+    });
 }
