@@ -20,7 +20,7 @@ export function getShopItems() {
             description: t.ability_roadblock_desc,
             goal: t.ability_roadblock_goal,
             abilities: t.ability_roadblock_abilities,
-            priceKora: 5,
+            priceKora: 10,
             icon: '🚧'
         }
     ];

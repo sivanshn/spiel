@@ -83,7 +83,7 @@ function renderShopOverview() {
         card.innerHTML = `
             <div class="shop-tile-icon">${item.icon}</div>
             <div class="shop-tile-name">${item.name}</div>
-            <div class="shop-tile-price">5 Kora</div>
+            <div class="shop-tile-price">${item.priceKora} Kora</div>
             <button class="action-btn buy-btn ${!affordable ? 'disabled' : ''}" 
                     ${!affordable ? 'disabled' : ''}>
                 ${affordable ? t.shop_buy : t.shop_not_enough_kora}

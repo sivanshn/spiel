@@ -6,8 +6,6 @@ import { getRoleColor, getRoleIcon, translateRole, translatePhase, getDistance }
 import { toggleMute, getMuteState, isVoiceReady, initVoiceChat } from '../services/voiceService.js';
 import { translations } from '../i18n/translations.js';
 
-let targetingAbilityId = null;
-
 export function initGameView() {
     const btnEndTurn = getEl('btn-end-turn');
     const btnMove = getEl('btn-move');
@@ -17,7 +15,6 @@ export function initGameView() {
 
     if (btnEndTurn) {
         btnEndTurn.addEventListener('click', () => {
-            cancelTargeting();
             socket.emit('end_turn');
         });
     }
@@ -62,7 +59,6 @@ export function initGameView() {
 
     socket.on('ability_success', (data) => {
         showPopup("ERFOLG", data.message);
-        cancelTargeting();
     });
 
     socket.on('game_started', () => {
@@ -114,12 +110,6 @@ export function initGameView() {
             }
         }, 5000);
     });
-}
-
-function cancelTargeting() {
-    targetingAbilityId = null;
-    const map = getEl('game-map');
-    if (map) map.classList.remove('targeting-mode');
 }
 
 function updateUI(gameState) {
@@ -193,21 +183,20 @@ function updateUI(gameState) {
         } else {
             abilities.forEach(([id, count]) => {
                 const entry = document.createElement('div');
-                entry.className = `ability-entry ${targetingAbilityId === id ? 'active' : ''}`;
+                entry.className = `ability-entry`;
                 const name = t[`ability_${id}_name`] || id;
                 entry.innerHTML = `<span class="ability-icon">${id === 'roadblock' ? '🚧' : '✨'}</span> ${name} x${count}`;
                 
                 entry.onclick = (e) => {
                     e.stopPropagation();
                     if (!isMyTurn) return;
-                    if (id === 'roadblock') {
-                        targetingAbilityId = (targetingAbilityId === id) ? null : id;
-                        if (targetingAbilityId) {
-                            getEl('game-map').classList.add('targeting-mode');
-                        } else {
-                            getEl('game-map').classList.remove('targeting-mode');
-                        }
+                    if (state.selectedStationId) {
+                        socket.emit('use_ability', { abilityId: id, targetId: state.selectedStationId });
+                        state.selectedStationId = null;
+                        abilitiesDropdown.classList.add('hidden');
                         updateUI(gameState);
+                    } else {
+                        showPopup(lang === 'de' ? 'HINWEIS' : 'NOTE', lang === 'de' ? 'Bitte wähle zuerst eine Station auf der Map aus.' : 'Please select a station on the map first.');
                     }
                 };
                 abilitiesDropdown.appendChild(entry);
@@ -317,13 +306,9 @@ function renderMap(gameState, me, isMyTurn) {
 
         if (isMyTurn) {
             g.onclick = () => {
-                if (targetingAbilityId === 'roadblock') {
-                    socket.emit('use_ability', { abilityId: 'roadblock', targetId: station.id });
-                } else {
-                    state.selectedStationId = station.id;
-                    renderMap(gameState, me, isMyTurn);
-                    updateUI(gameState);
-                }
+                state.selectedStationId = station.id;
+                renderMap(gameState, me, isMyTurn);
+                updateUI(gameState);
             };
             g.style.cursor = 'pointer';
         }
