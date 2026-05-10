@@ -153,8 +153,7 @@
 }
 
 .shop-profile-btn {
-    width: fit-content;
-    min-width: 140px;
+    width: 100%;    /* Gleiche Breite wie Profilkarte */
 }
 
 /* Responsive adjustment for Left Header */
