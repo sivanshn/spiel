@@ -56,6 +56,10 @@
                     <span class="btn-icon">🛍️</span>
                     <span data-i18n="btn_shop">Shop</span>
                 </button>
+                <button id="friends-btn" class="nav-btn shop-profile-btn">
+                    <span class="btn-icon">👥</span>
+                    <span data-i18n="btn_friends">Freunde</span>
+                </button>
             </div>
 
             <!-- PANEL 1: LOBBY LISTE -->
@@ -222,7 +226,39 @@
             </div>
         </div>
     </div>
-    <script type="module" src="/src/main.js"></script>
-</body>
+        <!-- Friends Side Panel -->
+        <aside id="friends-panel" class="friends-panel hidden">
+            <div class="friends-header">
+                <h2 data-i18n="friends_title">FREUNDE</h2>
+                <button id="close-friends-btn" class="close-btn">&times;</button>
+            </div>
+            
+            <div class="friends-tabs">
+                <button class="tab-btn active" data-tab="online" data-i18n="friends_tab_online">Online</button>
+                <button class="tab-btn" data-tab="offline" data-i18n="friends_tab_offline">Offline</button>
+                <button class="tab-btn" data-tab="find" data-i18n="friends_tab_find">Finden</button>
+            </div>
 
+            <div class="friends-content">
+                <div id="tab-online" class="tab-pane active">
+                    <div id="friends-list-online" class="friend-list"></div>
+                </div>
+                <div id="tab-offline" class="tab-pane">
+                    <div id="friends-list-offline" class="friend-list"></div>
+                </div>
+                <div id="tab-find" class="tab-pane">
+                    <div class="find-friend-form">
+                        <input type="text" id="find-friend-input" placeholder="Spielername..." data-i18n-placeholder="friends_find_placeholder">
+                        <button id="send-friend-request-btn" class="primary-btn" data-i18n="friends_btn_send">Anfrage senden</button>
+                    </div>
+                    <div class="requests-section">
+                        <h3 data-i18n="friends_requests_title">ANFRAGEN</h3>
+                        <div id="friend-requests-list" class="request-list"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <script type="module" src="/src/main.js"></script>
+    </body>
 </html>

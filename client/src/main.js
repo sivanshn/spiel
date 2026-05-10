@@ -7,6 +7,8 @@ import { initGameView } from './views/GameView.js';
 import { setLanguage } from './i18n/languageService.js';
 import { showPopup } from './utils/ui.js';
 import { initChatPanel } from './views/ChatPanel.js';
+import { initFriendsView } from './views/FriendsView.js';
+import './styles/friends.css';
 
 // Init views
 initLoginView();
@@ -14,6 +16,7 @@ initMainView();
 initLobbyWaitingPanel();
 initGameView();
 initChatPanel();
+initFriendsView();
 
 socket.on('connect', () => {
     state.myId = socket.id;

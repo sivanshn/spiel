@@ -1,4 +1,4 @@
-const { connectedUsers } = require('../utils/store');
+const { connectedUsers, allPlayers } = require('../utils/store');
 const { broadcastLobbyList } = require('../socket/broadcast');
 const { broadcastRanking } = require('../ranking/rankingService');
 
@@ -13,26 +13,40 @@ function registerPlayer(io, socket, data) {
         return socket.emit('registration_failed', 'Name darf nicht leer sein.');
     }
 
-    const isTaken = Array.from(connectedUsers.values())
+    // Prüfen ob der Name bereits ONLINE ist (andere Socket-ID)
+    const isOnline = Array.from(connectedUsers.values())
         .some(u => u.name.toLowerCase() === name.toLowerCase());
 
-    if (isTaken) {
-        return socket.emit('registration_failed', 'Dieser Name ist bereits vergeben.');
+    if (isOnline) {
+        return socket.emit('registration_failed', 'Dieser Name ist bereits online.');
     }
 
-    const user = {
-        socketId: socket.id,
-        name,
-        avatar: data.avatar || 'fox',
-        lobbyId: null,
-        koraBalance: 0,
-        micEnabled: true,
-        abilities: {} // { roadblock: 0 }
-    };
+    // Prüfen ob der Spieler bereits in allPlayers existiert (für Freunde/Persistenz)
+    let user = allPlayers.get(name.toLowerCase());
+
+    if (!user) {
+        user = {
+            name,
+            avatar: data.avatar || 'fox',
+            koraBalance: 0,
+            abilities: {},
+            friends: [],            // Liste von Namen (kleingeschrieben für Lookups)
+            incomingRequests: [],   // Liste von Namen
+            outgoingRequests: []    // Liste von Namen
+        };
+        allPlayers.set(name.toLowerCase(), user);
+    }
+
+    // Aktuelle Session-Daten
+    user.socketId = socket.id;
+    user.lobbyId = null;
+    user.micEnabled = true;
 
     connectedUsers.set(socket.id, user);
     socket.emit('registration_success', user);
-    socket.emit('kora_update', { balance: 0, earned: 0 });
+    socket.emit('kora_update', { balance: user.koraBalance, earned: 0 });
+    
+    // Freunde-Liste beim Login senden
     broadcastLobbyList(io);
     broadcastRanking(io);
 }

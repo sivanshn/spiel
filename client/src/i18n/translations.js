@@ -76,7 +76,22 @@ export const translations = {
         error_not_neighbor: "Du kannst nur eine benachbarte Verbindung sperren.",
         error_thief_ability: "Der Dieb kann diese Fähigkeit nicht benutzen.",
         msg_roadblock_placed: "Straßensperre wurde platziert!",
-        msg_connection_blocked: "Diese Verbindung ist gesperrt."
+        msg_connection_blocked: "Diese Verbindung ist gesperrt.",
+        btn_friends: "Freunde",
+        friends_title: "FREUNDE",
+        friends_tab_online: "Online",
+        friends_tab_offline: "Offline",
+        friends_tab_find: "Freunde finden",
+        friends_find_placeholder: "Spielername eingeben...",
+        friends_btn_send: "Anfrage senden",
+        friends_requests_title: "ANFRAGEN",
+        friends_no_online: "Keine Freunde online.",
+        friends_no_offline: "Keine Freunde offline.",
+        friends_request_sent: "Freundschaftsanfrage gesendet.",
+        friends_error_not_found: "Spieler nicht gefunden.",
+        friends_error_already: "Ihr seid bereits Freunde.",
+        friends_status_online: "Online",
+        friends_status_offline: "Offline"
     },
     en: {
         logo_title: "POLICE vs THIEF",
@@ -139,6 +154,21 @@ export const translations = {
         role_agent_name: "Special Agent",
         role_agent_short: "Can check a player's identity.",
         role_agent_goal: "Supports police in finding traitors.",
-        role_agent_abilities: "Everything police can do; Up to 3 stations movement; One-time identity check (sees real role)."
+        role_agent_abilities: "Everything police can do; Up to 3 stations movement; One-time identity check (sees real role).",
+        btn_friends: "Friends",
+        friends_title: "FRIENDS",
+        friends_tab_online: "Online",
+        friends_tab_offline: "Offline",
+        friends_tab_find: "Find Friends",
+        friends_find_placeholder: "Enter player name...",
+        friends_btn_send: "Send Request",
+        friends_requests_title: "REQUESTS",
+        friends_no_online: "No friends online.",
+        friends_no_offline: "No friends offline.",
+        friends_request_sent: "Friend request sent.",
+        friends_error_not_found: "Player not found.",
+        friends_error_already: "You are already friends.",
+        friends_status_online: "Online",
+        friends_status_offline: "Offline"
     }
 };

@@ -8,9 +8,13 @@ const { registerPlayer, removePlayer } = require('../player/playerManager');
 const { registerVoiceHandlers } = require('../voice/voiceSignaling');
 const { registerChatHandlers } = require('../chat/chatService');
 const { registerShopHandlers } = require('../shop/shopManager');
+const { registerFriendsHandlers } = require('../player/friendsService');
 
 function registerSocketHandlers(io, socket) {
-    socket.on('register_user', (data) => registerPlayer(io, socket, data));
+    socket.on('register_user', (data) => {
+        registerPlayer(io, socket, data);
+        registerFriendsHandlers(io, socket); // Direkt nach Register initialisieren
+    });
 
     socket.on('get_ranking', () => broadcastRanking(io));
 
