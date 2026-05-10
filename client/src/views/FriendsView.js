@@ -128,8 +128,8 @@ function renderFriends() {
                     <span class="request-name">${req.name}</span>
                 </div>
                 <div class="request-actions">
-                    <button class="action-btn accept-btn" title="${t.friends_status_online}">✔</button>
-                    <button class="action-btn decline-btn" title="${t.friends_status_offline}">&times;</button>
+                    <button class="friend-action-btn accept-btn" title="${t.friends_status_online}">✔</button>
+                    <button class="friend-action-btn decline-btn" title="${t.friends_status_offline}">&times;</button>
                 </div>
             `;
             
