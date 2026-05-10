@@ -325,7 +325,7 @@ svg {
 
 .abilities-dropdown {
     position: absolute;
-    bottom: calc(100% + 10px); /* Öffnet nach OBEN */
+    top: calc(100% + 10px); /* Öffnet wieder nach UNTEN */
     right: 0;
     width: 300px; /* Gleiche Breite wie Button */
     background: rgba(15, 23, 42, 0.95);
@@ -333,13 +333,13 @@ svg {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     padding: 0.6rem;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
     z-index: 100;
-    animation: slideInUp 0.2s ease-out;
+    animation: slideInDown 0.2s ease-out;
 }
 
-@keyframes slideInUp {
-    from { opacity: 0; transform: translateY(10px); }
+@keyframes slideInDown {
+    from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
