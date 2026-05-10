@@ -128,7 +128,7 @@
    ============================ */
 
 .shop-modal-panel {
-    max-width: 800px !important;
+    max-width: 720px !important;
     width: 94% !important;
     padding: 2.5rem !important;
     text-align: center !important;
@@ -209,7 +209,7 @@
 
 /* Shop Body */
 .shop-body {
-    height: 500px;
+    height: 420px;
     overflow-y: auto;
     margin-bottom: 2rem;
     padding-right: 10px;
