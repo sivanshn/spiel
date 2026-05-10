@@ -100,30 +100,23 @@
         <!-- Screen 2: Game View -->
         <section id="screen-game" class="screen">
             <div class="game-hud">
-                <!-- Links: Diamanten + Spielerliste als gemeinsame Box -->
                 <div class="hud-left-v">
-                    <div class="hud-info-group">
-                        <div class="hud-item diamond-panel hud-info-row">
-                            <span class="hud-icon">💎</span>
-                            <span data-i18n="game_diamonds">DIAMANTEN:</span>
-                            <span id="diamond-counter">0 / 2</span>
-                        </div>
-                        <div class="hud-info-divider"></div>
-                        <div id="game-player-list" class="hud-item player-list-panel">
-                            <!-- Player list will be injected here -->
-                        </div>
+                    <div class="hud-item diamond-panel">
+                        <span class="hud-icon">💎</span>
+                        <span data-i18n="game_diamonds">DIAMANTEN: </span>
+                        <span id="diamond-counter">0 / 2</span>
+                    </div>
+                    <div id="game-player-list" class="hud-item player-list-panel">
+                        <!-- Player list will be injected here -->
                     </div>
                 </div>
-                <!-- Mitte: Phase -->
                 <div class="hud-center">
                     <div id="game-phase" class="hud-item phase-highlight">Lobby</div>
                 </div>
-                <!-- Rechts: Fähigkeiten -->
                 <div class="hud-right">
                     <div class="abilities-container">
                         <button id="btn-abilities-toggle" class="hud-item hud-btn">
-                            <span data-i18n="game_btn_abilities">Fähigkeiten</span>
-                            <span class="arrow">▼</span>
+                            <span data-i18n="game_btn_abilities">Fähigkeiten</span> <span class="arrow">▼</span>
                         </button>
                         <div id="abilities-dropdown" class="abilities-dropdown hidden"></div>
                     </div>
@@ -134,12 +127,11 @@
                 <svg id="game-map" viewBox="0 0 1000 1000"></svg>
             </div>
 
-            <!-- Footer: Alle Aktions-Buttons als eine verbundene Leiste -->
             <div class="game-footer">
                 <div id="action-bar" class="hidden">
-                    <button id="btn-move" class="action-btn hidden">BEWEGEN</button>
-                    <button id="btn-investigate" class="action-btn hidden">UNTERSUCHEN</button>
-                    <button id="btn-arrest" class="action-btn hidden">FESTNAHME</button>
+                    <button id="btn-move" class="action-btn secondary hidden">MOVE (2 ÜBRIG)</button>
+                    <button id="btn-investigate" class="action-btn secondary hidden">UNTERSUCHEN (2 ÜBRIG)</button>
+                    <button id="btn-arrest" class="action-btn secondary hidden">FESTNAHME</button>
                     <button id="btn-end-turn" class="action-btn">ZUG BEENDEN</button>
                 </div>
             </div>
