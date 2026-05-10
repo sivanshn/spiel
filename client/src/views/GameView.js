@@ -59,6 +59,8 @@ export function initGameView() {
 
     socket.on('ability_success', (data) => {
         showPopup("ERFOLG", data.message);
+        state.selectedStationId = null;
+        if (state.lastState) updateUI(state.lastState);
     });
 
     socket.on('game_started', () => {
@@ -192,7 +194,6 @@ function updateUI(gameState) {
                     if (!isMyTurn) return;
                     if (state.selectedStationId) {
                         socket.emit('use_ability', { abilityId: id, targetId: state.selectedStationId });
-                        state.selectedStationId = null;
                         abilitiesDropdown.classList.add('hidden');
                         updateUI(gameState);
                     } else {
