@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polizei gegen Dieb | Cyber Noir</title>
+    <title>Polizei gegen Dieb | Online</title>
     <link rel="stylesheet" href="./style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
 </head>
@@ -26,90 +26,67 @@
 
         <!-- Screen 1.5: Main View / Lobby Overview -->
         <section id="screen-main" class="screen">
-            <div class="main-bg-dimmer"></div>
-
-            <!-- Left Sidebar -->
-            <div class="sidebar-left">
-                <div class="card profile-card">
-                    <img id="my-avatar" class="avatar-box" src="" alt="Avatar">
-                    <div class="card-body">
-                        <h2 id="my-name">Name</h2>
-                        <div class="kora-badge">
-                            <span class="icon">💎</span>
-                            <span id="kora-value-main">0</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="shop-btn" class="card shop-card clickable">
-                    <div class="card-icon">🛒</div>
-                    <div class="card-body">
-                        <span class="title" data-i18n="btn_shop">Shop</span>
-                    </div>
-                    <div class="card-arrow">❯</div>
-                </div>
-
-                <div class="sidebar-footer">
-                    <div class="version-info" data-i18n="lobby_version">v1.2.0 Cyber Noir</div>
-                </div>
+            <div class="main-header-actions">
+                <button id="ranking-btn" class="nav-btn" title="Rangliste">
+                    <span class="btn-icon">🏆</span>
+                    <span data-i18n="btn_ranking">Ranking</span>
+                </button>
+                <button id="roles-btn" class="nav-btn" title="Rollen">
+                    <span class="btn-icon">📋</span>
+                    <span data-i18n="btn_roles">Rollen</span>
+                </button>
+                <button id="settings-btn" class="icon-btn" title="Einstellungen">⚙️</button>
             </div>
 
-            <!-- Top Right Actions -->
-            <div class="nav-actions-right">
-                <button id="ranking-btn" class="nav-pill">
-                    <span class="icon">🏆</span> <span data-i18n="btn_ranking">Ranking</span>
-                </button>
-                <button id="roles-btn" class="nav-pill">
-                    <span class="icon">📋</span> <span data-i18n="btn_roles">Rollen</span>
-                </button>
-                <button id="settings-btn" class="nav-pill">
-                    <span class="icon">⚙️</span> <span data-i18n="settings_title">Einstellungen</span>
-                </button>
-            </div>
-
-            <!-- Central Content Area -->
-            <div class="center-content">
-                <div id="lobby-panel" class="premium-panel animate-in">
-                    
-                    <!-- View: Lobby Selection -->
-                    <div id="lobby-list-panel" class="panel-view">
-                        <div class="panel-header">
-                            <h1 class="header-title" data-i18n="main_open_lobbies">OFFENE LOBBYS</h1>
-                        </div>
-                        <div id="lobby-list" class="scroll-list">
-                            <p class="empty-msg" data-i18n="main_empty_lobbies">Keine aktiven Ermittlungen</p>
-                        </div>
-                        <div class="panel-footer">
-                            <button id="create-lobby-btn" class="btn-main primary" data-i18n="main_create_lobby">LOBBY ERSTELLEN</button>
-                        </div>
-                    </div>
-
-                    <!-- View: Lobby Warteraum -->
-                    <div id="lobby-waiting-panel" class="panel-view hidden">
-                        <div class="panel-header">
-                            <h1 id="lobby-view-title" class="header-title text-gradient">LOBBY</h1>
-                            <div class="header-stats">
-                                <span class="label" data-i18n="lobby_stats_players">SPIELER:</span>
-                                <span id="lobby-player-count" class="value">1 / 4</span>
-                            </div>
-                        </div>
-                        <div id="lobby-player-list" class="card-grid">
-                            <!-- Player cards injected here -->
-                        </div>
-                        <div class="panel-footer dual-action">
-                            <button id="leave-lobby-btn" class="btn-main secondary" data-i18n="lobby_btn_back">ZURÜCK</button>
-                            <div class="action-stack">
-                                <button id="start-game-btn" class="btn-main primary hidden" data-i18n="lobby_btn_start">SPIEL STARTEN</button>
-                                <p id="wait-msg" class="footer-hint hidden" data-i18n="lobby_start_hint">Nur der Host kann das Spiel starten</p>
+            <div class="left-header-container">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <img id="my-avatar" src="" alt="Avatar">
+                        <div>
+                            <h2 id="my-name">Name</h2>
+                            <div class="kora-display" id="kora-main">
+                                <span class="kora-icon">💎</span>
+                                <span class="kora-label" data-i18n="main_kora">Kora:</span>
+                                <span class="kora-value" id="kora-value-main">0</span>
                             </div>
                         </div>
                     </div>
+                </div>
+                <button id="shop-btn" class="nav-btn shop-profile-btn">
+                    <span class="btn-icon">🛍️</span>
+                    <span data-i18n="btn_shop">Shop</span>
+                </button>
+            </div>
 
+            <div class="central-panel">
+                <!-- Lobby List Panel -->
+                <div id="lobby-list-panel" class="lobby-panel animate-in">
+                    <h2 data-i18n="main_open_lobbies">OFFENE LOBBYS</h2>
+                    <div id="lobby-list" class="lobby-list">
+                        <p class="empty-msg" data-i18n="main_empty_lobbies">Keine aktiven Ermittlungen</p>
+                    </div>
+                    <button id="create-lobby-btn" class="action-btn" data-i18n="main_create_lobby">LOBBY ERSTELLEN</button>
+                </div>
+
+                <!-- Lobby Waiting Panel (Hidden by default) -->
+                <div id="lobby-waiting-panel" class="lobby-panel animate-in hidden">
+                    <h2 id="lobby-view-title" data-i18n="lobby_title">LOBBY</h2>
+                    <div class="lobby-stats">
+                        <span data-i18n="lobby_stats_players">SPIELER:</span>
+                        <span id="lobby-player-count">1 / 4</span>
+                    </div>
+                    <div id="lobby-player-list" class="player-list">
+                        <!-- Players will be injected here -->
+                    </div>
+                    <div class="panel-footer">
+                        <button id="leave-lobby-btn" class="secondary-btn" data-i18n="lobby_btn_back">ZURÜCK</button>
+                        <button id="start-game-btn" class="action-btn hidden" data-i18n="lobby_btn_start">SPIEL STARTEN</button>
+                    </div>
+                    <p id="wait-msg" class="wait-msg hidden" data-i18n="lobby_wait_msg">Warte auf weitere Spieler...</p>
                 </div>
             </div>
 
-            <!-- Global Chat Toggle -->
-            <div id="chat-toggle-btn" class="fab-chat">💬</div>
+            <button id="chat-toggle-btn" class="chat-toggle">💬</button>
         </section>
 
         <!-- Screen 2: Game View -->

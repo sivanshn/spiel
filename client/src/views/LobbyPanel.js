@@ -1,7 +1,6 @@
 /**
  * LobbyPanel.js
  * Verwaltet die Anzeige der Liste offener Lobbys.
- * Implementiert das hochwertige Cyber Noir Design.
  */
 
 import { socket } from '../services/socket.js';
@@ -21,22 +20,25 @@ export function renderLobbyList(lobbies, container) {
     }
 
     lobbies.forEach(lobby => {
-        const card = document.createElement('div');
-        card.className = 'lobby-card-item animate-in';
-        card.onclick = () => {
+        const item = document.createElement('div');
+        item.className = 'lobby-item';
+        
+        item.innerHTML = `
+            <div class="lobby-info">
+                <span class="lobby-title" style="font-weight:800; display:block;">${t.lobby_title} #${lobby.id.slice(0, 4)}</span>
+                <span class="lobby-host" style="font-size:0.8rem; color:#94a3b8;">Leitung: ${lobby.hostName}</span>
+            </div>
+            <div class="lobby-actions" style="display:flex; align-items:center; gap:1rem;">
+                <span class="player-count" style="font-weight:900;">${lobby.playerCount} / 4</span>
+                <button class="join-btn-small" style="padding:0.4rem 0.8rem; font-size:0.8rem;">${t.main_join}</button>
+            </div>
+        `;
+        
+        const btn = item.querySelector('.join-btn-small');
+        btn.onclick = () => {
             socket.emit('join_lobby', lobby.id);
         };
-
-        card.innerHTML = `
-            <div class="p-avatar" style="display:flex; align-items:center; justify-content:center; color:#3b82f6; font-size:1.5rem; background:rgba(59,130,246,0.1);">#</div>
-            <div class="lobby-info" style="flex:1;">
-                <span class="p-name">${t.lobby_title} VON ${lobby.hostName.toUpperCase()}</span>
-                <div style="font-size:0.8rem; color:#64748b; font-weight:800; margin-top:0.2rem; letter-spacing:1px;">
-                    ID: #${lobby.id.slice(0, 4)} — ${lobby.playerCount} / 4 SPIELER
-                </div>
-            </div>
-            <div class="join-icon" style="color:#3b82f6; font-weight:900;">❯</div>
-        `;
-        container.appendChild(card);
+        
+        container.appendChild(item);
     });
 }
