@@ -1,4 +1,5 @@
 const { connectedUsers } = require('../utils/store');
+const { sendOwnedPremiumAssets } = require('../utils/assetHelper');
 
 const ABILITIES = {
     roadblock: { id: 'roadblock', priceKora: 10, type: 'ability' }
@@ -77,6 +78,9 @@ function registerShopHandlers(io, socket) {
         
         // Push full player data update to sync everything
         socket.emit('player_data_updated', user);
+
+        // Deliver premium assets if applicable
+        sendOwnedPremiumAssets(socket, user);
     });
 
     socket.on('profile_set_frame', (data) => {

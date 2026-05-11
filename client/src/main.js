@@ -9,6 +9,8 @@ import { showPopup } from './utils/ui.js';
 import { initChatPanel } from './views/ChatPanel.js';
 import { initFriendsView } from './views/FriendsView.js';
 import { PlayerManager } from './services/PlayerManager.js';
+import { initAssetService } from './services/assetService.js';
+
 import './styles/friends.css';
 
 // Initialize Services
@@ -21,6 +23,8 @@ initLobbyWaitingPanel();
 initGameView();
 initChatPanel();
 initFriendsView();
+initAssetService();
+
 
 socket.on('connect', () => {
     state.myId = socket.id;

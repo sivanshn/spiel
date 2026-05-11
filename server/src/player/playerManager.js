@@ -1,6 +1,8 @@
 const { connectedUsers, allPlayers } = require('../utils/store');
 const { broadcastLobbyList } = require('../socket/broadcast');
 const { broadcastRanking } = require('../ranking/rankingService');
+const { sendOwnedPremiumAssets } = require('../utils/assetHelper');
+
 
 /**
  * Registriert einen neuen Spieler.
@@ -47,13 +49,21 @@ function registerPlayer(io, socket, data) {
 
     if (user.name === '1') {
         user.koraBalance = 1000;
+        user.avatar = 'trader_cat';
+        if (!user.ownedAvatars.includes('trader_cat')) {
+            user.ownedAvatars.push('trader_cat');
+        }
     }
 
     connectedUsers.set(socket.id, user);
     socket.emit('registration_success', user);
     socket.emit('kora_update', { balance: user.koraBalance, earned: 0 });
     
+    // Premium-Assets senden falls vorhanden
+    sendOwnedPremiumAssets(socket, user);
+
     // Freunde-Liste beim Login senden
+
     broadcastLobbyList(io);
     broadcastRanking(io);
 }

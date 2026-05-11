@@ -1,4 +1,7 @@
+import { assetStore } from './assetStore.js';
+
 export function getRoleColor(role) {
+
     if (role === 'thief') return '#f43f5e';
     if (role === 'police') return '#3b82f6';
     if (role === 'corrupt_police') return '#a855f7';
@@ -21,16 +24,20 @@ export function translateRole(role, lang = 'de') {
 }
 
 export function getAvatarUrl(avatarId) {
+    // Check asset store for premium/delivered assets (base64)
+    const premiumData = assetStore.getAsset(avatarId);
+    if (premiumData) return premiumData;
+
     const AVATAR_MAP = {
-        'default_avatar': '/default_avatar.png',
-        'trader_cat': '/trader_cat.png'
+        'default_avatar': '/default_avatar.png'
     };
 
     if (avatarId && AVATAR_MAP[avatarId]) {
         return AVATAR_MAP[avatarId];
     }
 
-    const oldDefaults = ['goat', 'monkey', 'cat', 'dog', 'fox', 'panda'];
+
+    const oldDefaults = ['goat', 'monkey', 'cat', 'dog', 'fox', 'panda', 'trader_cat'];
     if (!avatarId || oldDefaults.includes(avatarId)) {
         return '/default_avatar.png';
     }
