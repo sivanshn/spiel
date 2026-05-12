@@ -14,22 +14,19 @@ export function renderLobbyList(lobbies, container) {
     }
 
     lobbies.forEach(lobby => {
-        const card = document.createElement('div');
-        card.className = 'lobby-card animate-in';
-        card.innerHTML = `
-            <div class="lobby-info-left">
-                <h3>${texts.lobby_title} #${lobby.id.slice(0, 4).toUpperCase()}</h3>
-                <p>${texts.main_leadership} ${lobby.hostName}</p>
+        const entry = document.createElement('div');
+        entry.className = 'mission-mini-card animate-in';
+        entry.innerHTML = `
+            <div class="mini-card-info">
+                <span class="mini-card-name">${lobby.hostName}</span>
+                <span class="mini-card-players">${lobby.playerCount} / 4</span>
             </div>
-            <div class="lobby-info-right">
-                <span class="player-count">${lobby.playerCount} / 4</span>
-                <button class="join-btn-small">${texts.main_join}</button>
-            </div>
+            <button class="mini-join-btn">GO</button>
         `;
-        const btn = card.querySelector('.join-btn-small');
+        const btn = entry.querySelector('.mini-join-btn');
         btn.onclick = () => {
             socket.emit('join_lobby', lobby.id);
         };
-        container.appendChild(card);
+        container.appendChild(entry);
     });
 }

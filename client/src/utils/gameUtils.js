@@ -29,7 +29,9 @@ export function getAvatarUrl(avatarId) {
     if (premiumData) return premiumData;
 
     const AVATAR_MAP = {
-        'default_avatar': '/default_avatar.png'
+        'default_avatar': '/default_avatar.png',
+        'trader_cat': '/trader_cat.png',
+        'manager_cat': '/manager_cat.png'
     };
 
     if (avatarId && AVATAR_MAP[avatarId]) {
@@ -37,7 +39,7 @@ export function getAvatarUrl(avatarId) {
     }
 
 
-    const oldDefaults = ['goat', 'monkey', 'cat', 'dog', 'fox', 'panda', 'trader_cat'];
+    const oldDefaults = ['goat', 'monkey', 'cat', 'dog', 'fox', 'panda'];
     if (!avatarId || oldDefaults.includes(avatarId)) {
         return '/default_avatar.png';
     }

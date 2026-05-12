@@ -1,31 +1,28 @@
-/* ========================================
-   GLOBAL – Design Tokens, Reset, Screens
-   ======================================== */
-
+@import url('./tokens.css');
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap');
 
 :root {
-    /* Main Palette from Cat Icon */
-    --bg-dark: #060B14;
-    --panel-bg: #11192A;
-    --primary: #D8A33A; /* Gold */
-    --primary-bright: #F2C96B; /* Helles Gold */
-    --accent-green: #5FAF6D; /* Augen-Grün */
-    --accent-green-dark: #334B3D; /* Halsband-Grün */
-    --text-main: #E6D7C5; /* Off-white / Schnauze */
-    --text-dim: #8A7668; /* Gedeumptes Beige/Braun */
-    --accent-pink: #C98678; /* Nase */
+    /* Legacy mapping for backward compatibility if needed, 
+       but we should migrate to tokens.css variables */
+    --bg-dark: var(--bg-page);
+    --panel-bg: var(--bg-panel);
+    --primary: var(--clr-gold-500);
+    --primary-bright: var(--clr-gold-400);
+    --accent-green: var(--clr-emerald-500);
+    --accent-green-dark: var(--clr-emerald-700);
+    --text-main: var(--fg-main);
+    --text-dim: var(--fg-muted);
+    --accent-pink: var(--clr-coral-500);
     
-    /* Game Role Colors - Integrated into Palette */
-    --thief: #C98678; 
-    --police: #5FAF6D; 
-    --corrupt: #D8A33A; 
+    --thief: var(--role-thief); 
+    --police: var(--role-police); 
+    --corrupt: var(--role-corrupt); 
 
-    --glass: rgba(17, 25, 42, 0.85);
-    --glass-border: rgba(216, 163, 58, 0.25); /* Golden tint */
-    --text: var(--text-main);
+    --glass: var(--bg-glass);
+    --glass-border: var(--brd-glass);
+    --text: var(--fg-main);
     
-    --shadow-premium: 0 20px 50px rgba(0, 0, 0, 0.6);
+    --shadow-premium: var(--sh-premium);
 }
 
 * {

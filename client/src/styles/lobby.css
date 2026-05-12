@@ -3,13 +3,13 @@
    ============================ */
 
 .lobby-panel {
-    background: var(--panel-bg) !important;
+    background: var(--bg-panel) !important;
     backdrop-filter: blur(40px);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--shadow-premium);
+    border: 1px solid var(--brd-glass);
+    box-shadow: var(--sh-premium);
     width: 550px !important;
     max-width: 95%;
-    border-radius: 24px;
+    border-radius: var(--rd-2xl);
     padding: 0 !important;
     overflow: hidden;
     display: flex;
@@ -17,9 +17,9 @@
 }
 
 .panel-header {
-    padding: 1.5rem 2rem;
-    background: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: var(--sp-6) var(--sp-8);
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid var(--brd-muted);
     text-align: center;
 }
 
@@ -30,6 +30,7 @@
     font-weight: 900;
     color: var(--primary);
     text-transform: uppercase;
+    text-shadow: 0 0 15px rgba(216, 163, 58, 0.3);
 }
 
 .panel-content {
@@ -39,9 +40,9 @@
 }
 
 .panel-footer {
-    padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.02);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: var(--sp-6);
+    background: rgba(255, 255, 255, 0.01);
+    border-top: 1px solid var(--brd-muted);
     display: flex;
     justify-content: center;
 }
@@ -54,20 +55,21 @@
 }
 
 .lobby-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 0.8rem 1.2rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--brd-muted);
+    border-radius: var(--rd-md);
+    padding: var(--sp-3) var(--sp-4);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .lobby-card:hover {
     background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(56, 189, 248, 0.4);
-    transform: scale(1.02);
+    border-color: var(--primary);
+    transform: scale(1.01);
+    box-shadow: var(--sh-glow-gold);
 }
 
 .lobby-info-left {
@@ -97,20 +99,21 @@
 
 .join-btn-small {
     background: var(--primary);
-    color: #060B14;
+    color: var(--fg-on-primary);
     border: none;
-    padding: 0.4rem 1rem;
-    border-radius: 8px;
+    padding: var(--sp-2) var(--sp-4);
+    border-radius: var(--rd-sm);
     font-size: 0.75rem;
     font-weight: 800;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     text-transform: uppercase;
 }
 
 .join-btn-small:hover {
-    background: var(--primary-bright);
-    box-shadow: 0 0 15px rgba(216, 163, 58, 0.4);
+    background: var(--primary-hover);
+    box-shadow: var(--sh-glow-gold);
+    transform: translateY(-1px);
 }
 
 .player-count {
@@ -146,17 +149,18 @@
 .player-item {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--glass-border);
-    padding: 0.8rem 1.2rem;
-    border-radius: 12px;
+    gap: var(--sp-4);
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid var(--brd-muted);
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--rd-md);
     transition: all 0.3s;
 }
 
 .player-item.is-host {
     border-color: var(--primary);
-    background: rgba(216, 163, 58, 0.05);
+    background: rgba(216, 163, 58, 0.03);
+    box-shadow: inset 0 0 10px rgba(216, 163, 58, 0.05);
 }
 
 .player-avatar {
@@ -197,22 +201,24 @@
 /* Action Buttons (shared across lobby + game) */
 .action-btn {
     background: var(--primary);
-    color: #020617;
+    color: var(--fg-on-primary);
     border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
+    padding: var(--sp-3) var(--sp-6);
+    border-radius: var(--rd-md);
     font-weight: 700;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     white-space: nowrap;
+    box-shadow: var(--sh-premium);
 }
 
-.action-btn:hover {
-    filter: brightness(1.1);
+.action-btn:hover:not(:disabled) {
+    background: var(--primary-hover);
     transform: translateY(-2px);
+    box-shadow: var(--sh-glow-gold);
 }
 
 .action-btn:disabled {

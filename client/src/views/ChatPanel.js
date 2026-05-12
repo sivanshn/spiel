@@ -6,20 +6,8 @@ let unreadCount = 0;
 let isOpen = false;
 let chatPanel = null;
 let chatMessages = null;
-let chatToggleBtn = null;
-let unreadBadge = null;
 
 export function initChatPanel() {
-    // Floating Toggle Button erstellen
-    chatToggleBtn = document.createElement('button');
-    chatToggleBtn.id = 'chat-toggle-btn';
-    chatToggleBtn.title = 'Chat öffnen';
-    chatToggleBtn.innerHTML = `💬<span id="chat-unread-badge" class="hidden"></span>`;
-    chatToggleBtn.classList.add('hidden'); // Erst nach Login sichtbar
-    document.body.appendChild(chatToggleBtn);
-
-    unreadBadge = chatToggleBtn.querySelector('#chat-unread-badge');
-
     // Chat Panel HTML
     chatPanel = document.createElement('div');
     chatPanel.id = 'chat-panel';
@@ -27,7 +15,10 @@ export function initChatPanel() {
     chatPanel.innerHTML = `
         <div class="chat-header">
             <h3>💬 Globaler Chat</h3>
-            <span class="chat-online-count" id="chat-online-count">0 online</span>
+            <div class="chat-header-right">
+                <span class="chat-online-count" id="chat-online-count">0 online</span>
+                <button id="chat-close-btn" class="chat-close-x">✕</button>
+            </div>
         </div>
         <div id="chat-messages"></div>
         <div class="chat-input-area">
@@ -37,25 +28,16 @@ export function initChatPanel() {
     `;
     document.body.appendChild(chatPanel);
 
+    const closeBtn = chatPanel.querySelector('#chat-close-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            toggleChat();
+            // Optional: Dispatch event to clear nav highlight in MainView
+            window.dispatchEvent(new CustomEvent('chat_closed'));
+        });
+    }
+
     chatMessages = chatPanel.querySelector('#chat-messages');
-
-    // Toggle
-    chatToggleBtn.addEventListener('click', () => {
-        isOpen = !isOpen;
-        chatPanel.classList.toggle('hidden', !isOpen);
-        chatToggleBtn.innerHTML = isOpen
-            ? `✕<span id="chat-unread-badge" class="hidden"></span>`
-            : `💬<span id="chat-unread-badge" class="hidden"></span>`;
-        unreadBadge = chatToggleBtn.querySelector('#chat-unread-badge');
-
-        if (isOpen) {
-            unreadCount = 0;
-            unreadBadge.classList.add('hidden');
-            // Nach unten scrollen
-            setTimeout(() => scrollToBottom(), 50);
-            chatPanel.querySelector('#chat-input')?.focus();
-        }
-    });
 
     // Senden via Button
     const sendBtn = chatPanel.querySelector('#chat-send-btn');
@@ -69,30 +51,36 @@ export function initChatPanel() {
     // Nachrichten empfangen
     socket.on('chat_message', (msg) => {
         appendMessage(msg);
-
-        if (!isOpen) {
-            unreadCount++;
-            unreadBadge.textContent = unreadCount > 9 ? '9+' : unreadCount;
-            unreadBadge.classList.remove('hidden');
-        }
     });
 
-    // Chat erst nach Login anzeigen + History laden
+    // Chat erst nach Login History laden
     socket.on('registration_success', () => {
-        chatToggleBtn.classList.remove('hidden'); // Chat-Button einblenden
         socket.emit('get_chat_history');
     });
 
     socket.on('chat_history', (history) => {
         if (!chatMessages) return;
         chatMessages.innerHTML = '';
-        history.forEach(msg => appendMessage(msg, false)); // false = keine Unread-Zählung
+        history.forEach(msg => appendMessage(msg, false)); 
         scrollToBottom();
     });
 
     // Online-Zähler aktualisieren (bei Lobby-Updates)
     socket.on('lobby_list_update', () => updateOnlineCount());
     socket.on('registration_success', () => updateOnlineCount());
+}
+
+export function toggleChat() {
+    isOpen = !isOpen;
+    if (chatPanel) {
+        chatPanel.classList.toggle('hidden', !isOpen);
+        if (isOpen) {
+            unreadCount = 0;
+            setTimeout(() => scrollToBottom(), 50);
+            const input = chatPanel.querySelector('#chat-input');
+            if (input) input.focus();
+        }
+    }
 }
 
 function sendMessage() {
@@ -131,9 +119,6 @@ function scrollToBottom() {
 function updateOnlineCount() {
     const el = chatPanel?.querySelector('#chat-online-count');
     if (!el) return;
-    // Simpel: Anzahl der verbundenen Sockets (kommt vom Server via connectedUsers.size)
-    // Wir nutzen den Lobby-Update um zu wissen wie viele online sind (Proxy)
-    // Alternativ: Socket-Event 'online_count' vom Server
 }
 
 function escapeHtml(text) {

@@ -1,0 +1,98 @@
+/* ========================================
+   DESIGN TOKENS - Primitive -> Semantic -> Component
+   ======================================== */
+
+:root {
+    /* --- PRIMITIVE TOKENS (Raw values) --- */
+    
+    /* Core Palette (Inspired by Cat Icon) */
+    --clr-gold-500: #D8A33A;
+    --clr-gold-400: #F2C96B;
+    --clr-gold-600: #B88A2E;
+    
+    --clr-emerald-500: #5FAF6D;
+    --clr-emerald-600: #4A8F56;
+    --clr-emerald-700: #334B3D;
+    
+    --clr-navy-950: #060B14;
+    --clr-navy-900: #11192A;
+    --clr-navy-800: #1A243A;
+    
+    --clr-coral-500: #C98678;
+    --clr-coral-600: #B07266;
+    
+    --clr-slate-400: #94a3b8;
+    --clr-slate-500: #64748b;
+    --clr-slate-200: #e2e8f0;
+    
+    /* Spacing */
+    --sp-1: 0.25rem;
+    --sp-2: 0.5rem;
+    --sp-3: 0.75rem;
+    --sp-4: 1rem;
+    --sp-6: 1.5rem;
+    --sp-8: 2rem;
+    --sp-12: 3rem;
+    
+    /* Radius */
+    --rd-sm: 0.5rem;
+    --rd-md: 0.75rem;
+    --rd-lg: 1rem;
+    --rd-xl: 1.5rem;
+    --rd-2xl: 2rem;
+    --rd-full: 9999px;
+    
+    /* Shadows */
+    --sh-premium: 0 20px 50px rgba(0, 0, 0, 0.6);
+    --sh-glow-gold: 0 0 20px rgba(216, 163, 58, 0.4);
+    --sh-glow-emerald: 0 0 20px rgba(95, 175, 109, 0.4);
+    
+    /* --- SEMANTIC TOKENS (Purpose names) --- */
+    
+    /* Backgrounds */
+    --bg-page: var(--clr-navy-950);
+    --bg-panel: var(--clr-navy-900);
+    --bg-glass: rgba(17, 25, 42, 0.85);
+    --bg-glass-tint: rgba(216, 163, 58, 0.05);
+    
+    /* Foregrounds */
+    --fg-main: #E6D7C5;
+    --fg-muted: var(--clr-slate-400);
+    --fg-dim: var(--clr-slate-500);
+    --fg-on-primary: var(--clr-navy-950);
+    
+    /* Accents */
+    --primary: var(--clr-gold-500);
+    --primary-hover: var(--clr-gold-400);
+    --primary-active: var(--clr-gold-600);
+    
+    --success: var(--clr-emerald-500);
+    --danger: var(--clr-coral-500);
+    
+    /* Borders */
+    --brd-glass: rgba(216, 163, 58, 0.25);
+    --brd-primary: var(--clr-gold-500);
+    --brd-muted: rgba(255, 255, 255, 0.1);
+    
+    /* --- COMPONENT TOKENS (Specific components) --- */
+    
+    /* Profile Box */
+    --profile-bg: var(--bg-panel);
+    --profile-brd: var(--brd-glass);
+    --profile-sh: var(--sh-premium);
+    
+    /* Navigation Buttons */
+    --nav-btn-bg: var(--bg-panel);
+    --nav-btn-brd: var(--brd-glass);
+    --nav-btn-fg: var(--fg-main);
+    
+    /* Modals */
+    --modal-bg: var(--bg-glass);
+    --modal-brd: var(--brd-glass);
+    --modal-rd: var(--rd-2xl);
+    
+    /* Role Colors */
+    --role-thief: var(--clr-coral-500);
+    --role-police: var(--clr-emerald-500);
+    --role-corrupt: var(--clr-gold-500);
+}

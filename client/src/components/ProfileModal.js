@@ -40,28 +40,32 @@ export class ProfileModal {
         if (!player) return;
 
         // Render large preview
-        const currentFrame = player.currentFrame || 'default';
-        this.previewContainer.className = `avatar-container large ${currentFrame}`;
+        const frameClass = player.currentFrame ? `frame-${player.currentFrame}` : '';
+        this.previewContainer.className = `avatar-container large ${frameClass}`;
         
         if (this.displayName) this.displayName.textContent = player.name;
         if (this.displayAvatar) this.displayAvatar.src = getAvatarUrl(player.avatar);
         
         // Render owned frames
-        this.ownedGrid.innerHTML = '';
-        const owned = player.ownedFrames || ['default'];
+        if (this.ownedGrid) {
+            this.ownedGrid.innerHTML = '';
+            const owned = player.ownedFrames || ['default'];
+            const currentFrame = player.currentFrame || 'none';
 
-        owned.forEach(frameId => {
-            const tile = document.createElement('div');
-            tile.className = `owned-item-tile ${frameId === currentFrame ? 'active' : ''}`;
-            
-            const framePreview = document.createElement('div');
-            framePreview.className = `frame-preview ${frameId}`;
-            
-            tile.onclick = () => this.setFrame(frameId);
-            
-            tile.appendChild(framePreview);
-            this.ownedGrid.appendChild(tile);
-        });
+            owned.forEach(frameId => {
+                const tile = document.createElement('div');
+                tile.className = `owned-item-tile ${frameId === currentFrame ? 'active' : ''}`;
+                
+                const framePreview = document.createElement('div');
+                // Use the standardized frame-ID class for the preview
+                framePreview.className = `frame-preview ${frameId}`;
+                
+                tile.onclick = () => this.setFrame(frameId);
+                
+                tile.appendChild(framePreview);
+                this.ownedGrid.appendChild(tile);
+            });
+        }
 
         // Render owned avatars
         if (this.avatarsGrid) {

@@ -24,86 +24,102 @@
             </div>
         </section>
 
-        <!-- Screen 1.5: Main View / Lobby Overview -->
-        <section id="screen-main" class="screen">
-            <div class="main-header-actions">
-            </div>
-
-            <div class="left-header-container">
-                <div class="user-profile" id="user-profile-box">
-                    <div class="user-info">
-                        <div id="my-avatar-container" class="avatar-container">
+        <!-- Screen 1.5: Main View / Game HUD (Brawl Stars Style) -->
+        <section id="screen-main" class="screen brawl-hud">
+            <!-- TOP BAR -->
+            <header class="hud-top-bar">
+                <div class="hud-top-left">
+                    <div class="hud-player-card" id="user-profile-box" style="cursor: pointer;">
+                        <div id="my-avatar-container" class="hud-avatar-box">
                             <img id="my-avatar" src="" alt="Avatar">
                         </div>
-                        <div>
+                        <div class="hud-player-info">
                             <h2 id="my-name">Name</h2>
-                            <div class="kora-display" id="kora-main">
-                                <span class="kora-icon">💎</span>
-                                <span class="kora-label" data-i18n="main_kora">Kora:</span>
-                                <span class="kora-value" id="kora-value-main">0</span>
-                            </div>
+                            <div class="xp-bar-mini"><div class="xp-fill" style="width: 60%;"></div></div>
+                        </div>
+                    </div>
+                    <div class="hud-resources">
+                        <div class="resource-pill">
+                            <span class="resource-icon">💎</span>
+                            <span id="kora-value-main">0</span>
                         </div>
                     </div>
                 </div>
-                <button id="shop-btn" class="nav-btn shop-profile-btn">
-                    <span class="btn-icon">🛍️</span>
-                    <span data-i18n="btn_shop">Shop</span>
-                </button>
-                <button id="friends-btn" class="nav-btn shop-profile-btn">
-                    <span class="btn-icon">👥</span>
-                    <span data-i18n="btn_friends">Freunde</span>
-                </button>
-                <button id="ranking-btn" class="nav-btn shop-profile-btn">
-                    <span class="btn-icon">🏆</span>
-                    <span data-i18n="btn_ranking">Ranking</span>
-                </button>
-                <button id="roles-btn" class="nav-btn shop-profile-btn">
-                    <span class="btn-icon">📋</span>
-                    <span data-i18n="btn_roles">Rollen</span>
-                </button>
-                <button id="settings-btn" class="nav-btn shop-profile-btn">
-                    <span class="btn-icon">⚙️</span>
-                    <span data-i18n="btn_settings">Settings</span>
-                </button>
-            </div>
 
-            <!-- PANEL 1: LOBBY LISTE -->
-            <div id="lobby-list-panel" class="lobby-panel glass-card animate-in">
-                <div class="panel-header">
-                    <h2 data-i18n="main_open_lobbies">OFFENE LOBBYS</h2>
+                <div class="hud-top-right">
+                    <button id="ranking-btn" class="hud-circle-btn">
+                        <div class="circle-icon">🏆</div>
+                    </button>
+                    <button id="settings-btn" class="hud-circle-btn">
+                        <div class="circle-icon">⚙️</div>
+                    </button>
                 </div>
-                <div class="panel-content">
-                    <div id="lobby-list" class="lobby-list">
-                        <!-- Lobbies appear here -->
-                        <p class="empty-msg" data-i18n="main_empty_lobbies">Keine aktiven Ermittlungen</p>
-                    </div>
-                </div>
-                <div class="panel-footer">
-                    <button id="create-lobby-btn" class="action-btn" data-i18n="main_create_lobby">LOBBY
-                        ERSTELLEN</button>
-                </div>
-            </div>
+            </header>
 
-            <!-- PANEL 2: LOBBY WARTERAUM (Integriert in Main View) -->
-            <div id="lobby-waiting-panel" class="lobby-panel glass-card animate-in hidden">
-                <div class="panel-header">
-                    <h2 id="lobby-view-title" data-i18n="lobby_title">LOBBY</h2>
-                </div>
-                <div class="panel-content">
-                    <div class="lobby-stats">
-                        <span data-i18n="lobby_stats_players">SPIELER:</span> <span id="lobby-player-count">1 / 4</span>
+            <!-- SIDE DOCKS -->
+            <aside class="hud-side-dock left">
+                <button id="shop-btn" class="dock-item">
+                    <div class="dock-icon">🛍️</div>
+                    <span class="dock-label" data-i18n="btn_shop">Shop</span>
+                </button>
+                <button id="roles-btn" class="dock-item">
+                    <div class="dock-icon">📋</div>
+                    <span class="dock-label" data-i18n="btn_roles">Rollen</span>
+                </button>
+            </aside>
+
+            <aside class="hud-side-dock right">
+                <button id="friends-btn" class="dock-item">
+                    <div class="dock-icon">👥</div>
+                    <span class="dock-label" data-i18n="btn_friends">Freunde</span>
+                </button>
+                <button id="chat-btn-hud" class="dock-item">
+                    <div class="dock-icon">💬</div>
+                    <span class="dock-label">Chat</span>
+                </button>
+            </aside>
+
+            <!-- CENTER PIECE: Open Lobbies Dashboard -->
+            <main class="hud-center-stage">
+                <div id="lobby-list-panel" class="mission-selector dashboard-style">
+                    <div class="mission-header">
+                        <span class="mission-mode" data-i18n="main_open_lobbies">OFFENE LOBBYS</span>
+                        <span id="active-lobbies-count" class="online-tag">0 ONLINE</span>
                     </div>
-                    <div id="lobby-player-list" class="player-list">
-                        <!-- Players appear here -->
+                    <div id="lobby-list" class="mission-scroll-area">
+                        <!-- Lobbies as mini cards -->
                     </div>
                 </div>
-                <div class="panel-footer lobby-actions">
-                    <button id="leave-lobby-btn" class="action-btn secondary" data-i18n="lobby_btn_back">ZURÜCK</button>
-                    <button id="start-game-btn" class="action-btn hidden" data-i18n="lobby_btn_start">SPIEL
-                        STARTEN</button>
-                    <p id="wait-msg" class="wait-msg" data-i18n="lobby_wait_msg">Warte auf weitere Spieler...</p>
+            </main>
+
+            <!-- BOTTOM HUD: Mission & Play -->
+            <footer class="hud-bottom-bar">
+                <div class="brawl-pass-preview">
+                    <div class="pass-icon">🎫</div>
+                    <div class="pass-info">
+                        <span class="pass-name">POLIZEI PASS</span>
+                        <div class="pass-progress"></div>
+                    </div>
                 </div>
-            </div>
+
+                <div class="play-action-zone">
+                    <button id="create-lobby-btn" class="big-play-btn">
+                        <span class="play-label">SPIELEN</span>
+                    </button>
+                </div>
+
+                <!-- WAITING PANEL (MODAL STYLE) -->
+                <div id="lobby-waiting-panel" class="lobby-waiting-overlay hidden">
+                    <div class="waiting-card glass-card">
+                        <h2 id="lobby-view-title">LOBBY</h2>
+                        <div id="lobby-player-list" class="waiting-player-list"></div>
+                        <div class="waiting-actions">
+                            <button id="leave-lobby-btn" class="hud-btn secondary">BACK</button>
+                            <button id="start-game-btn" class="hud-btn primary hidden">START</button>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </section>
 
         <!-- Screen 2: Game View -->
@@ -191,19 +207,12 @@
                     </div>
                     <h3 id="profile-display-name">Spielername</h3>
                 </div>
-
-                <div class="inventory-section">
-                    <h4 data-i18n="profile_owned_frames">Deine Rahmen</h4>
-                    <div id="owned-frames-grid" class="owned-items-grid">
-                        <!-- Owned frames rendered here -->
-                    </div>
-                </div>
-
-                <div class="inventory-section">
-                    <h4 data-i18n="profile_owned_avatars">Deine Icons</h4>
-                    <div id="owned-avatars-grid" class="owned-items-grid">
-                        <!-- Owned avatars rendered here -->
-                    </div>
+                <div class="profile-inventory">
+                    <h3>MEINE RAHMEN</h3>
+                    <div id="owned-frames-grid" class="inventory-grid"></div>
+                    
+                    <h3>MEINE ICONS</h3>
+                    <div id="owned-avatars-grid" class="inventory-grid"></div>
                 </div>
 
                 <button id="profile-close" class="action-btn" data-i18n="shop_close">SCHLIESSEN</button>

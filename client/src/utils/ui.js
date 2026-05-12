@@ -39,7 +39,7 @@ export function closeAllModals() {
     modals.forEach(m => m.classList.add('hidden'));
     
     // Specifically handle some special IDs if they don't have the class
-    const panels = ['modal-settings', 'modal-ranking', 'friends-panel', 'modal-roles'];
+    const panels = ['modal-settings', 'modal-ranking', 'friends-panel', 'modal-roles', 'chat-panel'];
     panels.forEach(id => {
         const el = getEl(id);
         if (el) el.classList.add('hidden');

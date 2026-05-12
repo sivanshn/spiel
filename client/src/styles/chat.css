@@ -92,12 +92,35 @@
     margin: 0;
 }
 
+.chat-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
 .chat-online-count {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: #64748b;
     background: rgba(255, 255, 255, 0.04);
     padding: 0.2rem 0.6rem;
     border-radius: 20px;
+    letter-spacing: normal;
+}
+
+.chat-close-x {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    transition: all 0.2s;
+}
+
+.chat-close-x:hover {
+    color: white;
+    transform: scale(1.1);
 }
 
 /* Nachrichten Bereich */

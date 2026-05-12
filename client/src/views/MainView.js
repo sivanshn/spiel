@@ -1,4 +1,5 @@
 import { socket } from '../services/socket.js';
+import { toggleChat } from './ChatPanel.js';
 import { getEl, closeAllModals } from '../utils/ui.js';
 import { state } from '../app/state.js';
 import { setLanguage } from '../i18n/languageService.js';
@@ -8,6 +9,17 @@ import { ShopModal } from '../components/ShopModal.js';
 import { ProfileModal } from '../components/ProfileModal.js';
 import { initRolesModal } from './RolesModal.js';
 import { getAvatarUrl } from '../utils/gameUtils.js';
+
+function setActiveNav(btnId) {
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.id === btnId) btn.classList.add('active');
+    });
+}
+
+function clearActiveNav() {
+    document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+}
 
 export function initMainView(playerManager) {
     const createLobbyBtn = getEl('create-lobby-btn');
@@ -21,10 +33,11 @@ export function initMainView(playerManager) {
     const lobbyListContainer = getEl('lobby-list');
     const lobbyListPanel = getEl('lobby-list-panel');
     const lobbyWaitingPanel = getEl('lobby-waiting-panel');
-    const profileBox = document.querySelector('.user-profile');
+    const profileBox = getEl('user-profile-box');
     const shopBtn = getEl('shop-btn');
     const friendsBtn = getEl('friends-btn');
     const rolesBtn = getEl('roles-btn');
+    const nameEl = getEl('my-name');
 
     // Modals
     const shopModal = new ShopModal(socket);
@@ -38,21 +51,48 @@ export function initMainView(playerManager) {
     }
 
     if (shopBtn) {
-        shopBtn.addEventListener('click', () => shopModal.open());
+        shopBtn.addEventListener('click', () => {
+            setActiveNav('shop-btn');
+            shopModal.open();
+        });
     }
 
     if (friendsBtn) {
         friendsBtn.addEventListener('click', () => {
             if (state.friendsView) {
                 closeAllModals();
+                setActiveNav('friends-btn');
                 state.friendsView.show();
+            }
+        });
+    }
+
+    const chatBtn = getEl('chat-btn-hud');
+    if (chatBtn) {
+        chatBtn.addEventListener('click', () => {
+            closeAllModals();
+            setActiveNav('chat-btn-hud');
+            toggleChat();
+        });
+    }
+
+    if (rankingBtn) {
+        rankingBtn.addEventListener('click', () => {
+            const modal = getEl('modal-ranking');
+            if (modal) {
+                closeAllModals();
+                setActiveNav('ranking-btn');
+                modal.classList.remove('hidden');
             }
         });
     }
 
     const shopClose = getEl('shop-close');
     if (shopClose) {
-        shopClose.addEventListener('click', () => shopModal.close());
+        shopClose.addEventListener('click', () => {
+            clearActiveNav();
+            shopModal.close();
+        });
     }
 
     if (profileBox) {
@@ -64,6 +104,7 @@ export function initMainView(playerManager) {
             const modal = getEl('modal-roles');
             if (modal) {
                 closeAllModals();
+                setActiveNav('roles-btn');
                 modal.classList.remove('hidden');
             }
         });
@@ -71,30 +112,49 @@ export function initMainView(playerManager) {
 
     const profileClose = getEl('profile-close');
     if (profileClose) {
-        profileClose.addEventListener('click', () => profileModal.close());
+        profileClose.addEventListener('click', () => {
+            clearActiveNav();
+            profileModal.close();
+        });
+    }
+
+    const rolesClose = getEl('roles-close');
+    if (rolesClose) {
+        rolesClose.addEventListener('click', () => {
+            clearActiveNav();
+            getEl('modal-roles').classList.add('hidden');
+        });
     }
 
     if (settingsBtn) {
         settingsBtn.addEventListener('click', () => {
             closeAllModals();
+            setActiveNav('settings-btn');
             modalSettings.classList.remove('hidden');
         });
     }
 
     if (settingsClose) {
-        settingsClose.addEventListener('click', () => modalSettings.classList.add('hidden'));
+        settingsClose.addEventListener('click', () => {
+            clearActiveNav();
+            modalSettings.classList.add('hidden');
+        });
     }
 
     if (rankingBtn) {
         rankingBtn.addEventListener('click', () => {
             closeAllModals();
+            setActiveNav('ranking-btn');
             socket.emit('get_ranking');
             modalRanking.classList.remove('hidden');
         });
     }
 
     if (rankingClose) {
-        rankingClose.addEventListener('click', () => modalRanking.classList.add('hidden'));
+        rankingClose.addEventListener('click', () => {
+            clearActiveNav();
+            modalRanking.classList.add('hidden');
+        });
     }
 
     langButtons.forEach(btn => {
@@ -108,18 +168,29 @@ export function initMainView(playerManager) {
         const player = playerManager.getSelf() || state.myUserData;
         if (!player) return;
 
-        const nameEl = getEl('my-name');
+        const avatarImg = getEl('my-avatar');
+        const mainCharImg = getEl('main-character-img');
         const koraEl = getEl('kora-value-main');
         const avatarContainer = getEl('my-avatar-container');
-        const avatarImg = getEl('my-avatar');
 
         if (nameEl) nameEl.textContent = player.name;
         if (koraEl) koraEl.textContent = player.koraBalance;
-        if (avatarImg && player.avatar) avatarImg.src = getAvatarUrl(player.avatar);
+        
+        if (player.avatar) {
+            const avatarUrl = getAvatarUrl(player.avatar);
+            if (avatarImg) avatarImg.src = avatarUrl;
+            if (mainCharImg) mainCharImg.src = avatarUrl;
+        } else {
+            // Fallback to a cool placeholder if no avatar is set
+            const fallback = 'https://img.icons8.com/color/480/cat.png';
+            if (avatarImg) avatarImg.src = fallback;
+            if (mainCharImg) mainCharImg.src = fallback;
+        }
         
         if (avatarContainer) {
-            // Apply frame class directly
-            avatarContainer.className = `avatar-container ${player.currentFrame || 'default'}`;
+            // Apply frame class directly - preserve base class hud-avatar-box
+            const frameClass = player.currentFrame ? `frame-${player.currentFrame}` : '';
+            avatarContainer.className = `hud-avatar-box ${frameClass}`;
         }
     });
 
@@ -157,8 +228,12 @@ export function initMainView(playerManager) {
         renderLobbyPlayers(lobby);
         
         if (lobbyListPanel && lobbyWaitingPanel) {
-            lobbyListPanel.classList.add('hidden');
+            lobbyListPanel.classList.add('hidden'); // In this layout we don't hide the board, we show overlay
             lobbyWaitingPanel.classList.remove('hidden');
         }
+    });
+
+    window.addEventListener('chat_closed', () => {
+        clearActiveNav();
     });
 }

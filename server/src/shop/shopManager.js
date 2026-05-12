@@ -2,7 +2,7 @@ const { connectedUsers } = require('../utils/store');
 const { sendOwnedPremiumAssets } = require('../utils/assetHelper');
 
 const ABILITIES = {
-    roadblock: { id: 'roadblock', priceKora: 10, type: 'ability' }
+    roadblock: { id: 'roadblock', priceKora: 10, type: 'ability', icon: '🚧' }
 };
 
 const FRAMES = {
@@ -14,8 +14,8 @@ const FRAMES = {
 };
 
 const AVATARS = {
-    'default_avatar': { id: 'default_avatar', priceKora: 0, type: 'avatar' },
-    'trader_cat': { id: 'trader_cat', priceKora: 50, type: 'avatar' }
+    'trader_cat': { id: 'trader_cat', priceKora: 50, type: 'avatar' },
+    'manager_cat': { id: 'manager_cat', priceKora: 100, type: 'avatar' }
 };
 
 /**

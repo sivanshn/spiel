@@ -34,6 +34,12 @@ function sendOwnedPremiumAssets(socket, user) {
         if (data) premiumAssets['trader_cat'] = data;
     }
     
+    // Check for manager_cat
+    if (user.ownedAvatars && user.ownedAvatars.includes('manager_cat')) {
+        const data = getAssetAsBase64('manager_cat.png');
+        if (data) premiumAssets['manager_cat'] = data;
+    }
+    
     // Falls es Assets gibt, senden
     if (Object.keys(premiumAssets).length > 0) {
         socket.emit('premium_assets_delivery', premiumAssets);

@@ -298,22 +298,27 @@
     font-size: 0.9rem;
 }
 
-/* Specific Frame Designs */
-.frame_neon_blue {
+/* Specific Frame Designs (Shared by preview and actual avatar container) */
+.frame-neon_blue, .frame-preview.neon_blue {
     border-color: #00f2ff !important;
-    box-shadow: 0 0 15px rgba(0, 242, 255, 0.5), inset 0 0 10px rgba(0, 242, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.6), inset 0 0 10px rgba(0, 242, 255, 0.3);
 }
 
-.frame_plasma_red {
+.frame-red_pulse, .frame-preview.red_pulse {
     border-color: #ff0055 !important;
-    box-shadow: 0 0 15px rgba(255, 0, 85, 0.5), inset 0 0 10px rgba(255, 0, 85, 0.2);
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.6), inset 0 0 10px rgba(255, 0, 85, 0.3);
     animation: frame-pulse-red 2s infinite;
 }
 
-.frame_gold_premium {
+.frame-gold_glaze, .frame-preview.gold_glaze {
     border-color: #ffd700 !important;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 215, 0, 0.3);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7), inset 0 0 10px rgba(255, 215, 0, 0.4);
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(255, 215, 0, 0.15));
+}
+
+.frame-toxic_vibe, .frame-preview.toxic_vibe {
+    border-color: #39ff14 !important;
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.6), inset 0 0 10px rgba(57, 255, 20, 0.3);
 }
 
 @keyframes frame-pulse-red {
@@ -330,29 +335,7 @@
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.05);
     transition: all 0.3s;
-}
-
-.frame-preview::after {
-    content: '';
-    position: absolute;
-    top: -5px; left: -5px; right: -5px; bottom: -5px;
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-.frame-preview.frame_neon_blue::after {
-    border: 3px solid #00f2ff;
-    box-shadow: 0 0 15px #00f2ff;
-}
-
-.frame-preview.frame_plasma_red::after {
-    border: 3px solid #ff0055;
-    box-shadow: 0 0 15px #ff0055;
-}
-
-.frame-preview.frame_gold_premium::after {
-    border: 3px solid #ffd700;
-    box-shadow: 0 0 15px #ffd700;
+    position: relative;
 }
 
 .buy-btn {
@@ -406,3 +389,216 @@
     margin-bottom: 0 !important;
 }
 
+/* Profile Modal Adjustments */
+.profile-preview-large {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+}
+
+#profile-display-name {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: white;
+}
+
+/* ============================
+   ROLES MODAL
+   ============================ */
+
+.roles-modal-panel {
+    max-width: 650px !important;
+    padding: 2.5rem !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin: 2rem 0;
+    width: 100%;
+}
+
+.role-tile {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.role-tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at center, var(--primary-glow) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.role-tile:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+}
+
+.role-tile:hover::before {
+    opacity: 0.1;
+}
+
+.role-tile-icon {
+    font-size: 3.5rem;
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.1));
+    z-index: 1;
+}
+
+.role-tile-name {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 1;
+}
+
+/* Role Detail View */
+.role-detail-view {
+    width: 100%;
+    text-align: left;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.detail-scroll-area {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 15px;
+    margin-bottom: 2rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+}
+
+.detail-scroll-area::-webkit-scrollbar { width: 5px; }
+.detail-scroll-area::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+.detail-title-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-title-row h2 {
+    margin: 0 !important;
+    font-size: 2.2rem !important;
+}
+
+.detail-main-icon {
+    font-size: 4rem;
+}
+
+.detail-short {
+    font-style: italic;
+    color: #94a3b8;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.detail-section {
+    margin-bottom: 2rem;
+}
+
+.detail-section h3 {
+    font-size: 0.85rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.detail-abilities {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+}
+
+.detail-abilities li {
+    padding: 1rem 1.2rem;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    border-left: 4px solid var(--primary);
+    color: #e2e8f0;
+}
+
+.back-btn-footer {
+    width: 100% !important;
+}
+
+/* Profile Inventory Styles */
+.profile-inventory {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.profile-inventory h3 {
+    font-size: 1rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
+    text-align: left;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 15px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.owned-item-tile {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+    opacity: 0.7;
+}
+
+.owned-item-tile:hover {
+    transform: scale(1.05);
+    opacity: 1;
+}
+
+.owned-item-tile.active {
+    border-color: var(--primary);
+    opacity: 1;
+    box-shadow: 0 0 10px var(--primary);
+}
