@@ -720,3 +720,108 @@ svg {
         filter: brightness(1.5) drop-shadow(0 0 30px #facc15);
     }
 }
+
+/* ============================
+   RESPONSIVE (MOBILE)
+   ============================ */
+
+@media screen and (max-width: 930px) and (orientation: landscape) {
+    .game-hud {
+        top: 0.5rem !important;
+        left: 0.5rem !important;
+        right: 0.5rem !important;
+    }
+
+    .hud-item {
+        padding: 4px 10px !important;
+        font-size: 0.75rem !important;
+        border-radius: 8px !important;
+    }
+
+    .phase-highlight {
+        font-size: 1rem !important;
+        padding: 4px 15px !important;
+        min-width: 150px !important;
+    }
+
+    .player-list-panel {
+        min-width: 150px !important;
+        padding: 6px 10px !important;
+    }
+
+    .player-list-entry {
+        font-size: 0.75rem !important;
+        margin-bottom: 0.4rem !important;
+        gap: 6px !important;
+    }
+
+    #map-viewport {
+        padding: 1rem !important;
+    }
+
+    svg {
+        max-height: 80vh !important;
+    }
+
+    /* Action Bar (Mobile Landscape Layout) */
+    .game-footer {
+        bottom: 0.5rem !important;
+        left: 0.5rem !important;
+        right: 0.5rem !important;
+        justify-content: center !important;
+        pointer-events: none !important;
+    }
+
+    #action-bar, .action-bar {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 4px !important;
+        margin: 0 !important;
+        background: rgba(0, 0, 0, 0.6) !important;
+        padding: 5px !important;
+        border-radius: 12px !important;
+        backdrop-filter: blur(10px) !important;
+        width: auto !important;
+        max-width: 90vw !important;
+        pointer-events: auto !important;
+    }
+
+    #action-bar .action-btn, 
+    .action-bar .action-btn {
+        width: auto !important;
+        min-width: 100px !important;
+        height: 36px !important;
+        font-size: 0.7rem !important;
+        padding: 0 10px !important;
+        border-radius: 6px !important;
+    }
+
+    #btn-end-turn {
+        min-width: 120px !important;
+    }
+
+    .abilities-dropdown {
+        bottom: calc(100% + 5px) !important;
+        right: 0 !important;
+        width: 80vw !important;
+        max-height: 150px !important;
+    }
+
+    .ability-entry {
+        padding: 0.5rem 0.8rem !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* Prison Box */
+    .prison-box {
+        width: 110px !important;
+        height: 60px !important;
+        bottom: 50px !important;
+        left: 10px !important;
+        padding: 5px !important;
+    }
+
+    .prison-title { font-size: 0.6rem !important; }
+}

@@ -344,3 +344,42 @@
     color: #22c55e;
     text-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
 }
+/* ============================
+   RESPONSIVE (MOBILE)
+   ============================ */
+
+@media screen and (max-width: 930px) and (orientation: landscape) {
+    .lobby-panel {
+        width: 100% !important;
+        height: 85vh !important;
+        border-radius: 12px !important;
+    }
+
+    .panel-content {
+        max-height: 50vh !important;
+        padding: 0.75rem !important;
+    }
+
+    .lobby-info-left h3 { font-size: 0.8rem !important; }
+    .lobby-info-left p { font-size: 0.65rem !important; }
+    .player-count { padding: 0.2rem 0.6rem !important; font-size: 0.7rem !important; }
+
+    .lobby-header-row h2 {
+        font-size: 1.2rem !important;
+    }
+
+    .player-count-badge {
+        padding: 0.3rem 0.8rem !important;
+        font-size: 0.8rem !important;
+    }
+
+    .waiting-player-list .player-item {
+        width: calc(33% - 6px) !important;
+        height: 65px !important;
+    }
+
+    .map-btn {
+        padding: 0.5rem !important;
+        font-size: 0.7rem !important;
+    }
+}

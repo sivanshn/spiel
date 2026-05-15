@@ -125,7 +125,8 @@ export const translations = {
         frame_red_pulse: "Roter Puls",
         frame_gold_glaze: "Goldglanz",
         frame_toxic_vibe: "Toxic Vibe",
-        frame_none: "Standard"
+        frame_none: "Standard",
+        landscape_warning: "Bitte Handy quer halten"
     },
     en: {
         logo_title: "POLICE vs THIEF",
@@ -238,7 +239,8 @@ export const translations = {
         shop_item_neon_blue_name: "Neon Blue",
         shop_item_red_pulse_name: "Red Pulse",
         shop_item_gold_glaze_name: "Gold Glaze",
-        shop_item_toxic_vibe_name: "Toxic Vibe"
+        shop_item_toxic_vibe_name: "Toxic Vibe",
+        landscape_warning: "Please rotate your phone to landscape"
     }
 };
 
