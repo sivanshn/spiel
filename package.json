@@ -2,8 +2,7 @@
   "name": "polizei-vs-dieb",
   "version": "1.0.0",
   "scripts": {
-    "postinstall": "npm install --prefix client && npm install --prefix server",
-    "build": "npm run build --prefix client",
+    "build": "npm install --prefix client && npm run build --prefix client && npm install --prefix server",
     "start": "npm start --prefix server"
   }
 }
