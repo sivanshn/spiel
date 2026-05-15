@@ -628,17 +628,20 @@ function renderMap(gameState, me, isMyTurn) {
             g.style.cursor = 'pointer';
         }
 
+        const isMobile = window.innerWidth <= 930;
+        const hitRadius = isMobile ? 45 : 25;
         const hitArea = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        hitArea.setAttribute("cx", station.x); hitArea.setAttribute("cy", station.y); hitArea.setAttribute("r", 25);
+        hitArea.setAttribute("cx", station.x); hitArea.setAttribute("cy", station.y); hitArea.setAttribute("r", hitRadius);
         hitArea.setAttribute("fill", "transparent");
         g.appendChild(hitArea);
 
         // Selection Ring (New Style)
         if (state.selectedStationId === station.id) {
+            const ringRadius = isMobile ? 22 : 17;
             const selectionRing = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             selectionRing.setAttribute("cx", station.x);
             selectionRing.setAttribute("cy", station.y);
-            selectionRing.setAttribute("r", 17);
+            selectionRing.setAttribute("r", ringRadius);
             selectionRing.setAttribute("fill", "none");
             selectionRing.setAttribute("stroke", "#3b82f6"); // Blue
             selectionRing.setAttribute("stroke-width", "4");
@@ -646,8 +649,9 @@ function renderMap(gameState, me, isMyTurn) {
             g.appendChild(selectionRing);
         }
 
+        const stationRadius = isMobile ? 15 : 10;
         const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        circle.setAttribute("cx", station.x); circle.setAttribute("cy", station.y); circle.setAttribute("r", 10);
+        circle.setAttribute("cx", station.x); circle.setAttribute("cy", station.y); circle.setAttribute("r", stationRadius);
         circle.setAttribute("class", "station-circle");
 
         if (station.type === 'thief_start') circle.setAttribute("stroke", "#f43f5e");
@@ -745,7 +749,8 @@ function renderMap(gameState, me, isMyTurn) {
             let displayIcon = getRoleIcon(p.role);
             if (p.role === 'corrupt_police' && me && me.role === 'police') displayIcon = getRoleIcon('police');
 
-            const pIconSize = 40;
+            const isMobile = window.innerWidth <= 930;
+            const pIconSize = isMobile ? 55 : 40;
             const pIcon = document.createElementNS("http://www.w3.org/2000/svg", "image");
             pIcon.setAttribute("x", station.x + offsetX - pIconSize / 2);
             pIcon.setAttribute("y", station.y + offsetY - pIconSize / 2);

@@ -842,4 +842,14 @@ svg {
 
     .prison-title { font-size: 0.5rem !important; margin-bottom: 2px !important; }
     .imprisoned-badge { font-size: 8px !important; padding: 1px 3px !important; }
+
+    .station-text {
+        font-size: 16px !important; /* Larger text on map */
+        font-weight: 900 !important;
+        fill: #94a3b8 !important;
+    }
+
+    .player-label {
+        font-size: 14px !important;
+    }
 }
