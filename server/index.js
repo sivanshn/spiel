@@ -6,11 +6,21 @@ require('dotenv').config();
 
 const { registerSocketHandlers } = require('./src/socket/socketHandler');
 
+const path = require('path');
 const app = express();
 app.use(cors());
 
-app.get('/', (req, res) => {
+// Serve static files from the React/Vite app
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+app.get('/api/health', (req, res) => {
     res.send('<h1>Polizei gegen Dieb - Server läuft!</h1><p>Socket.io ist bereit.</p>');
+});
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 const server = http.createServer(app);
