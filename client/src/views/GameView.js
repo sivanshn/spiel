@@ -455,7 +455,7 @@ function updateUI(gameState) {
 
         if (btnMove) {
             btnMove.classList.remove('hidden');
-            btnMove.textContent = `MOVE (${myPlayer.ap_move} UEBRIG)`;
+            btnMove.textContent = `MOVE (${myPlayer.ap_move || 0} UEBRIG)`;
             let isValidMove = false;
             if (isMyTurn && state.selectedStationId) {
                 const startPos = myPlayer.position;
@@ -469,12 +469,12 @@ function updateUI(gameState) {
             if (btnInvestigate) {
                 btnInvestigate.classList.remove('hidden');
                 btnInvestigate.disabled = !isMyTurn || myPlayer.ap_investigate <= 0 || !state.selectedStationId;
-                btnInvestigate.textContent = `UNTERSUCHEN (${myPlayer.ap_investigate} UEBRIG)`;
+                btnInvestigate.textContent = `UNTERSUCHEN (${myPlayer.ap_investigate || 0} UEBRIG)`;
             }
             if (btnArrest) {
                 btnArrest.classList.remove('hidden');
                 btnArrest.disabled = !isMyTurn || myPlayer.ap_arrest <= 0 || !state.selectedStationId;
-                btnArrest.textContent = `FESTNAHME (${myPlayer.ap_arrest} UEBRIG)`;
+                btnArrest.textContent = `FESTNAHME (${myPlayer.ap_investigate || 0} UEBRIG)`;
             }
             if (btnRoadblock) {
                 btnRoadblock.classList.remove('hidden');
