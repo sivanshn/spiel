@@ -478,9 +478,8 @@ function updateUI(gameState) {
             }
             if (btnRoadblock) {
                 btnRoadblock.classList.remove('hidden');
-                const count = (myPlayer.abilities && myPlayer.abilities.roadblock) || 0;
-                btnRoadblock.disabled = !isMyTurn || count < 1;
-                btnRoadblock.textContent = `🚧 SPERRE (${count})`;
+                btnRoadblock.disabled = !isMyTurn || !myPlayer.abilities || !myPlayer.abilities.roadblock || myPlayer.abilities.roadblock <= 0 || !state.selectedStationId;
+                btnRoadblock.textContent = `STRASSE SPERRE (${myPlayer.abilities.roadblock || 0})`;
             }
         } else {
             if (btnInvestigate) btnInvestigate.classList.add('hidden');

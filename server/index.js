@@ -44,6 +44,12 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, () => {
     console.log(`Server läuft auf Port ${PORT}`);
+    
+    // Fallback: Lobby-Liste alle 5 Sekunden an alle wartenden Spieler senden
+    const { broadcastLobbyList } = require('./src/socket/broadcast');
+    setInterval(() => {
+        broadcastLobbyList(io);
+    }, 5000);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
