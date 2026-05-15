@@ -1,5 +1,6 @@
 import { socket } from './socket.js';
 import { state } from '../app/state.js';
+import { getDistance } from '../utils/gameUtils.js';
 
 const peerConnections = {};
 let localStream = null;
@@ -9,7 +10,9 @@ let voiceReady = false;
 const ICE_CONFIG = {
     iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' }
+        { urls: 'stun:stun1.l.google.com:19302' },
+        { urls: 'stun:stun2.l.google.com:19302' },
+        { urls: 'stun:stun.services.mozilla.com' }
     ]
 };
 
@@ -21,6 +24,11 @@ export async function initVoiceChat() {
         localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
         voiceReady = true;
         console.log('[Voice] Mikrofon aktiv');
+
+        // WICHTIG: Tracks zu allen bestehenden Verbindungen hinzufügen
+        Object.values(peerConnections).forEach(pc => {
+            localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+        });
     } catch (err) {
         console.warn('[Voice] Mikrofon nicht verfügbar:', err.message);
         return;
@@ -87,7 +95,11 @@ function getOrCreatePeerConnection(peerId) {
 
     // Lokales Audio hinzufügen
     if (localStream) {
-        localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+        localStream.getTracks().forEach(track => {
+            // Verhindern, dass derselbe Track mehrfach hinzugefügt wird
+            const alreadyAdded = pc.getSenders().some(s => s.track === track);
+            if (!alreadyAdded) pc.addTrack(track, localStream);
+        });
     }
 
     // Remote Audio abspielen
@@ -97,6 +109,7 @@ function getOrCreatePeerConnection(peerId) {
             audioEl = document.createElement('audio');
             audioEl.id = `voice-audio-${peerId}`;
             audioEl.autoplay = true;
+            audioEl.playsInline = true; // Wichtig für iOS/Mobile
             audioEl.style.display = 'none';
             document.body.appendChild(audioEl);
         }
@@ -166,3 +179,73 @@ function updatePeerMuteUI(peerId, isMuted) {
     indicator.textContent = isMuted ? '🔇' : '🎤';
     indicator.className = `voice-indicator ${isMuted ? 'muted' : 'active'}`;
 }
+
+/** 
+ * Aktualisiert die Lautstärke der anderen Spieler basierend auf der Entfernung.
+ * Polizei hört Polizei immer normal. 
+ * Wenn ein Dieb involviert ist, sinkt die Lautstärke mit der Distanz.
+ */
+export function updateVoiceVolumes(gameState, myId) {
+    const me = gameState.players[myId];
+    if (!me || !gameState.map) return;
+
+    Object.keys(peerConnections).forEach(peerId => {
+        const peer = gameState.players[peerId];
+        const audioEl = document.getElementById(`voice-audio-${peerId}`);
+        if (!peer || !audioEl) return;
+
+        let volume = 1.0;
+        const dist = getDistance(gameState.map, me.position, peer.position);
+
+        const isMePolice = (me.role === 'police' || me.role === 'corrupt_police');
+        const isPeerPolice = (peer.role === 'police' || peer.role === 'corrupt_police');
+
+        if (isMePolice && isPeerPolice) {
+            // Polizei hört Polizei immer normal
+            volume = 1.0;
+        } else if (isMePolice && peer.role === 'thief') {
+            // Polizei hört Dieb nur bei Nähe (Stealth Mechanik)
+            if (dist <= 1) volume = 1.0;
+            else if (dist === 2) volume = 0.4;
+            else if (dist === 3) volume = 0.1;
+            else volume = 0.0;
+        } else if (me.role === 'thief' && isPeerPolice) {
+            // Dieb hört Polizei global (mind. 70%), wird lauter bei Nähe
+            if (dist <= 2) volume = 1.0;
+            else if (dist === 3) volume = 0.8;
+            else volume = 0.7;
+        } else {
+            // Default (z.B. Dieb gegen Dieb - falls es mal zwei gäbe)
+            volume = 1.0;
+        }
+
+        audioEl.volume = volume;
+    });
+}
+
+/** Erzwungene Stummschaltung durch Sabotage */
+socket.on('sabotage_mute', ({ duration }) => {
+    if (!localStream) return;
+    const wasAlreadyMuted = isMuted;
+    
+    // Lokal stummschalten (ohne Toggle-Logik zu stören)
+    localStream.getAudioTracks().forEach(track => track.enabled = false);
+    isMuted = true;
+    
+    // UI Update
+    if (state.currentLobby) {
+        socket.emit('voice_mute_toggle', { lobbyId: state.currentLobby.id, isMuted: true });
+    }
+
+    // Event für UI-Einblendung
+    window.dispatchEvent(new CustomEvent('voice_sabotaged', { detail: { duration } }));
+
+    setTimeout(() => {
+        // Falls der User in der Zwischenzeit nicht manuell gemutet hat, wieder aktivieren
+        if (!wasAlreadyMuted) {
+            localStream.getAudioTracks().forEach(track => track.enabled = true);
+            isMuted = false;
+            socket.emit('voice_mute_toggle', { lobbyId: state.currentLobby.id, isMuted: false });
+        }
+    }, duration);
+});

@@ -56,6 +56,10 @@
     border-color: var(--primary);
 }
 
+.circle-icon {
+    pointer-events: none;
+}
+
 .hud-player-card {
     display: flex;
     align-items: center;
@@ -322,18 +326,145 @@
 }
 
 .waiting-card {
-    width: 500px;
+    width: 700px;
+    max-width: 95%;
     padding: var(--sp-10);
     text-align: center;
+    background: rgba(15, 23, 42, 0.95);
+    border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .waiting-player-list {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--sp-4);
+    gap: 1.5rem;
     justify-content: center;
-    margin: var(--sp-8) 0;
+    margin: 2.5rem 0;
+    max-width: 100%;
 }
+
+.waiting-player-list .player-item {
+    width: 180px;
+    height: 110px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.waiting-player-list .player-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.waiting-player-list .player-item.is-host {
+    border-color: var(--primary);
+    background: rgba(216, 163, 58, 0.08);
+}
+
+.waiting-player-list .player-item .player-name {
+    font-size: 0.9rem;
+    font-weight: 800;
+    margin-top: 10px;
+    color: white;
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.waiting-player-list .player-item .avatar-container {
+    width: 45px;
+    height: 45px;
+}
+
+.waiting-player-list .player-item .host-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 0.6rem;
+}
+
+.waiting-player-list .player-item .voice-indicator {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+/* --- HUD BUTTONS --- */
+.waiting-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.hud-btn {
+    padding: 1rem 2.5rem;
+    border-radius: 18px;
+    font-weight: 900;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    min-width: 160px;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.hud-btn.primary {
+    background: #fbbf24;
+    border-bottom: 5px solid #b45309;
+    color: white;
+    text-shadow: 1px 1px 0 #b45309;
+}
+
+.hud-btn.primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.hud-btn.primary:active:not(:disabled) {
+    transform: translateY(2px);
+    border-bottom-width: 2px;
+}
+
+.hud-btn.secondary {
+    background: #475569;
+    border-bottom: 5px solid #1e293b;
+    color: white;
+}
+
+.hud-btn.secondary:hover {
+    background: #64748b;
+    transform: translateY(-2px);
+}
+
+.hud-btn.secondary:active {
+    transform: translateY(2px);
+    border-bottom-width: 2px;
+}
+
+.hud-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(0.5);
+}
+
 
 /* Mission Mini Cards */
 .mission-mini-card {
@@ -378,4 +509,187 @@
 .mini-join-btn:active {
     transform: translateY(2px);
     border-bottom-width: 1px;
+}
+
+/* ============================
+   RESPONSIVE (MOBILE)
+   ============================ */
+
+@media (max-width: 768px) {
+    /* Global Adjustments */
+    .glass-card {
+        padding: 1.5rem !important;
+        border-radius: 24px !important;
+        width: 95% !important;
+    }
+
+    .action-btn {
+        width: 100% !important;
+        height: 50px !important;
+        font-size: 0.9rem !important;
+    }
+
+    /* Main View HUD */
+    .hud-top-bar {
+        padding: 0.5rem 1rem !important;
+    }
+
+    .hud-player-card {
+        padding: 4px 12px 4px 4px !important;
+        gap: 8px !important;
+    }
+
+    .hud-avatar-box {
+        width: 35px !important;
+        height: 35px !important;
+    }
+
+    .hud-player-info h2 {
+        font-size: 0.8rem !important;
+    }
+
+    .resource-pill {
+        padding: 2px 10px !important;
+        font-size: 0.9rem !important;
+        gap: 4px !important;
+    }
+
+    .hud-side-dock {
+        gap: 8px !important;
+    }
+
+    .dock-item {
+        width: 60px !important;
+        height: 60px !important;
+        border-radius: 12px !important;
+    }
+
+    .dock-icon { font-size: 1.4rem !important; }
+    .dock-label { display: none; }
+
+    #main-character-img {
+        height: 300px !important;
+    }
+
+    .mission-selector.dashboard-style {
+        width: 95vw !important;
+        height: 350px !important;
+    }
+
+    /* Game View HUD */
+    .game-hud {
+        top: 1rem !important;
+        left: 1rem !important;
+        right: 1rem !important;
+        grid-template-columns: 1fr 1fr !important; /* Stack or 2-col */
+        gap: 0.5rem !important;
+    }
+
+    .hud-center {
+        grid-column: span 2 !important;
+        order: -1 !important;
+    }
+
+    .hud-item {
+        padding: 0.5rem 0.8rem !important;
+        font-size: 0.8rem !important;
+        min-width: unset !important;
+    }
+
+    .phase-highlight {
+        font-size: 1.1rem !important;
+        padding: 0.6rem 1rem !important;
+        min-width: 80% !important;
+        width: 100% !important;
+    }
+
+    .player-list-panel {
+        min-width: 140px !important;
+        padding: 0.5rem 0.8rem !important;
+    }
+
+    #map-viewport {
+        padding: 1rem !important;
+    }
+
+    /* Action Bar (Mobile Bottom Grid) */
+    .game-footer {
+        left: 0.5rem !important;
+        right: 0.5rem !important;
+        bottom: 0.5rem !important;
+    }
+
+    #action-bar, .action-bar {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        background: rgba(0, 0, 0, 0.4);
+        padding: 10px !important;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        pointer-events: auto !important;
+    }
+
+    #action-bar .action-btn, 
+    .action-bar .action-btn {
+        width: calc(33% - 8px) !important;
+        height: 45px !important;
+        font-size: 0.75rem !important;
+        padding: 0 !important;
+        border-radius: 10px !important;
+    }
+
+    #btn-end-turn {
+        width: 100% !important; /* Give end turn full width at bottom or top of grid */
+        order: 10;
+    }
+
+    .abilities-dropdown {
+        bottom: calc(100% + 10px) !important;
+        right: 0 !important;
+        width: 90vw !important;
+        max-height: 250px;
+        overflow-y: auto;
+    }
+
+    /* Prison Box */
+    .prison-box {
+        width: 140px !important;
+        height: 80px !important;
+        bottom: 70px !important; /* Move up above action bar */
+        left: 10px !important;
+    }
+
+    /* Lobby */
+    .waiting-card {
+        padding: 1rem !important;
+    }
+
+    .waiting-player-list {
+        gap: 0.75rem !important;
+        margin: 1rem 0 !important;
+    }
+
+    .waiting-player-list .player-item {
+        width: calc(50% - 0.5rem) !important;
+        height: 90px !important;
+        padding: 8px !important;
+    }
+
+    .hud-btn {
+        min-width: 120px !important;
+        padding: 0.8rem 1rem !important;
+        font-size: 0.9rem !important;
+    }
+}
+
+/* Fix for very small devices */
+@media (max-width: 400px) {
+    .waiting-player-list .player-item {
+        width: 100% !important;
+    }
 }

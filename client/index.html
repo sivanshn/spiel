@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Polizei gegen Dieb | Online</title>
     <link rel="stylesheet" href="./style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
@@ -35,7 +35,9 @@
                         </div>
                         <div class="hud-player-info">
                             <h2 id="my-name">Name</h2>
-                            <div class="xp-bar-mini"><div class="xp-fill" style="width: 60%;"></div></div>
+                            <div class="xp-bar-mini">
+                                <div class="xp-fill" style="width: 60%;"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="hud-resources">
@@ -111,8 +113,15 @@
                 <!-- WAITING PANEL (MODAL STYLE) -->
                 <div id="lobby-waiting-panel" class="lobby-waiting-overlay hidden">
                     <div class="waiting-card glass-card">
-                        <h2 id="lobby-view-title">LOBBY</h2>
+                        <div class="lobby-header-row">
+                            <h2 id="lobby-view-title">LOBBY</h2>
+                            <div id="lobby-player-count" class="player-count-badge">0 / 0</div>
+                        </div>
+                        <div class="lobby-separator"></div>
+
+
                         <div id="lobby-player-list" class="waiting-player-list"></div>
+                        <div id="wait-msg" class="wait-status-msg">Warte auf weitere Spieler...</div>
                         <div class="waiting-actions">
                             <button id="leave-lobby-btn" class="hud-btn secondary">BACK</button>
                             <button id="start-game-btn" class="hud-btn primary hidden">START</button>
@@ -138,6 +147,11 @@
                 <div class="hud-center">
                     <div id="game-phase" class="hud-item phase-highlight">Lobby</div>
                 </div>
+                <div class="hud-right-v">
+                    <button id="btn-leave-game" class="hud-circle-btn danger" title="Spiel verlassen">
+                        <div class="circle-icon">🚪</div>
+                    </button>
+                </div>
             </div>
 
             <div id="map-viewport">
@@ -146,16 +160,19 @@
 
             <div class="game-footer">
                 <div id="action-bar" class="hidden">
-                    <div class="abilities-container">
+                    <div class="abilities-container hidden" style="display:none !important;">
                         <button id="btn-abilities-toggle" class="action-btn secondary">
                             <span data-i18n="game_btn_abilities">Fähigkeiten</span> <span class="arrow">▼</span>
                         </button>
                         <div id="abilities-dropdown" class="abilities-dropdown hidden"></div>
                     </div>
-                    <button id="btn-move" class="action-btn secondary hidden">MOVE (2 ÜBRIG)</button>
-                    <button id="btn-investigate" class="action-btn secondary hidden">UNTERSUCHEN (2 ÜBRIG)</button>
-                    <button id="btn-arrest" class="action-btn secondary hidden">FESTNAHME</button>
-                    <button id="btn-end-turn" class="action-btn">ZUG BEENDEN</button>
+                    <div class="action-bar hidden" id="game-action-bar">
+                        <button id="btn-move" class="action-btn">MOVE</button>
+                        <button id="btn-investigate" class="action-btn">UNTERSUCHEN</button>
+                        <button id="btn-arrest" class="action-btn">FESTNAHME</button>
+                        <button id="btn-roadblock" class="action-btn special">SPERRE (1)</button>
+                        <button id="btn-end-turn" class="action-btn end-turn">ZUG BEENDEN</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -180,9 +197,10 @@
                         <span class="shop-kora-value" id="shop-kora-display">0</span>
                     </div>
                 </div>
-                
+
                 <div class="shop-tabs">
-                    <button class="shop-tab-btn active" data-tab="abilities" data-i18n="shop_tab_abilities">Fähigkeiten</button>
+                    <button class="shop-tab-btn active" data-tab="abilities"
+                        data-i18n="shop_tab_abilities">Fähigkeiten</button>
                     <button class="shop-tab-btn" data-tab="frames" data-i18n="shop_tab_frames">Rahmen</button>
                     <button class="shop-tab-btn" data-tab="avatars" data-i18n="shop_tab_avatars">Icons</button>
                 </div>
@@ -200,7 +218,7 @@
         <div id="modal-profile" class="modal hidden">
             <div class="modal-content glass-card profile-modal-panel">
                 <h2 data-i18n="profile_title">PROFIL</h2>
-                
+
                 <div class="profile-preview-large">
                     <div id="profile-avatar-container" class="avatar-container large">
                         <img id="profile-display-avatar" src="" alt="Avatar">
@@ -210,7 +228,7 @@
                 <div class="profile-inventory">
                     <h3>MEINE RAHMEN</h3>
                     <div id="owned-frames-grid" class="inventory-grid"></div>
-                    
+
                     <h3>MEINE ICONS</h3>
                     <div id="owned-avatars-grid" class="inventory-grid"></div>
                 </div>
@@ -269,12 +287,24 @@
                 <button id="modal-close" class="action-btn">OK</button>
             </div>
         </div>
-            <aside id="friends-panel" class="friends-panel glass-card hidden">
+
+        <!-- Confirm Modal -->
+        <div id="confirm-modal" class="modal hidden">
+            <div class="glass-card modal-content animate-in">
+                <h2 id="confirm-title">BESTÄTIGEN</h2>
+                <p id="confirm-msg">Bist du sicher?</p>
+                <div class="confirm-actions">
+                    <button id="confirm-yes" class="action-btn danger">JA</button>
+                    <button id="confirm-no" class="action-btn secondary">NEIN</button>
+                </div>
+            </div>
+        </div>
+        <aside id="friends-panel" class="friends-panel glass-card hidden">
             <div class="friends-header">
                 <h2 data-i18n="friends_title">FREUNDE</h2>
                 <button id="friends-close-btn" class="close-btn">&times;</button>
             </div>
-            
+
             <div class="friends-tabs">
                 <button class="friends-tab active" data-view="list" data-i18n="friends_tab_list">Liste</button>
                 <button class="friends-tab" data-view="requests" data-i18n="friends_tab_requests">Anfragen</button>
@@ -295,7 +325,8 @@
                 <!-- Tab: Search -->
                 <div id="friends-view-search" class="friends-content-view hidden">
                     <div class="friends-search-box">
-                        <input type="text" id="friends-search-input" placeholder="Spieler suchen..." data-i18n-placeholder="friends_search_placeholder">
+                        <input type="text" id="friends-search-input" placeholder="Spieler suchen..."
+                            data-i18n-placeholder="friends_search_placeholder">
                         <button id="friends-search-btn" class="action-btn small">Suchen</button>
                     </div>
                     <div id="friends-search-results" class="search-results"></div>
@@ -304,5 +335,6 @@
         </aside>
 
         <script type="module" src="/src/main.js"></script>
-    </body>
+</body>
+
 </html>

@@ -34,6 +34,10 @@ socket.on('error_msg', (msg) => {
     showPopup("ACHTUNG", msg);
 });
 
+socket.on('notification', (data) => {
+    showPopup(data.title || "INFO", data.message);
+});
+
 // Initial call
 const lobbyListContainer = document.getElementById('lobby-list');
 setLanguage(state.currentLanguage, lobbyListContainer);

@@ -59,6 +59,72 @@ body {
     transition: opacity 0.5s ease;
 }
 
+/* PRISON AREA */
+.prison-box {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 200px;
+    height: 120px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid #ef4444;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+    z-index: 10;
+}
+
+.prison-title {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #ef4444;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.prison-cells {
+    display: flex;
+    gap: 8px;
+}
+
+.imprisoned-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #ef4444;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 800;
+    transform: rotate(15deg);
+}
+
+.sabotage-btn-small {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    margin-left: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.sabotage-btn-small:hover {
+    background: #ef4444;
+    color: white;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
 .screen.active {
     display: flex !important;
 }
@@ -121,6 +187,18 @@ button:hover {
     border: none;
 }
 
+.action-btn.special {
+    background: rgba(216, 163, 58, 0.1) !important;
+    border: 1px solid var(--primary) !important;
+    color: var(--primary) !important;
+}
+
+.action-btn.special:hover:not(:disabled) {
+    background: var(--primary) !important;
+    color: #060B14 !important;
+    box-shadow: 0 0 15px rgba(216, 163, 58, 0.4);
+}
+
 .action-btn.secondary {
     background: var(--panel-bg) !important;
     backdrop-filter: blur(20px);
@@ -157,4 +235,44 @@ button:hover {
     max-width: 500px;
     width: 90%;
     color: var(--text-main);
+}
+/* ============================
+   AUTO-ROTATE FOR MOBILE
+   ============================ */
+
+@media screen and (max-width: 900px) and (orientation: portrait) {
+    html, body {
+        overflow: hidden;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    #game-container {
+        width: 100vh !important;
+        height: 100vw !important;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(90deg);
+        transform-origin: center;
+        z-index: 9999;
+    }
+
+    /* Optional: Small helper text so they know why it rotated */
+    body::before {
+        content: "🔄 BITTE HANDY QUER HALTEN";
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-weight: 900;
+        font-size: 0.7rem;
+        color: var(--primary);
+        z-index: 10000;
+        background: rgba(0,0,0,0.8);
+        padding: 4px 12px;
+        border-radius: 20px;
+        pointer-events: none;
+        letter-spacing: 1px;
+    }
 }

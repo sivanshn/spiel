@@ -9,6 +9,8 @@ const { sendOwnedPremiumAssets } = require('../utils/assetHelper');
  * Prüft auf leere Namen und Namens-Duplikate.
  */
 function registerPlayer(io, socket, data) {
+    console.log(`[Login] Versuch von: ${data ? data.name : 'Unbekannt'}`);
+    if (!data || !data.name) return;
     const name = data.name.trim();
 
     if (!name) {

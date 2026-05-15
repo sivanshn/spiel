@@ -62,10 +62,10 @@ export class ShopModal {
         items.forEach(item => {
             const card = document.createElement('div');
             card.className = 'shop-item-card';
-            
+
             const preview = document.createElement('div');
             preview.className = 'item-preview';
-            
+
             if (this.currentTab === 'frames') {
                 preview.innerHTML = `<div class="frame-preview ${item.id}"></div>`;
             } else if (this.currentTab === 'avatars') {

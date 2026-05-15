@@ -17,7 +17,7 @@ function broadcastState(io, lobbyId) {
         const filteredPlayers = {};
         Object.values(gameState.players).forEach(player => {
             const pData = { ...player };
-            
+
             // Sichtbarkeits-Regel:
             // 1. Dieb ist für alle sichtbar.
             // 2. Korrupter Polizist ist für Dieb und sich selbst sichtbar.
@@ -27,15 +27,37 @@ function broadcastState(io, lobbyId) {
                     pData.role = 'police';
                 }
             }
-            
+
+            if (player.id !== socket.id) {
+                delete pData.abilities;
+            }
+
             filteredPlayers[player.id] = pData;
         });
+
+        // Traces Logik: 
+        // 1. Diebes-Team sieht immer alle Spuren.
+        // 2. Polizei sieht während Großfahndung NUR den "3-Schritte-Schatten" (Snapshot).
+        let visibleTraces = [];
+        if (isThief || isCorruptPolice) {
+            visibleTraces = gameState.thiefTraces;
+        } else if (gameState.isMassHuntActive && gameState.massHuntSnapshot) {
+            visibleTraces = gameState.massHuntSnapshot;
+        }
 
         const filteredState = {
             ...gameState,
             players: filteredPlayers,
-            thiefTraces: (isThief || isCorruptPolice) ? gameState.thiefTraces : []
+            thiefTraces: visibleTraces
         };
+
+        // Revealed traces/positions for all
+        if (!isThief && !isCorruptPolice) {
+            // Only show revealed traces or the ping position
+            if (gameState.revealedThiefPos) {
+                filteredState.revealedThiefPos = gameState.revealedThiefPos;
+            }
+        }
 
         socket.emit('state_update', filteredState);
     });
@@ -50,7 +72,7 @@ function broadcastLobbyList(io) {
             name: l.name,
             hostName: l.hostName,
             playerCount: l.players.length,
-            maxPlayers: 4
+            maxPlayers: l.maxPlayers
         }));
 
     connectedUsers.forEach(user => {
@@ -69,6 +91,7 @@ function broadcastLobbyUpdate(io, lobbyId) {
         id: lobby.id,
         name: lobby.name,
         hostId: lobby.hostId,
+        maxPlayers: lobby.maxPlayers,
         players: lobby.players.map(p => ({
             socketId: p.socketId,
             name: p.name,
@@ -77,10 +100,8 @@ function broadcastLobbyUpdate(io, lobbyId) {
         }))
     };
 
-    lobby.players.forEach(p => {
-        const socket = io.sockets.sockets.get(p.socketId);
-        if (socket) socket.emit('lobby_update', update);
-    });
+    // Sende das Update an den gesamten Raum (garantiert Synchronität)
+    io.to(lobbyId).emit('lobby_update', update);
 }
 
 module.exports = { broadcastState, broadcastLobbyList, broadcastLobbyUpdate };

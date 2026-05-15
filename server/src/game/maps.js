@@ -1,0 +1,82 @@
+const maps = {
+    'city': {
+        name: 'Großstadt',
+        stations: {
+            'nordtor': { id: 'nordtor', name: 'Nordtor', x: 500, y: 120, type: 'thief_start' },
+            'universitaet': { id: 'universitaet', name: 'Universität', x: 250, y: 120 },
+            'westviertel': { id: 'westviertel', name: 'Westviertel', x: 250, y: 300 },
+            'altstadt': { id: 'altstadt', name: 'Altstadt', x: 650, y: 150 },
+            'museum': { id: 'museum', name: 'Museum', x: 820, y: 150 },
+            'osthafen': { id: 'osthafen', name: 'Osthafen', x: 920, y: 300 },
+            'rathaus': { id: 'rathaus', name: 'Rathaus', x: 550, y: 350 },
+            'kunstviertel': { id: 'kunstviertel', name: 'Kunstviertel', x: 730, y: 430 },
+            'zentralstation': { id: 'zentralstation', name: 'Zentralstation', x: 400, y: 480 },
+            'docklands': { id: 'docklands', name: 'Docklands', x: 180, y: 550 },
+            'dünsen': { id: 'dünsen', name: 'dünsen', x: 60, y: 550, type: 'police_start' },
+            'hafen': { id: 'hafen', name: 'Hafen', x: 250, y: 650 },
+            'marktplatz': { id: 'marktplatz', name: 'Marktplatz', x: 500, y: 650 },
+            'brueckenplatz': { id: 'brueckenplatz', name: 'Brückenplatz', x: 600, y: 500 },
+            'suedviertel': { id: 'suedviertel', name: 'Südviertel', x: 730, y: 650 },
+            'suedbahnhof': { id: 'suedbahnhof', name: 'Südbahnhof', x: 450, y: 820 },
+            'tech_park': { id: 'tech_park', name: 'Tech Park', x: 600, y: 820 },
+            'stadtpark': { id: 'stadtpark', name: 'Stadtpark', x: 750, y: 750 },
+            'flucht': { id: 'flucht', name: 'Flucht', x: 820, y: 850, type: 'escape' },
+            'ahlhorn': { id: 'ahlhorn', name: 'Ahlhorn', x: 920, y: 650, type: 'police_start' }
+        },
+        connections: [
+            ['nordtor', 'universitaet'], ['nordtor', 'altstadt'], ['nordtor', 'rathaus'],
+            ['universitaet', 'westviertel'],
+            ['westviertel', 'zentralstation'],
+            ['altstadt', 'museum'], ['altstadt', 'rathaus'],
+            ['museum', 'osthafen'],
+            ['osthafen', 'suedviertel'],
+            ['rathaus', 'zentralstation'], ['rathaus', 'kunstviertel'],
+            ['kunstviertel', 'suedviertel'],
+            ['zentralstation', 'docklands'], ['zentralstation', 'brueckenplatz'], ['zentralstation', 'marktplatz'],
+            ['docklands', 'dünsen'], ['docklands', 'hafen'],
+            ['hafen', 'marktplatz'],
+            ['marktplatz', 'suedbahnhof'], ['marktplatz', 'suedviertel'],
+            ['brueckenplatz', 'suedviertel'],
+            ['suedviertel', 'stadtpark'], ['suedviertel', 'ahlhorn'],
+            ['suedbahnhof', 'tech_park'],
+            ['tech_park', 'flucht'],
+            ['stadtpark', 'flucht']
+        ]
+    },
+    'city_small': {
+        name: 'Kleinstadt (4 Spieler)',
+        stations: {
+            'nordtor': { id: 'nordtor', name: 'Nordtor', x: 500, y: 150, type: 'thief_start' },
+            'universitaet': { id: 'universitaet', name: 'Universität', x: 250, y: 150 },
+            'westviertel': { id: 'westviertel', name: 'Westviertel', x: 250, y: 350 },
+            'altstadt': { id: 'altstadt', name: 'Altstadt', x: 650, y: 180 },
+            'museum': { id: 'museum', name: 'Museum', x: 820, y: 180 },
+            'osthafen': { id: 'osthafen', name: 'Osthafen', x: 920, y: 350 },
+            'rathaus': { id: 'rathaus', name: 'Rathaus', x: 550, y: 400 },
+            'kunstviertel': { id: 'kunstviertel', name: 'Kunstviertel', x: 730, y: 480 },
+            'zentralstation': { id: 'zentralstation', name: 'Zentralstation', x: 400, y: 530 },
+            'docklands': { id: 'docklands', name: 'Docklands', x: 180, y: 600, type: 'police_start' },
+            'hafen': { id: 'hafen', name: 'Hafen', x: 250, y: 750 },
+            'marktplatz': { id: 'marktplatz', name: 'Marktplatz', x: 500, y: 750 },
+            'brueckenplatz': { id: 'brueckenplatz', name: 'Brückenplatz', x: 600, y: 600 },
+            'suedviertel': { id: 'suedviertel', name: 'Südviertel', x: 730, y: 750, type: 'police_start' }
+        },
+        connections: [
+            ['nordtor', 'universitaet'], ['nordtor', 'altstadt'], ['nordtor', 'rathaus'],
+            ['universitaet', 'westviertel'],
+            ['westviertel', 'zentralstation'],
+            ['altstadt', 'museum'], ['altstadt', 'rathaus'],
+            ['museum', 'osthafen'],
+            ['osthafen', 'suedviertel'],
+            ['rathaus', 'zentralstation'], ['rathaus', 'kunstviertel'],
+            ['kunstviertel', 'suedviertel'],
+            ['zentralstation', 'docklands'], ['zentralstation', 'brueckenplatz'], ['zentralstation', 'marktplatz'],
+            ['docklands', 'hafen'],
+            ['hafen', 'marktplatz'],
+            ['marktplatz', 'suedviertel'],
+            ['brueckenplatz', 'suedviertel']
+        ]
+    }
+};
+
+module.exports = maps;

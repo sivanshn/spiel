@@ -1,7 +1,7 @@
-const mapData = require('../game/mapData');
-
-function getDistance(startId, endId) {
+function getDistance(mapData, startId, endId) {
     if (startId === endId) return 0;
+    if (!mapData || !mapData.connections) return Infinity;
+    
     let queue = [[startId, 0]];
     let visited = new Set([startId]);
 

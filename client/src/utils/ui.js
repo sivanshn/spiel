@@ -45,3 +45,35 @@ export function closeAllModals() {
         if (el) el.classList.add('hidden');
     });
 }
+export function showConfirm(title, message, onConfirm) {
+    const confirmModal = getEl('confirm-modal');
+    const confirmTitle = getEl('confirm-title');
+    const confirmMsg = getEl('confirm-msg');
+    const confirmYes = getEl('confirm-yes');
+    const confirmNo = getEl('confirm-no');
+
+    if (!confirmModal) return;
+
+    confirmTitle.textContent = title;
+    confirmMsg.textContent = message;
+    confirmModal.classList.remove('hidden');
+
+    const handleYes = () => {
+        onConfirm();
+        confirmModal.classList.add('hidden');
+        cleanup();
+    };
+
+    const handleNo = () => {
+        confirmModal.classList.add('hidden');
+        cleanup();
+    };
+
+    const cleanup = () => {
+        confirmYes.removeEventListener('click', handleYes);
+        confirmNo.removeEventListener('click', handleNo);
+    };
+
+    confirmYes.addEventListener('click', handleYes);
+    confirmNo.addEventListener('click', handleNo);
+}

@@ -2,6 +2,19 @@
    LOGIN SCREEN
    ============================ */
 
+.login-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.login-card input {
+    width: 100%;
+    max-width: 300px;
+}
+
 .logo {
     font-size: 3rem;
     font-weight: 900;

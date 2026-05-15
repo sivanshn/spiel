@@ -73,7 +73,8 @@ export function renderLobbyPlayers(lobby) {
     const waitMsg = getEl('wait-msg');
 
     if (title) title.textContent = lobby.name.toUpperCase();
-    if (count) count.textContent = `${lobby.players.length} / 4`;
+    const reqPlayers = lobby.maxPlayers || 5;
+    if (count) count.textContent = `${lobby.players.length} / ${reqPlayers}`;
     if (list) list.innerHTML = '';
 
     lobby.players.forEach(p => {
@@ -84,7 +85,9 @@ export function renderLobbyPlayers(lobby) {
         if (p.isHost) item.classList.add('is-host');
 
         item.innerHTML = `
-            <img src="${getAvatarUrl(p.avatar)}" class="player-avatar">
+            <div class="avatar-container small ${p.currentFrame ? 'frame_' + p.currentFrame : ''}">
+                <img src="${getAvatarUrl(p.avatar)}" class="player-avatar">
+            </div>
             <span class="player-name">${p.name}</span>
             ${p.isHost ? '<span class="host-badge">HOST</span>' : ''}
             ${!isMe ? '<span class="voice-indicator">🎤</span>' : ''}
@@ -108,7 +111,14 @@ export function renderLobbyPlayers(lobby) {
     }
 
     if (waitMsg) {
-        if (isHost) waitMsg.classList.add('hidden');
-        else waitMsg.classList.remove('hidden');
+        if (isFull) {
+            waitMsg.textContent = isHost ? 'BEREIT ZUM START!' : 'DER HOST KANN JETZT STARTEN...';
+            waitMsg.classList.add('ready');
+        } else {
+            const diff = 4 - lobby.players.length;
+            waitMsg.textContent = `WARTE AUF ${diff} WEITERE SPIELER...`;
+            waitMsg.classList.remove('ready');
+        }
     }
+
 }
