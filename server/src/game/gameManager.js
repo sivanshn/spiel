@@ -113,7 +113,7 @@ function startTurn(io, lobbyId, playerId, phase) {
             gameState.massHuntNotificationSent = true;
             io.to(lobbyId).emit('notification', {
                 title: '🚨 GROSSFAHNDUNG 🚨',
-                message: '📡 SATELLITENBILDER SIND RAUS! Die Spur des Diebes wurde lokalisiert.'
+                message: '📡 SATELLITENBILDER SIND RAUS! Die alten Spuren vom Dieb wurden lokalisiert.'
             });
             // NEU: "3-Schritte-Schatten" - Zeige Positionen von vor 2, 3 und 4 Runden
             const shadowRounds = [gameState.round - 2, gameState.round - 3, gameState.round - 4];
