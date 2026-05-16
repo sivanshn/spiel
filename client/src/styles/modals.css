@@ -1,18 +1,21 @@
 /* ============================
-   MODALS (Notification, Ranking, Settings)
+   MODALS — Complete Styles
+   Includes: Notification, Ranking, Settings, Shop,
+             Profile, Roles, Player Profile (NEW), Kora Send (NEW)
    ============================ */
 
 .modal {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(6, 11, 20, 0.9);
-    backdrop-filter: blur(15px);
+    background: rgba(6, 11, 20, 0.88);
+    backdrop-filter: blur(16px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    transition: opacity 0.3s;
+    transition: opacity 0.25s;
+    padding: 1rem;
 }
 
 .modal.hidden {
@@ -21,85 +24,179 @@
 }
 
 .modal-content {
-    max-width: 400px;
-    width: 90%;
+    max-width: 420px;
+    width: 100%;
     text-align: center;
-    padding: 3rem 2rem;
+    padding: 2.5rem 2rem;
 }
 
 .modal-content h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     margin-bottom: 1rem;
-    background: linear-gradient(to right, var(--text-main), var(--primary));
+    background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-transform: uppercase;
     letter-spacing: 2px;
+    font-weight: 900;
 }
 
 .modal-content p {
     color: #94a3b8;
     margin-bottom: 2rem;
-    font-size: 1.1rem;
-    line-height: 1.5;
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
-/* Ranking Modal */
+/* ============================
+   NOTIFICATION MODAL
+   ============================ */
+#notification-modal .modal-content {
+    max-width: 380px;
+}
+
+/* ============================
+   CONFIRM MODAL
+   ============================ */
+#confirm-modal .modal-content {
+    max-width: 420px;
+    padding: 2.5rem;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: center;
+}
+
+.confirm-actions .action-btn {
+    flex: 1;
+    max-width: 160px;
+    height: 50px;
+}
+
+/* ============================
+   RANKING MODAL
+   ============================ */
 .ranking-modal-panel {
-    max-width: 500px !important;
+    max-width: 520px !important;
     padding: 2.5rem !important;
+}
+
+.ranking-modal-header {
+    margin-bottom: 1.5rem;
+}
+
+.ranking-subtitle {
+    font-size: 0.8rem !important;
+    color: #475569 !important;
+    margin-bottom: 0 !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .ranking-header {
     display: grid;
-    grid-template-columns: 80px 1fr 100px;
-    padding: 1rem;
+    grid-template-columns: 70px 1fr 90px;
+    padding: 0.7rem 1rem;
     background: rgba(255, 255, 255, 0.03);
-    border-radius: 12px;
-    margin-bottom: 1rem;
-    font-size: 0.8rem;
+    border-radius: 10px;
+    margin-bottom: 0.8rem;
+    font-size: 0.72rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     color: var(--text-dim);
+    font-weight: 700;
 }
 
 .ranking-list {
-    max-height: 350px;
+    max-height: 380px;
     overflow-y: auto;
-    margin-bottom: 2rem;
-    padding-right: 5px;
+    margin-bottom: 1.5rem;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
 }
+
+.ranking-list::-webkit-scrollbar { width: 4px; }
+.ranking-list::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
 .ranking-entry {
     display: grid;
-    grid-template-columns: 80px 1fr 100px;
+    grid-template-columns: 70px 1fr 90px;
     align-items: center;
-    padding: 0.8rem 1rem;
+    padding: 0.75rem 1rem;
     background: var(--panel-bg);
     border-radius: 12px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     border: 1px solid var(--glass-border);
+    transition: all 0.2s;
+    cursor: pointer;
 }
 
-.rank-number { font-weight: 900; font-size: 1.1rem; color: var(--primary); }
-.rank-user   { display: flex; align-items: center; gap: 1rem; color: var(--text-main); }
-.rank-avatar { width: 32px; height: 32px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); }
-.rank-kora   { font-weight: 800; color: var(--primary); }
+.ranking-entry:hover {
+    border-color: var(--primary);
+    background: rgba(216, 163, 58, 0.04);
+    transform: translateX(-2px);
+}
 
-/* Settings Modal */
+.ranking-entry:nth-child(1) { border-color: #ffd700; background: rgba(255, 215, 0, 0.05); }
+.ranking-entry:nth-child(2) { border-color: #c0c0c0; background: rgba(192, 192, 192, 0.04); }
+.ranking-entry:nth-child(3) { border-color: #cd7f32; background: rgba(205, 127, 50, 0.04); }
+
+.rank-number {
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--primary);
+}
+
+.ranking-entry:nth-child(1) .rank-number::before { content: "🥇 "; }
+.ranking-entry:nth-child(2) .rank-number::before { content: "🥈 "; }
+.ranking-entry:nth-child(3) .rank-number::before { content: "🥉 "; }
+
+.rank-user {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.rank-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-border);
+    object-fit: cover;
+}
+
+.rank-kora {
+    font-weight: 800;
+    color: var(--primary);
+    text-align: right;
+    font-size: 0.95rem;
+}
+
+/* ============================
+   SETTINGS MODAL
+   ============================ */
 .settings-modal-panel {
     max-width: 400px !important;
 }
 
 .settings-group {
-    margin: 2rem 0;
+    margin: 1.5rem 0;
     text-align: left;
 }
 
 .settings-group p {
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
     font-size: 0.9rem;
     color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .language-options {
@@ -109,24 +206,24 @@
 
 .lang-btn {
     flex: 1;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    padding: 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+    padding: 0.9rem;
     border-radius: 12px;
     cursor: pointer;
     font-weight: 800;
     font-size: 0.8rem;
+    letter-spacing: 1px;
     transition: all 0.2s;
 }
 
-.lang-btn:hover  { background: rgba(255, 255, 255, 0.1); }
-.lang-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+.lang-btn:hover { background: rgba(255, 255, 255, 0.08); color: white; }
+.lang-btn.active { background: var(--primary); border-color: var(--primary); color: #060B14; }
 
 /* ============================
    SHOP MODAL
    ============================ */
-
 .shop-modal-panel {
     max-width: 720px !important;
     width: 94% !important;
@@ -134,232 +231,129 @@
     text-align: center !important;
 }
 
-/* Shop Header: Titel + Kora-Badge */
 .shop-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.shop-header h2 {
-    margin-bottom: 0 !important;
-    font-size: 2rem !important;
-}
+.shop-header h2 { margin-bottom: 0 !important; font-size: 1.8rem !important; }
 
 .shop-kora-badge {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(216, 163, 58, 0.08);
+    border: 1px solid rgba(216, 163, 58, 0.2);
     border-radius: 12px;
     padding: 0.5rem 1rem;
 }
 
-.shop-kora-label {
-    font-size: 0.85rem;
-    color: #94a3b8;
-}
+.shop-kora-label { font-size: 0.8rem; color: #94a3b8; }
+.shop-kora-value { font-size: 1.1rem; font-weight: 900; color: var(--primary); }
 
-.shop-kora-value {
-    font-size: 1.1rem;
-    font-weight: 900;
-    color: var(--primary);
-}
-
-/* Shop Tabs */
 .shop-tabs {
     display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 15px;
+    gap: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    padding-bottom: 12px;
 }
 
 .shop-tab-btn {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.05);
     color: #94a3b8;
-    padding: 10px 20px;
+    padding: 8px 18px;
     border-radius: 8px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s;
     text-transform: uppercase;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     letter-spacing: 1px;
 }
 
-.shop-tab-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: white;
-}
-
+.shop-tab-btn:hover { background: rgba(255, 255, 255, 0.07); color: white; }
 .shop-tab-btn.active {
-    background: var(--primary-glow);
+    background: rgba(216, 163, 58, 0.12);
     border-color: var(--primary);
-    color: white;
-    box-shadow: 0 0 15px var(--primary-glow);
+    color: var(--primary);
 }
 
-/* Shop Body */
 .shop-body {
-    height: 420px;
+    height: 400px;
     overflow-y: auto;
-    margin-bottom: 2rem;
-    padding-right: 10px;
+    margin-bottom: 1.5rem;
+    padding-right: 8px;
     scrollbar-width: thin;
     scrollbar-color: var(--primary) transparent;
 }
 
-.shop-body::-webkit-scrollbar {
-    width: 6px;
-}
+.shop-body::-webkit-scrollbar { width: 5px; }
+.shop-body::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
-.shop-body::-webkit-scrollbar-thumb {
-    background-color: var(--primary);
-    border-radius: 10px;
-}
-
-/* Items Grid */
 .shop-items-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 20px;
-    padding: 5px;
+    grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+    gap: 16px;
+    padding: 4px;
 }
 
 .shop-item-card {
-    background: rgba(15, 23, 42, 0.4);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 16px;
-    padding: 20px;
+    padding: 18px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 10px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
 }
 
-.shop-item-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: radial-gradient(circle at center, var(--primary-glow) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-}
-
 .shop-item-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
     border-color: var(--primary);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
-
-.shop-item-card:hover::before {
-    opacity: 0.1;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(216, 163, 58, 0.1);
 }
 
 .item-preview {
-    width: 80px;
-    height: 80px;
+    width: 75px;
+    height: 75px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3rem;
+    font-size: 2.8rem;
     background: rgba(255, 255, 255, 0.03);
     border-radius: 12px;
-    margin-bottom: 5px;
-    position: relative;
 }
 
-.item-name {
-    font-weight: 700;
-    color: white;
-    font-size: 1rem;
-    text-align: center;
-}
-
+.item-name { font-weight: 700; color: white; font-size: 0.95rem; text-align: center; }
 .item-price {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     color: var(--primary);
     font-weight: 900;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
 }
 
-/* Specific Frame Designs (Shared by preview and actual avatar container) */
-.frame-neon_blue, .frame-preview.neon_blue {
-    border-color: #00f2ff !important;
-    box-shadow: 0 0 15px rgba(0, 242, 255, 0.6), inset 0 0 10px rgba(0, 242, 255, 0.3);
-}
-
-.frame-red_pulse, .frame-preview.red_pulse {
-    border-color: #ff0055 !important;
-    box-shadow: 0 0 15px rgba(255, 0, 85, 0.6), inset 0 0 10px rgba(255, 0, 85, 0.3);
-    animation: frame-pulse-red 2s infinite;
-}
-
-.frame-gold_glaze, .frame-preview.gold_glaze {
-    border-color: #ffd700 !important;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7), inset 0 0 10px rgba(255, 215, 0, 0.4);
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(255, 215, 0, 0.15));
-}
-
-.frame-toxic_vibe, .frame-preview.toxic_vibe {
-    border-color: #39ff14 !important;
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.6), inset 0 0 10px rgba(57, 255, 20, 0.3);
-}
-
-@keyframes frame-pulse-red {
-    0% { box-shadow: 0 0 10px rgba(255, 0, 85, 0.4); }
-    50% { box-shadow: 0 0 25px rgba(255, 0, 85, 0.8); }
-    100% { box-shadow: 0 0 10px rgba(255, 0, 85, 0.4); }
-}
-
-/* Base Frame Preview (used in shop/inventory tiles) */
-.frame-preview {
-    width: 60px;
-    height: 60px;
-    border: 3px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    transition: all 0.3s;
-    position: relative;
-}
-
-.buy-btn {
-    margin-top: 0.5rem;
-    width: 100%;
-    font-size: 0.75rem !important;
-    padding: 0.5rem !important;
-}
-
+.buy-btn { margin-top: 4px; width: 100%; font-size: 0.75rem !important; padding: 0.5rem !important; }
 .buy-btn.disabled {
-    opacity: 0.5 !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: transparent !important;
+    opacity: 0.4 !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
     cursor: not-allowed;
 }
 
-/* Detail View (Shared with Roles Modal if possible, but distinct here) */
-.shop-detail-view {
-    text-align: left;
-    animation: fadeIn 0.3s ease-out;
-}
-
-
-/* Empty State */
 .shop-empty-state {
     display: flex;
     flex-direction: column;
@@ -370,35 +364,62 @@
     text-align: center;
 }
 
-.shop-empty-icon {
-    font-size: 3.5rem;
-    opacity: 0.4;
-    margin-bottom: 0.5rem;
+.shop-empty-icon { font-size: 3rem; opacity: 0.35; }
+.shop-empty-title { font-size: 1.1rem !important; font-weight: 700; color: rgba(255,255,255,0.5) !important; margin-bottom: 0 !important; }
+.shop-empty-sub { font-size: 0.85rem !important; color: #64748b !important; margin-bottom: 0 !important; }
+
+/* Frame Styles */
+.frame-preview {
+    width: 58px;
+    height: 58px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    transition: all 0.3s;
+    position: relative;
 }
 
-.shop-empty-title {
-    font-size: 1.2rem !important;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.6) !important;
-    margin-bottom: 0 !important;
+.frame-neon_blue, .frame-preview.neon_blue {
+    border-color: #00f2ff !important;
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.5), inset 0 0 8px rgba(0, 242, 255, 0.2);
+}
+.frame-red_pulse, .frame-preview.red_pulse {
+    border-color: #ff0055 !important;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.5), inset 0 0 8px rgba(255, 0, 85, 0.2);
+    animation: frame-pulse-red 2s infinite;
+}
+.frame-gold_glaze, .frame-preview.gold_glaze {
+    border-color: #ffd700 !important;
+    box-shadow: 0 0 18px rgba(255, 215, 0, 0.6), inset 0 0 8px rgba(255, 215, 0, 0.3);
+}
+.frame-toxic_vibe, .frame-preview.toxic_vibe {
+    border-color: #39ff14 !important;
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.5), inset 0 0 8px rgba(57, 255, 20, 0.2);
 }
 
-.shop-empty-sub {
-    font-size: 0.9rem !important;
-    color: #64748b !important;
-    margin-bottom: 0 !important;
+@keyframes frame-pulse-red {
+    0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 85, 0.4); }
+    50% { box-shadow: 0 0 25px rgba(255, 0, 85, 0.8); }
 }
 
-/* Profile Modal Adjustments */
+/* ============================
+   PROFILE MODAL
+   ============================ */
+.profile-modal-panel {
+    max-width: 520px !important;
+    padding: 2.5rem !important;
+}
+
 .profile-preview-large {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
+    gap: 1.5rem;
     margin-bottom: 2rem;
     padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
 }
 
 #profile-display-name {
@@ -408,174 +429,27 @@
     color: white;
 }
 
-/* ============================
-   ROLES MODAL
-   ============================ */
-
-.roles-modal-panel {
-    max-width: 650px !important;
-    padding: 2.5rem !important;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.roles-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin: 2rem 0;
-    width: 100%;
-}
-
-.role-tile {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-}
-
-.role-tile::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: radial-gradient(circle at center, var(--primary-glow) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.role-tile:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--primary);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-}
-
-.role-tile:hover::before {
-    opacity: 0.1;
-}
-
-.role-tile-icon {
-    font-size: 3.5rem;
-    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.1));
-    z-index: 1;
-}
-
-.role-tile-name {
-    font-weight: 800;
-    font-size: 1.1rem;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    z-index: 1;
-}
-
-/* Role Detail View */
-.role-detail-view {
-    width: 100%;
-    text-align: left;
-    animation: fadeIn 0.4s ease-out;
-}
-
-.detail-scroll-area {
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: 15px;
-    margin-bottom: 2rem;
-    scrollbar-width: thin;
-    scrollbar-color: var(--primary) transparent;
-}
-
-.detail-scroll-area::-webkit-scrollbar { width: 5px; }
-.detail-scroll-area::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
-
-.detail-title-row {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.detail-title-row h2 {
-    margin: 0 !important;
-    font-size: 2.2rem !important;
-}
-
-.detail-main-icon {
-    font-size: 4rem;
-}
-
-.detail-short {
-    font-style: italic;
-    color: #94a3b8;
-    margin-bottom: 2rem;
-    font-size: 1.1rem;
-}
-
-.detail-section {
-    margin-bottom: 2rem;
-}
-
-.detail-section h3 {
-    font-size: 0.85rem;
-    color: var(--primary);
-    margin-bottom: 1rem;
-    letter-spacing: 2px;
-    font-weight: 900;
-    text-transform: uppercase;
-}
-
-.detail-abilities {
-    list-style: none;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-}
-
-.detail-abilities li {
-    padding: 1rem 1.2rem;
-    background: rgba(255, 255, 255, 0.04);
-    border-radius: 12px;
-    font-size: 0.95rem;
-    border-left: 4px solid var(--primary);
-    color: #e2e8f0;
-}
-
-.back-btn-footer {
-    width: 100% !important;
-}
-
-/* Profile Inventory Styles */
 .profile-inventory {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    margin: 2rem 0;
+    gap: 1.2rem;
+    margin: 1.5rem 0;
 }
 
 .profile-inventory h3 {
-    font-size: 1rem;
+    font-size: 0.8rem;
     color: var(--primary);
     margin-bottom: 0.5rem;
     letter-spacing: 2px;
     text-align: left;
+    font-weight: 900;
 }
 
 .inventory-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-    gap: 15px;
+    gap: 12px;
     padding: 10px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 12px;
@@ -592,131 +466,601 @@
     opacity: 0.7;
 }
 
-.owned-item-tile:hover {
-    transform: scale(1.05);
-    opacity: 1;
+.owned-item-tile:hover { transform: scale(1.05); opacity: 1; }
+.owned-item-tile.active { border-color: var(--primary); opacity: 1; box-shadow: 0 0 10px var(--primary); }
+
+/* ============================
+   ROLES MODAL
+   ============================ */
+.roles-modal-panel {
+    max-width: 650px !important;
+    padding: 2.5rem !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.owned-item-tile.active {
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+    margin: 1.5rem 0;
+    width: 100%;
+}
+
+.role-tile {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.role-tile:hover {
+    background: rgba(255, 255, 255, 0.06);
     border-color: var(--primary);
-    opacity: 1;
-    box-shadow: 0 0 10px var(--primary);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+.role-tile-icon { font-size: 3rem; }
+.role-tile-name {
+    font-weight: 800;
+    font-size: 1rem;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.role-detail-view { width: 100%; text-align: left; animation: fadeIn 0.35s ease-out; }
+.detail-scroll-area {
+    max-height: 380px;
+    overflow-y: auto;
+    padding-right: 12px;
+    margin-bottom: 1.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+}
+.detail-scroll-area::-webkit-scrollbar { width: 4px; }
+.detail-scroll-area::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+.detail-title-row {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.detail-title-row h2 { margin: 0 !important; font-size: 2rem !important; }
+.detail-main-icon { font-size: 3.5rem; }
+.detail-short { font-style: italic; color: #94a3b8; margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.5; }
+
+.detail-section { margin-bottom: 1.5rem; }
+.detail-section h3 {
+    font-size: 0.78rem;
+    color: var(--primary);
+    margin-bottom: 0.8rem;
+    letter-spacing: 2px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.detail-abilities { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.detail-abilities li {
+    padding: 0.9rem 1.1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    border-left: 3px solid var(--primary);
+    color: #e2e8f0;
+    line-height: 1.4;
+}
+
+.back-btn-footer { width: 100% !important; }
+
+/* ============================
+   ★ NEW: PLAYER PROFILE MODAL
+   ============================ */
+.player-profile-modal {
+    max-width: 360px !important;
+    padding: 1.8rem !important;
+    position: relative;
+    text-align: left !important;
+}
+
+/* Close X button */
+.pp-close-x {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #64748b;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all 0.2s;
+    padding: 0;
+    line-height: 1;
+}
+
+.pp-close-x:hover {
+    background: rgba(255,255,255,0.08);
+    color: white;
+    transform: rotate(90deg);
+    border-color: rgba(255,255,255,0.2);
+}
+
+/* Profile Header */
+.pp-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    padding-right: 2rem; /* Space for close X */
+}
+
+.pp-avatar {
+    width: 68px !important;
+    height: 68px !important;
+    border-radius: 16px !important;
+    border: 2px solid var(--primary) !important;
+    box-shadow: 0 0 20px rgba(216, 163, 58, 0.25);
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.05);
+    overflow: hidden;
+}
+
+.pp-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pp-info h2 {
+    font-size: 1.3rem !important;
+    font-weight: 900 !important;
+    color: white !important;
+    margin: 0 0 0.5rem !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: white !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+}
+
+.pp-stats { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.pp-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(216, 163, 58, 0.07);
+    border: 1px solid rgba(216, 163, 58, 0.2);
+    padding: 0.25rem 0.6rem;
+    border-radius: 8px;
+}
+
+.pp-stat-icon { font-size: 0.85rem; }
+.pp-stat-value { font-weight: 800; color: var(--primary); font-size: 0.9rem; }
+.pp-stat-label { font-size: 0.7rem; color: #64748b; }
+
+/* Divider */
+.pp-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin-bottom: 1rem;
+}
+
+/* Action Buttons */
+.pp-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.pp-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+    text-align: left;
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+}
+
+.pp-btn-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+.pp-btn-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+}
+
+.pp-btn-title { font-weight: 700; font-size: 0.9rem; line-height: 1; }
+.pp-btn-sub { font-size: 0.72rem; opacity: 0.5; font-weight: 400; }
+.pp-btn-arrow { font-size: 1.2rem; color: rgba(255,255,255,0.2); }
+
+/* Chat Button */
+.pp-action-btn.chat-btn {
+    background: rgba(56, 189, 248, 0.06);
+    border-color: rgba(56, 189, 248, 0.15);
+    color: #7dd3fc;
+}
+
+.pp-action-btn.chat-btn:hover {
+    background: rgba(56, 189, 248, 0.12);
+    border-color: #38bdf8;
+    transform: translateX(4px);
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.1);
+}
+
+.pp-action-btn.chat-btn .pp-btn-arrow { color: #38bdf8; }
+
+/* Kora Button */
+.pp-action-btn.kora-btn {
+    background: rgba(216, 163, 58, 0.06);
+    border-color: rgba(216, 163, 58, 0.15);
+    color: var(--primary);
+}
+
+.pp-action-btn.kora-btn:hover {
+    background: rgba(216, 163, 58, 0.12);
+    border-color: var(--primary);
+    transform: translateX(4px);
+    box-shadow: 0 4px 15px rgba(216, 163, 58, 0.1);
+}
+
+.pp-action-btn.kora-btn .pp-btn-arrow { color: var(--primary); }
+
+/* Friend Button */
+.pp-action-btn.friend-btn {
+    background: rgba(95, 175, 109, 0.06);
+    border-color: rgba(95, 175, 109, 0.15);
+    color: var(--accent-green);
+}
+
+.pp-action-btn.friend-btn:hover {
+    background: rgba(95, 175, 109, 0.12);
+    border-color: var(--accent-green);
+    transform: translateX(4px);
+    box-shadow: 0 4px 15px rgba(95, 175, 109, 0.1);
+}
+
+.pp-action-btn.friend-btn .pp-btn-arrow { color: var(--accent-green); }
+
+/* Close Button */
+.pp-close-main {
+    width: 100% !important;
+    height: 42px !important;
+    font-size: 0.82rem !important;
+    border-radius: 10px !important;
 }
 
 /* ============================
-   RESPONSIVE (MOBILE)
+   ★ NEW: KORA SEND MODAL
    ============================ */
+.kora-send-modal {
+    max-width: 380px !important;
+    padding: 2rem !important;
+    text-align: center;
+}
 
+.ks-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    filter: drop-shadow(0 0 15px rgba(216, 163, 58, 0.4));
+}
+
+.kora-send-modal h2 {
+    font-size: 1.4rem !important;
+    margin-bottom: 1.5rem !important;
+    letter-spacing: 3px !important;
+}
+
+/* Target Row */
+.ks-target-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+    padding: 0.7rem 1rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    text-align: left;
+}
+
+.ks-label {
+    color: #64748b;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.ks-target-name {
+    font-weight: 800;
+    color: white;
+    font-size: 0.95rem;
+}
+
+/* Balance Card */
+.ks-balance-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.9rem 1.2rem;
+    background: rgba(216, 163, 58, 0.06);
+    border: 1px solid rgba(216, 163, 58, 0.2);
+    border-radius: 12px;
+    margin-bottom: 1.2rem;
+}
+
+.ks-balance-label {
+    color: #94a3b8;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.ks-balance-value {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 900;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+/* Input */
+.ks-input-group {
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
+.ks-input-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.ks-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 0 1rem;
+    transition: all 0.2s;
+    margin-bottom: 0.75rem;
+}
+
+.ks-input-wrap:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(216, 163, 58, 0.12);
+}
+
+.ks-input-icon { font-size: 1rem; }
+
+#ks-amount {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 0.9rem 0;
+    color: white;
+    font-size: 1.15rem;
+    font-weight: 700;
+    outline: none;
+    width: 100%;
+}
+
+#ks-amount::placeholder { color: #475569; font-weight: 400; }
+
+/* Quick Amount Buttons */
+.ks-quick-amounts {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.ks-quick-btn {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #94a3b8;
+    padding: 0.4rem;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+}
+
+.ks-quick-btn:hover {
+    background: rgba(216, 163, 58, 0.1);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-1px);
+}
+
+/* Actions */
+.ks-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.ks-actions .action-btn {
+    flex: 1;
+    height: 48px !important;
+    font-size: 0.88rem !important;
+    border-radius: 12px !important;
+    width: auto !important;
+}
+
+/* ============================
+   DANGER BUTTON
+   ============================ */
+.action-btn.danger {
+    background: linear-gradient(180deg, #f43f5e 0%, #9f1239 100%) !important;
+    color: white !important;
+}
+
+.action-btn.danger:hover:not(:disabled) {
+    background: linear-gradient(180deg, #fb7185 0%, #9f1239 100%) !important;
+    box-shadow: 0 8px 25px rgba(244, 63, 94, 0.35) !important;
+}
+
+/* ============================
+   RESPONSIVE (MOBILE LANDSCAPE)
+   ============================ */
 @media screen and (max-width: 930px) and (orientation: landscape) {
     .modal-content {
         max-width: 95vw !important;
-        max-height: 95vh !important;
+        max-height: 92vh !important;
         padding: 1rem !important;
-        border-radius: 16px !important;
+        border-radius: 14px !important;
         width: 100% !important;
         overflow-y: auto !important;
     }
 
-    .modal-content h2 { font-size: 1.2rem !important; }
+    .modal-content h2 { font-size: 1.1rem !important; margin-bottom: 0.6rem !important; }
+    .modal-content p { font-size: 0.85rem !important; margin-bottom: 1rem !important; }
 
-    /* Shop Modal Landscape */
+    /* Ranking */
+    .ranking-modal-panel { max-width: 95vw !important; padding: 0.8rem !important; }
+    .ranking-list { max-height: 55vh !important; margin-bottom: 0.8rem !important; }
+    .ranking-entry { padding: 0.5rem 0.7rem !important; margin-bottom: 4px !important; }
+    .rank-number { font-size: 0.85rem !important; }
+
+    /* Shop */
+    .shop-modal-panel { max-width: 95vw !important; padding: 0.8rem !important; }
+    .shop-header { margin-bottom: 0.5rem !important; padding-bottom: 0.5rem !important; }
+    .shop-header h2 { font-size: 1.1rem !important; }
+    .shop-kora-badge { padding: 4px 8px !important; font-size: 0.72rem !important; }
+    .shop-tabs { margin-bottom: 8px !important; padding-bottom: 5px !important; gap: 5px !important; }
+    .shop-tab-btn { padding: 5px 10px !important; font-size: 0.68rem !important; }
+    .shop-body { height: 48vh !important; margin-bottom: 0.8rem !important; }
+    .shop-items-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important; gap: 8px !important; }
+    .shop-item-card { padding: 8px !important; gap: 5px !important; border-radius: 10px !important; }
+    .item-preview { width: 44px !important; height: 44px !important; font-size: 1.6rem !important; border-radius: 8px !important; }
+    .item-name { font-size: 0.75rem !important; }
+    .item-price { font-size: 0.7rem !important; }
+
+    /* Roles */
+    .roles-modal-panel { max-width: 95vw !important; padding: 0.8rem !important; }
+    .roles-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; margin: 8px 0 !important; }
+    .role-tile { padding: 10px !important; border-radius: 12px !important; gap: 5px !important; }
+    .role-tile-icon { font-size: 2rem !important; }
+    .role-tile-name { font-size: 0.78rem !important; letter-spacing: 1px !important; }
+    .detail-scroll-area { max-height: 42vh !important; margin-bottom: 0.8rem !important; }
+    .detail-main-icon { font-size: 2.2rem !important; }
+    .detail-title-row h2 { font-size: 1.3rem !important; }
+    .detail-short { font-size: 0.82rem !important; margin-bottom: 0.8rem !important; }
+    .detail-abilities li { padding: 6px 10px !important; font-size: 0.78rem !important; }
+
+    /* Player Profile */
+    .player-profile-modal { max-width: 95vw !important; padding: 0.8rem !important; }
+    .pp-avatar { width: 52px !important; height: 52px !important; }
+    .pp-info h2 { font-size: 1.1rem !important; }
+    .pp-action-btn { padding: 0.65rem 0.8rem !important; }
+    .pp-btn-title { font-size: 0.82rem !important; }
+    .pp-btn-sub { display: none; }
+
+    /* Kora Send */
+    .kora-send-modal { max-width: 95vw !important; padding: 0.8rem !important; }
+    .kora-send-modal h2 { font-size: 1.1rem !important; margin-bottom: 0.8rem !important; }
+    .ks-icon { font-size: 1.8rem !important; margin-bottom: 0.3rem !important; }
+    .ks-balance-card { padding: 0.6rem 0.9rem !important; margin-bottom: 0.8rem !important; }
+    .ks-quick-amounts { gap: 0.3rem !important; }
+    .ks-quick-btn { font-size: 0.72rem !important; padding: 0.3rem !important; }
+    .ks-actions .action-btn { height: 40px !important; font-size: 0.82rem !important; }
+
+    /* Confirm */
+    .confirm-actions .action-btn { max-width: 130px !important; height: 42px !important; font-size: 0.85rem !important; }
+
+    /* General action btn in modals */
+    .modal-content .action-btn:not(.pp-action-btn):not(.ks-actions .action-btn):not(.confirm-actions .action-btn) {
+        width: 100% !important;
+        height: 40px !important;
+        font-size: 0.82rem !important;
+        border-radius: 10px !important;
+    }
+}
+
+/* ============================
+   MOBILE PORTRAIT ADJUSTMENTS
+   ============================ */
+@media screen and (max-width: 480px) {
+    .modal-content {
+        padding: 1.5rem !important;
+        border-radius: 20px !important;
+    }
+
     .shop-modal-panel {
-        max-width: 95vw !important;
-        padding: 1rem !important;
-    }
-
-    .shop-header {
-        margin-bottom: 0.5rem !important;
-        padding-bottom: 0.5rem !important;
-    }
-
-    .shop-header h2 { font-size: 1.2rem !important; }
-
-    .shop-kora-badge {
-        padding: 4px 10px !important;
-        font-size: 0.75rem !important;
-    }
-
-    .shop-tabs {
-        margin-bottom: 10px !important;
-        padding-bottom: 5px !important;
-        gap: 5px !important;
-    }
-
-    .shop-tab-btn {
-        padding: 6px 12px !important;
-        font-size: 0.7rem !important;
-    }
-
-    .shop-body {
-        height: 50vh !important;
-        margin-bottom: 1rem !important;
+        max-width: 100% !important;
+        padding: 1.2rem !important;
     }
 
     .shop-items-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+        grid-template-columns: repeat(2, 1fr) !important;
         gap: 10px !important;
-    }
-
-    .shop-item-card {
-        padding: 10px !important;
-        gap: 6px !important;
-    }
-
-    .item-preview {
-        width: 50px !important;
-        height: 50px !important;
-        font-size: 1.8rem !important;
-    }
-
-    .item-name { font-size: 0.8rem !important; }
-    .item-price { font-size: 0.75rem !important; }
-
-    /* Roles Modal Landscape */
-    .roles-modal-panel {
-        max-width: 95vw !important;
-        padding: 1rem !important;
     }
 
     .roles-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
-        margin: 10px 0 !important;
+        grid-template-columns: 1fr !important;
     }
 
-    .role-tile {
-        padding: 10px !important;
-        border-radius: 12px !important;
-        gap: 5px !important;
+    .player-profile-modal {
+        max-width: 100% !important;
+        padding: 1.2rem !important;
     }
 
-    .role-tile-icon { font-size: 2rem !important; }
-    .role-tile-name { font-size: 0.85rem !important; }
-
-    .role-detail-view .detail-title-row {
-        margin-bottom: 1rem !important;
-        padding-bottom: 0.5rem !important;
-        gap: 1rem !important;
+    .kora-send-modal {
+        max-width: 100% !important;
+        padding: 1.2rem !important;
     }
 
-    .role-detail-view .detail-main-icon { font-size: 2.5rem !important; }
-    .role-detail-view .detail-title-row h2 { font-size: 1.5rem !important; }
-
-    .detail-scroll-area {
-        max-height: 45vh !important;
-        margin-bottom: 1rem !important;
+    .ks-actions {
+        flex-direction: column;
     }
 
-    .detail-short { font-size: 0.85rem !important; margin-bottom: 1rem !important; }
-    .detail-section h3 { font-size: 0.75rem !important; margin-bottom: 0.5rem !important; }
-    .detail-abilities { gap: 5px !important; }
-    .detail-abilities li { padding: 8px 12px !important; font-size: 0.8rem !important; }
-
-    /* Action Buttons in Modals */
-    .modal-content .action-btn {
+    .ks-actions .action-btn {
         width: 100% !important;
-        height: 40px !important;
-        font-size: 0.85rem !important;
-        border-radius: 10px !important;
+    }
+
+    .confirm-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .confirm-actions .action-btn {
+        max-width: 100% !important;
+        width: 100% !important;
     }
 }
