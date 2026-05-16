@@ -1,59 +1,214 @@
-/* ============================
+/* ============================================================
    LOGIN SCREEN
-   ============================ */
+   ============================================================ */
 
+#screen-login {
+  background: var(--c-bg);
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Background grid lines (tactical aesthetic) */
+#screen-login::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,229,204,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,204,0.035) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+/* ── Radial glow behind logo */
+#screen-login::after {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0,229,204,0.07) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  pointer-events: none;
+}
+
+/* ── Logo */
+.logo-container {
+  text-align: center;
+  margin-bottom: 48px;
+  position: relative;
+  z-index: 2;
+}
+
+.logo-container h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--c-text);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+/* Accent on "vs" word */
+.logo-container h1 span,
+.logo-accent { color: var(--c-accent); }
+
+/* Horizontal accent line under title */
+.logo-container::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 2px;
+  background: var(--c-accent);
+  margin: 14px auto 0;
+  box-shadow: 0 0 12px var(--c-accent-glow);
+}
+
+.logo-container p {
+  font-size: 0.82rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  margin-top: 18px;
+  font-weight: 500;
+}
+
+.version-tag {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  color: var(--c-text-muted);
+  opacity: 0.5;
+}
+
+/* ── Login Card */
 .login-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 2rem;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 400px;
+  padding: 36px 32px;
+  border-radius: var(--r-xl);
+  background: rgba(13,17,23,0.9);
+  border: 1px solid var(--c-border-2);
+  box-shadow: var(--sh-float);
+}
+
+/* Accent corner notch */
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 40px; height: 40px;
+  background: var(--c-accent);
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  border-radius: 0 var(--r-xl) 0 0;
+  opacity: 0.15;
 }
 
 .login-card input {
-    width: 100%;
-    max-width: 300px;
+  display: block;
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--r-md);
+  color: var(--c-text);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 16px 20px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.logo {
-    font-size: 3rem;
-    font-weight: 900;
-    letter-spacing: -1px;
-    margin-bottom: 0.5rem;
+.login-card input::placeholder {
+  color: var(--c-text-muted);
+  letter-spacing: 2px;
+  font-size: 0.85rem;
 }
 
-.logo span {
-    color: var(--primary);
-    font-size: 1.5rem;
-    vertical-align: middle;
+.login-card input:focus {
+  border-color: var(--c-accent);
+  background: rgba(0,229,204,0.04);
+  box-shadow: 0 0 0 3px var(--c-accent-dim);
 }
 
-.subtitle {
-    color: var(--text-dim);
-    margin-bottom: 2.5rem;
-    font-weight: 300;
+/* Big CTA button */
+#join-btn {
+  display: block;
+  width: 100%;
+  height: 54px;
+  background: var(--c-accent);
+  color: var(--c-bg);
+  border: none;
+  border-radius: var(--r-md);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s var(--ease-out);
+  box-shadow: 0 4px 24px var(--c-accent-glow);
 }
 
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+#join-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2.5s infinite;
+  pointer-events: none;
 }
 
-input {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--glass-border);
-    padding: 1.2rem;
-    border-radius: 16px;
-    color: var(--text-main);
-    font-size: 1.1rem;
-    text-align: center;
-    outline: none;
-    transition: all 0.3s;
+#join-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 36px var(--c-accent-glow);
+  filter: brightness(1.06);
 }
 
-input:focus {
-    border-color: var(--primary);
-    background: rgba(0, 0, 0, 0.6);
-    box-shadow: 0 0 20px rgba(216, 163, 58, 0.2);
+#join-btn:active { transform: translateY(0); }
+
+/* ── Decorative corner dots */
+.login-dots {
+  position: absolute;
+  bottom: 32px;
+  opacity: 0.15;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.login-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--c-accent);
+}
+.login-dot:nth-child(2) { opacity: 0.6; }
+.login-dot:nth-child(3) { opacity: 0.3; }
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 930px) and (orientation: landscape) {
+  .logo-container { margin-bottom: 24px; }
+  .logo-container h1 { font-size: 2rem; letter-spacing: 4px; }
+  .logo-container p  { font-size: 0.72rem; margin-top: 8px; }
+  .login-card { padding: 24px 22px; max-width: 360px; }
+  .login-card input { padding: 12px 16px; font-size: 0.95rem; margin-bottom: 14px; }
+  #join-btn { height: 46px; font-size: 0.95rem; }
+}
+
+@media (max-width: 480px) {
+  .login-card { padding: 24px 20px; }
 }
