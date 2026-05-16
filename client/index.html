@@ -5,32 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Polizei gegen Dieb | Online</title>
-    <link rel="stylesheet" href="./style.css?v=3">
+    <link rel="stylesheet" href="./style.css?v=4">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Hard override to prevent rotation and hide game in portrait */
         @media screen and (max-width: 950px) and (orientation: portrait) {
             #game-container { display: none !important; transform: none !important; }
             .landscape-warning { display: flex !important; }
         }
     </style>
 </head>
- 
+
 <body>
+    <!-- Portrait Warning -->
     <div id="landscape-warning" class="landscape-warning">
         <div class="warning-content">
             <div class="rotate-icon">📱🔄</div>
             <p data-i18n="landscape_warning">Bitte Handy quer halten</p>
-            <small style="opacity: 0.5; font-size: 0.6rem;">v2.7</small>
+            <small style="opacity: 0.5; font-size: 0.6rem;">v2.8</small>
         </div>
     </div>
+
     <div id="game-container">
-        <!-- Screen 1: Login -->
+
+        <!-- ══════════════════════════════════
+             SCREEN 1: LOGIN
+        ══════════════════════════════════ -->
         <section id="screen-login" class="screen active">
             <div class="logo-container animate-in">
                 <h1 data-i18n="logo_title">POLIZEI vs DIEB</h1>
                 <p data-i18n="logo_subtitle">Ein rundenbasiertes Strategie-Abenteuer</p>
-                <div style="font-size: 0.6rem; opacity: 0.4; margin-top: 5px;">v2.7 - LOBBY SYNC FIXED</div>
+                <div style="font-size: 0.6rem; opacity: 0.4; margin-top: 5px;">v2.8</div>
             </div>
             <div class="login-card glass-card animate-in">
                 <input type="text" id="username" data-i18n-placeholder="login_placeholder"
@@ -39,8 +43,11 @@
             </div>
         </section>
 
-        <!-- Screen 1.5: Main View / Game HUD (Brawl Stars Style) -->
+        <!-- ══════════════════════════════════
+             SCREEN 1.5: MAIN HUD
+        ══════════════════════════════════ -->
         <section id="screen-main" class="screen brawl-hud">
+
             <!-- TOP BAR -->
             <header class="hud-top-bar">
                 <div class="hud-top-left">
@@ -62,18 +69,17 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="hud-top-right">
-                    <button id="ranking-btn" class="hud-circle-btn">
+                    <button id="ranking-btn" class="hud-circle-btn" title="Rangliste">
                         <div class="circle-icon">🏆</div>
                     </button>
-                    <button id="settings-btn" class="hud-circle-btn">
+                    <button id="settings-btn" class="hud-circle-btn" title="Einstellungen">
                         <div class="circle-icon">⚙️</div>
                     </button>
                 </div>
             </header>
 
-            <!-- SIDE DOCKS -->
+            <!-- LEFT DOCK -->
             <aside class="hud-side-dock left">
                 <button id="shop-btn" class="dock-item">
                     <div class="dock-icon">🛍️</div>
@@ -85,6 +91,7 @@
                 </button>
             </aside>
 
+            <!-- RIGHT DOCK -->
             <aside class="hud-side-dock right">
                 <button id="friends-btn" class="dock-item">
                     <div class="dock-icon">👥</div>
@@ -96,20 +103,18 @@
                 </button>
             </aside>
 
-            <!-- CENTER PIECE: Open Lobbies Dashboard -->
+            <!-- CENTER: Lobby List -->
             <main class="hud-center-stage">
                 <div id="lobby-list-panel" class="mission-selector dashboard-style">
                     <div class="mission-header">
                         <span class="mission-mode" data-i18n="main_open_lobbies">OFFENE LOBBYS</span>
                         <span id="active-lobbies-count" class="online-tag">0 ONLINE</span>
                     </div>
-                    <div id="lobby-list" class="mission-scroll-area">
-                        <!-- Lobbies as mini cards -->
-                    </div>
+                    <div id="lobby-list" class="mission-scroll-area"></div>
                 </div>
             </main>
 
-            <!-- BOTTOM HUD: Mission & Play -->
+            <!-- BOTTOM BAR -->
             <footer class="hud-bottom-bar">
                 <div class="brawl-pass-preview">
                     <div class="pass-icon">🎫</div>
@@ -118,14 +123,13 @@
                         <div class="pass-progress"></div>
                     </div>
                 </div>
-
                 <div class="play-action-zone">
                     <button id="create-lobby-btn" class="big-play-btn">
                         <span class="play-label">SPIELEN</span>
                     </button>
                 </div>
 
-                <!-- WAITING PANEL (MODAL STYLE) -->
+                <!-- Lobby Waiting Overlay -->
                 <div id="lobby-waiting-panel" class="lobby-waiting-overlay hidden">
                     <div class="waiting-card glass-card">
                         <div class="lobby-header-row">
@@ -133,8 +137,6 @@
                             <div id="lobby-player-count" class="player-count-badge">0 / 0</div>
                         </div>
                         <div class="lobby-separator"></div>
-
-
                         <div id="lobby-player-list" class="waiting-player-list"></div>
                         <div id="wait-msg" class="wait-status-msg">Warte auf weitere Spieler...</div>
                         <div class="waiting-actions">
@@ -146,7 +148,9 @@
             </footer>
         </section>
 
-        <!-- Screen 2: Game View -->
+        <!-- ══════════════════════════════════
+             SCREEN 2: GAME VIEW
+        ══════════════════════════════════ -->
         <section id="screen-game" class="screen">
             <div class="game-hud">
                 <div class="hud-left-v">
@@ -155,9 +159,7 @@
                         <span data-i18n="game_diamonds">DIAMANTEN: </span>
                         <span id="diamond-counter">0 / 2</span>
                     </div>
-                    <div id="game-player-list" class="hud-item player-list-panel">
-                        <!-- Player list will be injected here -->
-                    </div>
+                    <div id="game-player-list" class="hud-item player-list-panel"></div>
                 </div>
                 <div class="hud-center">
                     <div id="game-phase" class="hud-item phase-highlight">Lobby</div>
@@ -192,7 +194,9 @@
             </div>
         </section>
 
-        <!-- Screen 3: Result -->
+        <!-- ══════════════════════════════════
+             SCREEN 3: RESULT
+        ══════════════════════════════════ -->
         <section id="screen-result" class="screen">
             <div class="result-card glass-card">
                 <h1 id="result-title">GEWINNER</h1>
@@ -200,6 +204,10 @@
                 <div id="result-reward" class="reward-badge hidden">+10 Kora erhalten</div>
             </div>
         </section>
+
+        <!-- ══════════════════════════════════
+             MODALS
+        ══════════════════════════════════ -->
 
         <!-- Modal: Shop -->
         <div id="modal-shop" class="modal hidden">
@@ -212,28 +220,22 @@
                         <span class="shop-kora-value" id="shop-kora-display">0</span>
                     </div>
                 </div>
-
                 <div class="shop-tabs">
-                    <button class="shop-tab-btn active" data-tab="abilities"
-                        data-i18n="shop_tab_abilities">Fähigkeiten</button>
+                    <button class="shop-tab-btn active" data-tab="abilities" data-i18n="shop_tab_abilities">Fähigkeiten</button>
                     <button class="shop-tab-btn" data-tab="frames" data-i18n="shop_tab_frames">Rahmen</button>
                     <button class="shop-tab-btn" data-tab="avatars" data-i18n="shop_tab_avatars">Icons</button>
                 </div>
-
                 <div class="shop-body">
-                    <div id="shop-items-grid" class="shop-items-grid">
-                        <!-- Items rendered here -->
-                    </div>
+                    <div id="shop-items-grid" class="shop-items-grid"></div>
                 </div>
                 <button id="shop-close" class="action-btn" data-i18n="shop_close">SCHLIESSEN</button>
             </div>
         </div>
 
-        <!-- Modal: Profile / Inventory -->
+        <!-- Modal: My Profile / Inventory -->
         <div id="modal-profile" class="modal hidden">
             <div class="modal-content glass-card profile-modal-panel">
                 <h2 data-i18n="profile_title">PROFIL</h2>
-
                 <div class="profile-preview-large">
                     <div id="profile-avatar-container" class="avatar-container large">
                         <img id="profile-display-avatar" src="" alt="Avatar">
@@ -243,11 +245,9 @@
                 <div class="profile-inventory">
                     <h3>MEINE RAHMEN</h3>
                     <div id="owned-frames-grid" class="inventory-grid"></div>
-
                     <h3>MEINE ICONS</h3>
                     <div id="owned-avatars-grid" class="inventory-grid"></div>
                 </div>
-
                 <button id="profile-close" class="action-btn" data-i18n="shop_close">SCHLIESSEN</button>
             </div>
         </div>
@@ -255,15 +255,16 @@
         <!-- Modal: Ranking -->
         <div id="modal-ranking" class="modal hidden">
             <div class="modal-content glass-card ranking-modal-panel">
-                <h2 data-i18n="ranking_title">RANGLISTE</h2>
+                <div class="ranking-modal-header">
+                    <h2 data-i18n="ranking_title">RANGLISTE</h2>
+                    <p class="ranking-subtitle">Top Spieler nach Kora</p>
+                </div>
                 <div class="ranking-header">
                     <span data-i18n="ranking_rank">Platz</span>
                     <span data-i18n="ranking_name">Spieler</span>
                     <span data-i18n="ranking_kora">Kora</span>
                 </div>
-                <div id="ranking-list" class="ranking-list">
-                    <!-- Ranking entries here -->
-                </div>
+                <div id="ranking-list" class="ranking-list"></div>
                 <button id="ranking-close" class="action-btn" data-i18n="ranking_close">ZURÜCK</button>
             </div>
         </div>
@@ -272,9 +273,7 @@
         <div id="modal-roles" class="modal hidden">
             <div class="modal-content glass-card roles-modal-panel">
                 <h2 data-i18n="roles_title">SPIELROLLEN</h2>
-                <div id="roles-list" class="roles-grid">
-                    <!-- Roles cards appear here -->
-                </div>
+                <div id="roles-list" class="roles-grid"></div>
                 <button id="roles-close" class="action-btn" data-i18n="roles_close">SCHLIESSEN</button>
             </div>
         </div>
@@ -294,7 +293,7 @@
             </div>
         </div>
 
-        <!-- Custom Notification Modal -->
+        <!-- Modal: Notification -->
         <div id="notification-modal" class="modal hidden">
             <div class="glass-card modal-content animate-in">
                 <h2 id="modal-title">INFO</h2>
@@ -303,7 +302,7 @@
             </div>
         </div>
 
-        <!-- Confirm Modal -->
+        <!-- Modal: Confirm -->
         <div id="confirm-modal" class="modal hidden">
             <div class="glass-card modal-content animate-in">
                 <h2 id="confirm-title">BESTÄTIGEN</h2>
@@ -314,6 +313,110 @@
                 </div>
             </div>
         </div>
+
+        <!-- ══════════════════════════════════
+             NEW: Modal: Player Profile
+             Triggered when clicking any player
+        ══════════════════════════════════ -->
+        <div id="modal-player-profile" class="modal hidden">
+            <div class="modal-content glass-card player-profile-modal">
+                <!-- Close X -->
+                <button class="pp-close-x" id="pp-close-x" title="Schließen">✕</button>
+
+                <!-- Header: Avatar + Name + Stats -->
+                <div class="pp-header">
+                    <div id="pp-avatar-container" class="avatar-container pp-avatar"></div>
+                    <div class="pp-info">
+                        <h2 id="pp-name">Spieler</h2>
+                        <div class="pp-stats">
+                            <div class="pp-stat">
+                                <span class="pp-stat-icon">💎</span>
+                                <span class="pp-stat-value" id="pp-kora">0</span>
+                                <span class="pp-stat-label">Kora</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pp-divider"></div>
+
+                <!-- Action Buttons -->
+                <div class="pp-actions">
+                    <button id="pp-chat-btn" class="pp-action-btn chat-btn">
+                        <span class="pp-btn-icon">💬</span>
+                        <div class="pp-btn-text">
+                            <span class="pp-btn-title">Chatten</span>
+                            <span class="pp-btn-sub">Nachricht senden</span>
+                        </div>
+                        <span class="pp-btn-arrow">›</span>
+                    </button>
+                    <button id="pp-kora-btn" class="pp-action-btn kora-btn">
+                        <span class="pp-btn-icon">💎</span>
+                        <div class="pp-btn-text">
+                            <span class="pp-btn-title">Kora senden</span>
+                            <span class="pp-btn-sub">Kora übertragen</span>
+                        </div>
+                        <span class="pp-btn-arrow">›</span>
+                    </button>
+                    <button id="pp-friend-btn" class="pp-action-btn friend-btn">
+                        <span class="pp-btn-icon">👥</span>
+                        <div class="pp-btn-text">
+                            <span class="pp-btn-title">Freund hinzufügen</span>
+                            <span class="pp-btn-sub">Freundschaftsanfrage senden</span>
+                        </div>
+                        <span class="pp-btn-arrow">›</span>
+                    </button>
+                </div>
+
+                <button id="pp-close" class="action-btn secondary pp-close-main">SCHLIESSEN</button>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════
+             NEW: Modal: Kora Senden
+        ══════════════════════════════════ -->
+        <div id="modal-kora-send" class="modal hidden">
+            <div class="modal-content glass-card kora-send-modal">
+                <div class="ks-icon">💎</div>
+                <h2>KORA SENDEN</h2>
+
+                <div class="ks-target-row">
+                    <span class="ks-label">An:</span>
+                    <span class="ks-target-name" id="ks-target-name">Spieler</span>
+                </div>
+
+                <div class="ks-balance-card">
+                    <span class="ks-balance-label">Dein Guthaben</span>
+                    <div class="ks-balance-value">
+                        <span>💎</span>
+                        <span id="ks-own-kora">0</span>
+                    </div>
+                </div>
+
+                <div class="ks-input-group">
+                    <label class="ks-input-label" for="ks-amount">Betrag eingeben</label>
+                    <div class="ks-input-wrap">
+                        <span class="ks-input-icon">💎</span>
+                        <input type="number" id="ks-amount" placeholder="0" min="1">
+                    </div>
+                    <div class="ks-quick-amounts">
+                        <button class="ks-quick-btn" data-amount="10">10</button>
+                        <button class="ks-quick-btn" data-amount="50">50</button>
+                        <button class="ks-quick-btn" data-amount="100">100</button>
+                        <button class="ks-quick-btn" data-amount="all">MAX</button>
+                    </div>
+                </div>
+
+                <div class="ks-actions">
+                    <button id="ks-cancel-btn" class="action-btn secondary">ABBRECHEN</button>
+                    <button id="ks-send-btn" class="action-btn">SENDEN</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════
+             FRIENDS PANEL (Slide-in)
+        ══════════════════════════════════ -->
         <aside id="friends-panel" class="friends-panel glass-card hidden">
             <div class="friends-header">
                 <h2 data-i18n="friends_title">FREUNDE</h2>
@@ -350,6 +453,7 @@
         </aside>
 
         <script type="module" src="/src/main.js"></script>
+    </div>
 </body>
-hallo
+
 </html>
