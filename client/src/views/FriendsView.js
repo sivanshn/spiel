@@ -3,6 +3,7 @@ import { getTranslation } from '../i18n/translations.js';
 import { state } from '../app/state.js';
 import { getEl, showPopup, closeAllModals } from '../utils/ui.js';
 import { getAvatarUrl } from '../utils/gameUtils.js';
+import { PlayerProfileModal } from '../components/PlayerProfileModal.js';
 
 export class FriendsView {
     constructor() {
@@ -14,6 +15,7 @@ export class FriendsView {
         this.searchBtn = getEl('friends-search-btn');
         this.tabs = document.querySelectorAll('.friends-tab');
         this.closeBtn = getEl('friends-close-btn');
+        this.playerProfileModal = new PlayerProfileModal(socket);
         
         this.init();
     }
@@ -112,6 +114,9 @@ export class FriendsView {
                     <span class="friend-status ${statusClass}">${statusText}</span>
                 </div>
             `;
+            item.onclick = () => {
+                this.playerProfileModal.open(f);
+            };
             this.friendsListEl.appendChild(item);
         });
     }
@@ -178,6 +183,9 @@ export class FriendsView {
 
         card.querySelector('.send-req-btn').onclick = sendReq;
 
+        card.onclick = () => {
+            this.playerProfileModal.open(player);
+        };
         this.searchResultsEl.appendChild(card);
     }
 }

@@ -9,6 +9,7 @@ import { ShopModal } from '../components/ShopModal.js';
 import { ProfileModal } from '../components/ProfileModal.js';
 import { initRolesModal } from './RolesModal.js';
 import { getAvatarUrl } from '../utils/gameUtils.js';
+import { PlayerProfileModal } from '../components/PlayerProfileModal.js';
 
 function setActiveNav(btnId) {
     document.querySelectorAll('.nav-item').forEach(btn => {
@@ -42,6 +43,7 @@ export function initMainView(playerManager) {
     // Modals
     const shopModal = new ShopModal(socket);
     const profileModal = new ProfileModal(socket, playerManager);
+    const playerProfileModal = new PlayerProfileModal(socket);
     initRolesModal();
 
     if (createLobbyBtn) {
@@ -82,6 +84,7 @@ export function initMainView(playerManager) {
             if (modal) {
                 closeAllModals();
                 setActiveNav('ranking-btn');
+                socket.emit('get_ranking');
                 modal.classList.remove('hidden');
             }
         });
@@ -141,14 +144,6 @@ export function initMainView(playerManager) {
         });
     }
 
-    if (rankingBtn) {
-        rankingBtn.addEventListener('click', () => {
-            closeAllModals();
-            setActiveNav('ranking-btn');
-            socket.emit('get_ranking');
-            modalRanking.classList.remove('hidden');
-        });
-    }
 
     if (rankingClose) {
         rankingClose.addEventListener('click', () => {
@@ -215,6 +210,9 @@ export function initMainView(playerManager) {
                 </div>
                 <span class="rank-kora">${entry.kora}</span>
             `;
+            div.onclick = () => {
+                playerProfileModal.open(entry);
+            };
             rankingList.appendChild(div);
         });
     });

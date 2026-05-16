@@ -126,7 +126,9 @@ export const translations = {
         frame_gold_glaze: "Goldglanz",
         frame_toxic_vibe: "Toxic Vibe",
         frame_none: "Standard",
-        landscape_warning: "Bitte Handy quer halten"
+        landscape_warning: "Bitte Handy quer halten",
+        action_modal_chat: "Chatten",
+        action_modal_send_kora: "Kora senden"
     },
     en: {
         logo_title: "POLICE vs THIEF",

@@ -5,11 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Polizei gegen Dieb | Online</title>
-    <link rel="stylesheet" href="./style.css?v=4">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css?v=3.0">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* NUCLEAR FIX: Force all screens to absolute top-left to prevent vertical shift */
+        .screen {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        #game-container {
+            position: fixed !important;
+            inset: 0 !important;
+            overflow: hidden !important;
+            background: #000;
+        }
         @media screen and (max-width: 950px) and (orientation: portrait) {
-            #game-container { display: none !important; transform: none !important; }
+            #game-container { display: none !important; }
             .landscape-warning { display: flex !important; }
         }
     </style>
@@ -21,7 +39,7 @@
         <div class="warning-content">
             <div class="rotate-icon">📱🔄</div>
             <p data-i18n="landscape_warning">Bitte Handy quer halten</p>
-            <small style="opacity: 0.5; font-size: 0.6rem;">v2.8</small>
+            <small style="opacity: 0.5; font-size: 0.6rem;">v3.0</small>
         </div>
     </div>
 
@@ -34,7 +52,7 @@
             <div class="logo-container animate-in">
                 <h1 data-i18n="logo_title">POLIZEI vs DIEB</h1>
                 <p data-i18n="logo_subtitle">Ein rundenbasiertes Strategie-Abenteuer</p>
-                <div style="font-size: 0.6rem; opacity: 0.4; margin-top: 5px;">v2.8</div>
+                <div style="font-size: 0.6rem; opacity: 0.4; margin-top: 5px;">v3.0</div>
             </div>
             <div class="login-card glass-card animate-in">
                 <input type="text" id="username" data-i18n-placeholder="login_placeholder"

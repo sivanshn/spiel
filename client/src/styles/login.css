@@ -4,10 +4,12 @@
 
 #screen-login {
   background: var(--c-bg);
+  position: absolute !important;
+  inset: 0 !important;
   flex-direction: column;
   gap: 0;
-  position: relative;
   overflow: hidden;
+  z-index: var(--z-base);
 }
 
 /* ── Background grid lines (tactical aesthetic) */
