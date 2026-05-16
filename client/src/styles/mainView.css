@@ -657,6 +657,7 @@
   .mission-selector.dashboard-style { height: 75vh; max-width: 100%; border-radius: var(--r-lg); }
 
   .hud-bottom-bar { padding: 8px 12px; }
+  #start-search-btn { margin-bottom: 12px; } /* Push slightly up */
   .brawl-pass-preview { display: none; }
   .big-play-btn { height: 46px; padding: 0 32px; }
   .play-label { font-size: 1.1rem; letter-spacing: 3px; }
