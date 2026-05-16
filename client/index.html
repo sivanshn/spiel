@@ -147,23 +147,24 @@
                     </button>
                 </div>
 
-                <!-- Lobby Waiting Overlay -->
-                <div id="lobby-waiting-panel" class="lobby-waiting-overlay hidden">
-                    <div class="waiting-card glass-card">
-                        <div class="lobby-header-row">
-                            <h2 id="lobby-view-title">LOBBY</h2>
-                            <div id="lobby-player-count" class="player-count-badge">0 / 0</div>
-                        </div>
-                        <div class="lobby-separator"></div>
-                        <div id="lobby-player-list" class="waiting-player-list"></div>
-                        <div id="wait-msg" class="wait-status-msg">Warte auf weitere Spieler...</div>
-                        <div class="waiting-actions">
-                            <button id="leave-lobby-btn" class="hud-btn secondary">BACK</button>
-                            <button id="start-game-btn" class="hud-btn primary hidden">START</button>
-                        </div>
+            </footer>
+
+            <!-- Lobby Waiting Overlay (Moved outside footer for perfect centering) -->
+            <div id="lobby-waiting-panel" class="lobby-waiting-overlay hidden">
+                <div class="waiting-card glass-card">
+                    <div class="lobby-header-row">
+                        <h2 id="lobby-view-title">LOBBY</h2>
+                        <div id="lobby-player-count" class="player-count-badge">0 / 0</div>
+                    </div>
+                    <div class="lobby-separator"></div>
+                    <div id="lobby-player-list" class="waiting-player-list"></div>
+                    <div id="wait-msg" class="wait-status-msg">Warte auf weitere Spieler...</div>
+                    <div class="waiting-actions">
+                        <button id="leave-lobby-btn" class="hud-btn secondary">BACK</button>
+                        <button id="start-game-btn" class="hud-btn primary hidden">START</button>
                     </div>
                 </div>
-            </footer>
+            </div>
         </section>
 
         <!-- ══════════════════════════════════
