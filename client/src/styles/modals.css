@@ -616,31 +616,136 @@
 }
 .pp-action-btn.chat-btn .pp-btn-arrow { color: #38bdf8; }
 
-/* Kora */
-.pp-action-btn.kora-btn {
-  background: var(--c-gold-dim);
-  border-color: rgba(240,180,41,0.15);
-  color: var(--c-gold);
+/* Kora Transfer Section (Integrated in Profile) */
+.pp-kora-transfer-section {
+  margin: 10px 0;
+  padding: 16px;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
 }
-.pp-action-btn.kora-btn:hover {
-  background: rgba(240,180,41,0.12);
-  border-color: var(--c-gold);
-  transform: translateX(4px);
-}
-.pp-action-btn.kora-btn .pp-btn-arrow { color: var(--c-gold); }
 
-/* Friend */
-.pp-action-btn.friend-btn {
-  background: rgba(0,214,143,0.05);
-  border-color: rgba(0,214,143,0.15);
-  color: var(--c-green);
+.ks-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-.pp-action-btn.friend-btn:hover {
-  background: rgba(0,214,143,0.1);
-  border-color: var(--c-green);
-  transform: translateX(4px);
+
+.ks-coin {
+  font-size: 1.4rem;
+  filter: drop-shadow(0 0 8px rgba(240,180,41,0.4));
 }
-.pp-action-btn.friend-btn .pp-btn-arrow { color: var(--c-green); }
+
+.ks-slider-container {
+  flex: 1;
+  position: relative;
+  height: 12px;
+  display: flex;
+  align-items: center;
+}
+
+/* Custom Range Slider */
+.ks-range-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  outline: none;
+  border: 1px solid var(--c-border);
+  z-index: 2;
+}
+
+.ks-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 24px;
+  background: #00f2ff;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0,242,255,0.8);
+  border: 2px solid #fff;
+}
+
+.ks-range-slider::-moz-range-thumb {
+  width: 16px;
+  height: 24px;
+  background: #00f2ff;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0,242,255,0.8);
+  border: 2px solid #fff;
+}
+
+.ks-number-input {
+  width: 60px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--c-border-2);
+  color: var(--c-text);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  padding: 6px 0;
+  border-radius: var(--r-sm);
+  outline: none;
+}
+.ks-number-input:focus { border-color: #00f2ff; }
+
+/* Transport Button */
+.pp-transport-btn {
+  position: relative;
+  width: 100%;
+  height: 48px;
+  background: #333;
+  border: 1px solid #444;
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 2px;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.pp-transport-btn .btn-text {
+  position: relative;
+  z-index: 2;
+  color: #aaa;
+}
+
+.pp-transport-btn:hover {
+  background: #3a3a3a;
+  border-color: #555;
+}
+
+.pp-transport-btn.active {
+  background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+  border-color: #00f2ff;
+}
+.pp-transport-btn.active .btn-text {
+  color: #fff;
+  text-shadow: 0 0 10px rgba(0,242,255,0.5);
+}
+
+.pp-transport-btn .btn-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  background: radial-gradient(circle, rgba(0,242,255,0.2) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s, height 0.4s;
+}
+
+.pp-transport-btn:hover .btn-glow {
+  width: 300px; height: 300px;
+}
 
 .pp-close-main { width: 100% !important; height: 40px !important; font-size: 0.8rem !important; border-radius: var(--r-md) !important; }
 

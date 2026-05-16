@@ -8,6 +8,7 @@ import { setLanguage } from './i18n/languageService.js';
 import { showPopup } from './utils/ui.js';
 import { initChatPanel } from './views/ChatPanel.js';
 import { initFriendsView } from './views/FriendsView.js';
+import { initPrivateChatPanel } from './views/PrivateChatPanel.js';
 import { PlayerManager } from './services/PlayerManager.js';
 import { initAssetService } from './services/assetService.js';
 
@@ -23,6 +24,7 @@ initLobbyWaitingPanel();
 initGameView();
 initChatPanel();
 initFriendsView();
+initPrivateChatPanel();
 initAssetService();
 
 

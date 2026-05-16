@@ -365,23 +365,32 @@
                         <span class="pp-btn-icon">💬</span>
                         <div class="pp-btn-text">
                             <span class="pp-btn-title">Chatten</span>
-                            <span class="pp-btn-sub">Nachricht senden</span>
+                            <span class="pp-btn-sub">Privatnachricht senden</span>
                         </div>
                         <span class="pp-btn-arrow">›</span>
                     </button>
-                    <button id="pp-kora-btn" class="pp-action-btn kora-btn">
-                        <span class="pp-btn-icon">💎</span>
-                        <div class="pp-btn-text">
-                            <span class="pp-btn-title">Kora senden</span>
-                            <span class="pp-btn-sub">Kora übertragen</span>
+                    
+                    <!-- NEW: Kora Slider Section -->
+                    <div class="pp-kora-transfer-section">
+                        <div class="ks-slider-row">
+                            <span class="ks-coin">🪙</span>
+                            <div class="ks-slider-container">
+                                <input type="range" id="pp-kora-slider" min="0" max="100" value="0" class="ks-range-slider">
+                                <div class="ks-slider-track"></div>
+                            </div>
+                            <input type="number" id="pp-kora-input" class="ks-number-input" value="0" min="0">
                         </div>
-                        <span class="pp-btn-arrow">›</span>
-                    </button>
+                        <button id="pp-kora-send-btn" class="pp-transport-btn">
+                            <span class="btn-glow"></span>
+                            <span class="btn-text">TRANSPORT</span>
+                        </button>
+                    </div>
+
                     <button id="pp-friend-btn" class="pp-action-btn friend-btn">
                         <span class="pp-btn-icon">👥</span>
                         <div class="pp-btn-text">
                             <span class="pp-btn-title">Freund hinzufügen</span>
-                            <span class="pp-btn-sub">Freundschaftsanfrage senden</span>
+                            <span class="pp-btn-sub">Anfrage senden</span>
                         </div>
                         <span class="pp-btn-arrow">›</span>
                     </button>
@@ -434,8 +443,27 @@
         </div>
 
         <!-- ══════════════════════════════════
-             FRIENDS PANEL (Slide-in)
+             NEW: PRIVATE CHAT PANEL (Slide-in)
         ══════════════════════════════════ -->
+        <aside id="private-chat-panel" class="friends-panel private-chat-side-panel glass-card hidden">
+            <div class="friends-header">
+                <div class="pc-header-info">
+                    <span class="pc-status-dot"></span>
+                    <h2 id="pc-target-name">Chat</h2>
+                </div>
+                <button id="pc-close-btn" class="close-btn">&times;</button>
+            </div>
+            
+            <div id="pc-messages" class="pc-messages-area">
+                <!-- Messages will be injected here -->
+            </div>
+
+            <div class="pc-input-wrapper">
+                <input type="text" id="pc-input" placeholder="Nachricht..." maxlength="200">
+                <button id="pc-send-btn">➤</button>
+            </div>
+        </aside>
+
         <aside id="friends-panel" class="friends-panel glass-card hidden">
             <div class="friends-header">
                 <h2 data-i18n="friends_title">FREUNDE</h2>
