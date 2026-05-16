@@ -27,6 +27,12 @@ function registerSocketHandlers(io, socket) {
     socket.on('move_to', (targetStationId) => handleMoveAction(io, socket, targetStationId));
     socket.on('investigate', () => handleInvestigateAction(io, socket));
     socket.on('arrest', () => handleArrestAction(io, socket));
+
+    socket.on('game_action', (data) => {
+        if (data.type === 'investigate') handleInvestigateAction(io, socket, data.stationId);
+        if (data.type === 'arrest') handleArrestAction(io, socket, data.stationId);
+    });
+
     socket.on('use_ability', (data) => handleUseAbility(io, socket, data));
     socket.on('sabotage_mute', (targetId) => {
         const { handleSabotageMute } = require('../game/gameManager');

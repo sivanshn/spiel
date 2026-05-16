@@ -155,6 +155,35 @@ function startTurn(io, lobbyId, playerId, phase) {
     }, 1000);
 
     broadcastState(io, lobbyId);
+    
+    // NEU: Sofort prüfen ob Dieb eingekesselt ist (Sieg Polizei)
+    if (phase === 'thief_turn') {
+        if (checkThiefTrapped(io, lobbyId)) return;
+    }
+}
+
+function checkThiefTrapped(io, lobbyId) {
+    const lobby = lobbies.get(lobbyId);
+    if (!lobby || !lobby.gameState) return false;
+    const gameState = lobby.gameState;
+    const thief = Object.values(gameState.players).find(p => p.role === 'thief');
+    if (!thief || thief.isImprisoned) return false;
+
+    const connections = gameState.map.connections.filter(c => c.includes(thief.position));
+    const validMoves = connections.filter(c => {
+        const other = c[0] === thief.position ? c[1] : c[0];
+        const isBlocked = gameState.roadblocks.some(rb => 
+            (rb.stationAId === thief.position && rb.stationBId === other) ||
+            (rb.stationAId === other && rb.stationBId === thief.position)
+        );
+        return !isBlocked;
+    });
+
+    if (validMoves.length === 0) {
+        handleGameEnd(io, lobbyId, 'police', 'Die Polizei hat gewonnen! Der Dieb ist eingekesselt und kann sich nicht mehr bewegen.');
+        return true;
+    }
+    return false;
 }
 
 function endTurn(io, lobbyId, playerId, lastPlayerRole = null, lastPlayerIndex = -1) {
@@ -354,11 +383,15 @@ function handleMoveAction(io, socket, targetStationId) {
         if (player.ap_move === 0 && player.ap_investigate === 0 && gameState.phase !== 'end') {
             endTurn(io, user.lobbyId, socket.id);
         }
+        
+        // Nach Move prüfen ob Dieb eingekesselt (falls er sich selbst in Sackgasse manövriert)
+        checkThiefTrapped(io, user.lobbyId);
+        
         broadcastState(io, user.lobbyId);
     }
 }
 
-function handleInvestigateAction(io, socket) {
+function handleInvestigateAction(io, socket, targetStationId = null) {
     const { connectedUsers } = require('../utils/store');
     const user = connectedUsers.get(socket.id);
     if (!user || !user.lobbyId) return;
@@ -370,7 +403,14 @@ function handleInvestigateAction(io, socket) {
     if (player.ap_investigate < 1) return socket.emit('error_msg', 'Keine Untersuchungen!');
 
     player.ap_investigate -= 1;
-    const currentStation = player.position;
+    const currentStation = targetStationId || player.position;
+    
+    // Check range (must be same station)
+    if (currentStation !== player.position) {
+        player.ap_investigate += 1; // Refund
+        return socket.emit('error_msg', 'Du kannst nur deine eigene Station untersuchen!');
+    }
+
     const foundTrace = gameState.thiefTraces.find(t => t.stationId === currentStation);
     const thief = Object.values(gameState.players).find(p => p.role === 'thief');
 
@@ -391,7 +431,7 @@ function handleInvestigateAction(io, socket) {
     broadcastState(io, user.lobbyId);
 }
 
-function handleArrestAction(io, socket) {
+function handleArrestAction(io, socket, targetStationId = null) {
     const { connectedUsers } = require('../utils/store');
     const user = connectedUsers.get(socket.id);
     if (!user || !user.lobbyId) return;
@@ -401,6 +441,11 @@ function handleArrestAction(io, socket) {
 
     if (!player || gameState.activePlayerId !== socket.id || player.role === 'thief') return;
     if (player.ap_investigate < 1) return socket.emit('error_msg', 'Keine Aktionspunkte!');
+
+    const target = targetStationId || player.position;
+    if (target !== player.position) {
+        return socket.emit('error_msg', 'Du kannst nur an deiner eigenen Station eine Festnahme versuchen!');
+    }
 
     player.ap_investigate -= 1;
     const thief = Object.values(gameState.players).find(p => p.role === 'thief');
@@ -463,6 +508,10 @@ function handleUseAbility(io, socket, data) {
         console.log(`[Ability] ${user.name} platzierte Straßensperre zwischen ${player.position} and ${targetId}`);
 
         socket.emit('ability_success', { abilityId, message: 'Straßensperre wurde platziert!' });
+        
+        // Prüfen ob Dieb eingekesselt durch diese Sperre
+        checkThiefTrapped(io, user.lobbyId);
+
         if (player.ap_move === 0 && player.ap_investigate === 0) endTurn(io, user.lobbyId, socket.id);
         broadcastState(io, user.lobbyId);
     }

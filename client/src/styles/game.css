@@ -266,61 +266,59 @@ svg { max-height: 90vh; max-width: 95vw; }
   100% { stroke-opacity: 0.4; stroke-width: 3; }
 }
 
-/* ── Game Footer — Action Bar */
+/* ── Game action bar */
 .game-footer {
   position: absolute;
-  bottom: 16px;
-  right: 16px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
+  bottom: 30px;
+  right: 30px;
   z-index: var(--z-hud);
-  pointer-events: none;
 }
 
-#action-bar, .action-bar {
+.action-bar {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  pointer-events: auto;
-  align-items: flex-end;
+  gap: 12px;
+  width: 240px; /* Fixed width for uniform buttons */
 }
 
-/* Action buttons in game */
-#action-bar .action-btn,
 .action-bar .action-btn {
-  min-width: 160px;
-  height: 44px;
-  font-size: 0.8rem;
-  letter-spacing: 1.5px;
-  border-radius: var(--r-md);
-  backdrop-filter: blur(10px);
-  background: rgba(8,11,18,0.85);
-  border: 1px solid var(--c-border-2);
-  color: var(--c-text);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-}
-#action-bar .action-btn:hover:not(:disabled),
-.action-bar .action-btn:hover:not(:disabled) {
-  background: rgba(0,229,204,0.08);
-  border-color: var(--c-accent);
-  color: var(--c-accent);
-  transform: translateX(-6px);
+  width: 100% !important; /* Force all buttons to same width */
+  justify-content: center;
+  text-align: center;
+  /* Active state color like End Turn */
+  background: var(--c-accent);
+  color: var(--c-bg);
+  box-shadow: 0 4px 15px var(--c-accent-dim);
 }
 
-#btn-end-turn {
-  background: var(--c-accent) !important;
-  color: var(--c-bg) !important;
-  border-color: transparent !important;
-  box-shadow: 0 4px 20px var(--c-accent-glow) !important;
-}
-#btn-end-turn:hover:not(:disabled) {
-  filter: brightness(1.08);
-  transform: translateX(-3px) scale(1.03) !important;
-  box-shadow: 0 6px 28px var(--c-accent-glow) !important;
+.action-bar .action-btn.end-turn {
+  margin-top: 10px;
+  background: #00e5cc; /* Distinct cyan */
 }
 
-/* Abilities dropdown */
+.action-bar .action-btn:disabled {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.2);
+  box-shadow: none;
+}
+
+/* ── Responsive Mobile Landscape */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .game-footer {
+    bottom: 10px; /* Lowered on mobile */
+    right: 15px;
+  }
+  .action-bar {
+    width: 180px;
+    gap: 6px;
+  }
+  .action-bar .action-btn {
+    padding: 8px 12px;
+    font-size: 0.7rem;
+  }
+}
+
+/* ── Abilities dropdown */
 .abilities-container { position: relative; pointer-events: auto; }
 #btn-abilities-toggle {
   display: flex;

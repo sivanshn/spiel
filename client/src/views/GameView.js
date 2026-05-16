@@ -34,26 +34,36 @@ export function initGameView() {
         });
     }
 
-    if (btnMove) {
-        btnMove.addEventListener('click', () => {
-            if (state.selectedStationId) {
-                socket.emit('move_to', state.selectedStationId);
-                state.selectedStationId = null;
-            }
-        });
-    }
-
-    if (btnInvestigate) {
-        btnInvestigate.addEventListener('click', () => {
-            socket.emit('investigate');
-        });
-    }
-
-    if (btnArrest) {
-        btnArrest.addEventListener('click', () => {
-            socket.emit('arrest');
-        });
-    }
+    // Action Buttons
+    btnMove.onclick = () => {
+        state.selectedAction = 'move';
+        updateActionButtons();
+        renderMap();
+    };
+    btnInvestigate.onclick = () => {
+        // Automatically target self if possible
+        const self = playerManager.getSelf();
+        if (self && self.stationId) {
+            socket.emit('game_action', { type: 'investigate', stationId: self.stationId });
+            state.selectedAction = null;
+        } else {
+            state.selectedAction = 'investigate';
+        }
+        updateActionButtons();
+        renderMap();
+    };
+    btnArrest.onclick = () => {
+        // Automatically target self if possible
+        const self = playerManager.getSelf();
+        if (self && self.stationId) {
+            socket.emit('game_action', { type: 'arrest', stationId: self.stationId });
+            state.selectedAction = null;
+        } else {
+            state.selectedAction = 'arrest';
+        }
+        updateActionButtons();
+        renderMap();
+    };
 
     if (btnRoadblock) {
         btnRoadblock.addEventListener('click', () => {
@@ -63,12 +73,6 @@ export function initGameView() {
             } else {
                 showPopup('HINWEIS', 'Wähle zuerst eine Station aus, die du absperren möchtest.');
             }
-        });
-    }
-
-    if (btnArrest) {
-        btnArrest.addEventListener('click', () => {
-            socket.emit('arrest');
         });
     }
 
@@ -466,19 +470,26 @@ function updateUI(gameState) {
         }
 
         if (myPlayer && myPlayer.role !== 'thief') {
+            const isAtMyStation = !state.selectedStationId || state.selectedStationId === myPlayer.position;
+            const hasInvestigateAP = (myPlayer.ap_investigate || 0) > 0;
+
             if (btnInvestigate) {
                 btnInvestigate.classList.remove('hidden');
-                btnInvestigate.disabled = !isMyTurn || myPlayer.ap_investigate <= 0 || !state.selectedStationId;
+                // Active if at my station, disabled if other station selected
+                btnInvestigate.disabled = !isMyTurn || !hasInvestigateAP || !isAtMyStation;
                 btnInvestigate.textContent = `UNTERSUCHEN (${myPlayer.ap_investigate || 0} UEBRIG)`;
             }
             if (btnArrest) {
                 btnArrest.classList.remove('hidden');
-                btnArrest.disabled = !isMyTurn || myPlayer.ap_arrest <= 0 || !state.selectedStationId;
+                // Active if at my station, disabled if other station selected
+                btnArrest.disabled = !isMyTurn || !hasInvestigateAP || !isAtMyStation;
                 btnArrest.textContent = `FESTNAHME (${myPlayer.ap_investigate || 0} UEBRIG)`;
             }
             if (btnRoadblock) {
                 btnRoadblock.classList.remove('hidden');
-                btnRoadblock.disabled = !isMyTurn || !myPlayer.abilities || !myPlayer.abilities.roadblock || myPlayer.abilities.roadblock <= 0 || !state.selectedStationId;
+                // Roadblock needs a target (neighbor)
+                const isNeighbor = state.selectedStationId && getDistance(gameState.map, myPlayer.position, state.selectedStationId) === 1;
+                btnRoadblock.disabled = !isMyTurn || !myPlayer.abilities || !myPlayer.abilities.roadblock || myPlayer.abilities.roadblock <= 0 || !isNeighbor;
                 btnRoadblock.textContent = `STRASSE SPERRE (${myPlayer.abilities.roadblock || 0})`;
             }
         } else {
