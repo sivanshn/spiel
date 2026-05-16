@@ -1,14 +1,27 @@
-/* ========================================
-   Haupt-CSS – importiert alle Teilbereiche
-   ======================================== */
+/* ============================================================
+   POLIZEI vs DIEB — style.css  v3.0
+   Master import file — all partials loaded below
+   Aesthetic: Tactical Dark (Valorant × Discord × Clash Royale)
+   Fonts: Rajdhani (display) · DM Sans (body)
+   ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 
+/* 1. Design tokens, reset, shared primitives */
 @import './src/styles/global.css';
+
+/* 2. Screens */
 @import './src/styles/login.css';
 @import './src/styles/mainView.css';
 @import './src/styles/lobby.css';
 @import './src/styles/game.css';
+
+/* 3. Overlays / Modals */
 @import './src/styles/modals.css';
-@import './src/styles/voice.css';
+
+/* 4. Side panels */
+@import './src/styles/friends.css';
 @import './src/styles/chat.css';
+
+/* 5. Audio / Voice */
+@import './src/styles/voice.css';
