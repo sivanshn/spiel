@@ -1,88 +1,64 @@
-/* ============================
-   VOICE CHAT UI
-   ============================ */
+/* ============================================================
+   VOICE / MIC — indicators and prison box
+   ============================================================ */
 
-.mic-btn {
-    background: rgba(56, 189, 248, 0.15);
-    border: 1px solid rgba(56, 189, 248, 0.4);
-    color: var(--primary);
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 1.2rem;
-    padding: 0;
-    flex-shrink: 0;
+/* Prison box (game screen bottom-left) */
+.prison-box {
+  position: fixed;
+  bottom: 12px; left: 12px;
+  min-width: 120px;
+  background: rgba(8,11,18,0.92);
+  border: 1px solid var(--c-border-2);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  z-index: var(--z-hud);
+  backdrop-filter: blur(16px);
 }
 
-.mic-btn:hover {
-    background: rgba(56, 189, 248, 0.25);
-    transform: scale(1.05);
+.prison-title {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
-.mic-btn.muted {
-    background: rgba(244, 63, 94, 0.15);
-    border-color: rgba(244, 63, 94, 0.5);
-    color: var(--thief);
+.imprisoned-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--c-red-dim);
+  color: var(--c-red);
+  border: 1px solid rgba(255,58,92,0.25);
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 100px;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
 }
 
-.mic-btn.muted:hover {
-    background: rgba(244, 63, 94, 0.25);
+/* Mic icons in player list */
+.mic-status { font-size: 0.85rem; transition: all 0.2s; }
+.mic-status.mic-off { filter: grayscale(1); opacity: 0.35; }
+.mic-status.clickable { cursor: pointer; }
+.mic-status.clickable:hover { transform: scale(1.2); filter: none; }
+
+/* Voice activity ring on avatar */
+.avatar-speaking {
+  animation: speakingPulse 0.8s ease-in-out infinite alternate;
+}
+@keyframes speakingPulse {
+  from { box-shadow: 0 0 0 0 var(--c-green); }
+  to   { box-shadow: 0 0 0 4px rgba(0,214,143,0); }
 }
 
-.mic-btn.inactive {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.1);
-    color: #475569;
-    cursor: not-allowed;
-    transform: none;
-}
-
-/* Voice Indicator auf Spielerkarten */
-.voice-indicator {
-    font-size: 0.9rem;
-    margin-left: auto;
-    transition: all 0.2s;
-}
-
-.voice-indicator.active {
-    filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.8));
-    animation: voice-pulse 1.5s ease-in-out infinite;
-}
-
-.voice-indicator.muted {
-    opacity: 0.5;
-}
-
-@keyframes voice-pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.5; }
-}
-
-/* Mic Button in HUD (Spiel) */
-.hud-mic-btn {
-    background: rgba(10, 15, 25, 0.7);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    color: var(--primary);
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: all 0.2s;
-    padding: 0;
-}
-
-.hud-mic-btn.muted {
-    border-color: rgba(244, 63, 94, 0.5);
-    color: var(--thief);
+/* Mobile */
+@media (max-width: 930px) and (orientation: landscape) {
+  .prison-box { bottom: 4px; left: 4px; min-width: 80px; padding: 5px 8px; }
+  .prison-title { font-size: 0.5rem; margin-bottom: 3px; }
+  .imprisoned-badge { font-size: 0.6rem; padding: 2px 5px; }
 }
